@@ -112,7 +112,7 @@ let tasks = [];
 let selectedId = null;
 let editingId = null;
 
-// ─── LOCALSTORAGE ───
+// Local Storage
 function loadTasks() {
   const saved = localStorage.getItem('stutime_tasks');
   if (saved) {
@@ -245,6 +245,7 @@ function renderDetail() {
           </div>
           <h2 class="text-2xl font-bold text-white leading-tight">${t.title}</h2>
         </div>
+        
         <!-- Pin button -->
         <button onclick="togglePin(${t.id})" title="${t.pinned ? 'Unpin' : 'Pin task'}"
           class="flex-shrink-0 w-9 h-9 rounded-xl border flex items-center justify-center transition-all

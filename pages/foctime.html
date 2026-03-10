@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-<<<<<<< HEAD
     body { 
         font-family: 'Plus Jakarta Sans', sans-serif; 
     }
@@ -16,33 +15,6 @@
         font-family: 'Bebas Neue', sans-serif; 
     }
 
-    .ring-progress {
-        fill: none;
-        stroke: #FFD04E;
-        stroke-width: 6;
-        stroke-linecap: round;
-        stroke-dasharray: 1068;
-        stroke-dashoffset: 0;
-        transition: stroke-dashoffset 0.5s linear;
-        filter: drop-shadow(0 0 8px rgba(255,214,10,0.5));
-    }
-    .ring-track { fill: none; stroke: #2a2a2a; stroke-width: 6; }
-    .ring-progress.done {
-        stroke: #4ade80;
-        filter: drop-shadow(0 0 10px rgba(74,222,128,0.5));
-    }
-
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.4; }
-      100% { transform: scale(1.08); opacity: 0; }
-    }
-    .pulse-anim { animation: pulse-ring 2s ease-out infinite; }
-
-=======
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
-    .nav-blur { backdrop-filter: blur(20px); }
->>>>>>> 18318a86292fc7a8f9bf371b57cefbf7c37ca691
     @keyframes slideIn {
       from { opacity: 0; transform: translateX(-8px); }
       to { opacity: 1; transform: translateX(0); }
@@ -53,32 +25,21 @@
     .log-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
   </style>
 </head>
-<<<<<<< HEAD
-<body class="bg-[#1E1E20] text-[#F0F0F0] h-screen flex flex-col overflow-x-hidden"></body>
-=======
-
-<body class="bg-[#111111] text-white min-h-screen overflow-x-hidden">
->>>>>>> 18318a86292fc7a8f9bf371b57cefbf7c37ca691
+<body class="bg-[#111111] text-[#F0F0F0] h-screen flex flex-col overflow-x-hidden"></body>
 
   <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
     <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
     <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
-<<<<<<< HEAD
       <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
-      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
-      <a href="#" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD60A] text-[#111111]">FocTime!</a>
-=======
-      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
       <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
       <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">FocTime!</a>
->>>>>>> 18318a86292fc7a8f9bf371b57cefbf7c37ca691
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
     </div>
     <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
   </nav>
 
-  <div class="grid grid-cols-[440px_1fr] min-h-[calc(100vh-77px)]">
+  <div class="grid grid-cols-[380px_1fr] min-h-[calc(100vh-77px)]">
     <aside class="border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex flex-col gap-6">
       <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
         <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-5">Custom</div>
@@ -131,7 +92,7 @@
       </div>
     </aside>
 
-    <main class="flex flex-col items-center justify-start px-6 pt-32 pb-6 relative overflow-hidden">
+    <main class="flex flex-col items-center justify-start px-6 pt-20 pb-6 relative overflow-hidden">
       <div class="flex bg-[#222222] rounded-full p-[4px] border border-white/[0.07] mb-12">
         <button onclick="setMode('focus',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111] transition-all">Focus</button>
         <button onclick="setMode('short',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Short Break</button>
