@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STUTime — FocTime!</title>
-  <link href="" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
   <script src="https://cdn.tailwindcss.com"></script>
-
   <style>
+<<<<<<< HEAD
     body { 
         font-family: 'Plus Jakarta Sans', sans-serif; 
     }
@@ -39,374 +38,284 @@
     }
     .pulse-anim { animation: pulse-ring 2s ease-out infinite; }
 
+=======
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+    .nav-blur { backdrop-filter: blur(20px); }
+>>>>>>> 18318a86292fc7a8f9bf371b57cefbf7c37ca691
     @keyframes slideIn {
       from { opacity: 0; transform: translateX(-8px); }
       to { opacity: 1; transform: translateX(0); }
     }
     .log-slide { animation: slideIn 0.3s ease; }
-
     .log-scroll::-webkit-scrollbar { width: 4px; }
     .log-scroll::-webkit-scrollbar-track { background: transparent; }
     .log-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
-
-    .nav-blur { backdrop-filter: blur(20px); }
   </style>
 </head>
+<<<<<<< HEAD
 <body class="bg-[#1E1E20] text-[#F0F0F0] h-screen flex flex-col overflow-x-hidden"></body>
+=======
+
+<body class="bg-[#111111] text-white min-h-screen overflow-x-hidden">
+>>>>>>> 18318a86292fc7a8f9bf371b57cefbf7c37ca691
 
   <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
-    <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD60A] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
-
+    <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
     <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
+<<<<<<< HEAD
       <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
       <a href="#" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD60A] text-[#111111]">FocTime!</a>
+=======
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
+      <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
+      <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">FocTime!</a>
+>>>>>>> 18318a86292fc7a8f9bf371b57cefbf7c37ca691
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
     </div>
-
-    <button onclick="openMotivate()" class="border border-[#FFD60A] text-[#FFD60A] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD60A] hover:text-[#111111] transition-all">
-      Motivate
-    </button>
+    <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
   </nav>
 
-  <!-- PAGE LAYOUT -->
-  <div class="grid grid-cols-[420px_1fr] min-h-[calc(100vh-77px)]">
-
-    <!-- SIDEBAR -->
+  <div class="grid grid-cols-[440px_1fr] min-h-[calc(100vh-77px)]">
     <aside class="border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex flex-col gap-6">
-
-      <!-- Custom -->
       <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
-        <div class="font-bebas text-[#FFD60A] text-xl tracking-wider mb-5">Custom</div>
-
+        <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-5">Custom</div>
         <div class="flex items-center justify-between py-[10px] border-b border-white/[0.07]">
           <span class="text-sm font-medium text-[#ccc]">Focus</span>
           <div class="flex items-center gap-3">
-            <button onclick="adjustTime('focus',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">−</button>
+            <button onclick="adjustTime('focus',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">−</button>
             <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-focus">25</span>
-            <button onclick="adjustTime('focus',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">+</button>
+            <button onclick="adjustTime('focus',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
           </div>
         </div>
-
         <div class="flex items-center justify-between py-[10px] border-b border-white/[0.07]">
           <span class="text-sm font-medium text-[#ccc]">Short break</span>
           <div class="flex items-center gap-3">
-            <button onclick="adjustTime('short',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">−</button>
+            <button onclick="adjustTime('short',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">−</button>
             <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-short">5</span>
-            <button onclick="adjustTime('short',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">+</button>
+            <button onclick="adjustTime('short',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
           </div>
         </div>
-
         <div class="flex items-center justify-between py-[10px]">
           <span class="text-sm font-medium text-[#ccc]">Long break</span>
           <div class="flex items-center gap-3">
-            <button onclick="adjustTime('long',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">−</button>
+            <button onclick="adjustTime('long',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">−</button>
             <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-long">10</span>
-            <button onclick="adjustTime('long',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">+</button>
+            <button onclick="adjustTime('long',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
           </div>
         </div>
-
-        <button onclick="applySettings()" class="w-full mt-[18px] bg-[#FFD60A] text-[#111111] rounded-xl py-3 text-sm font-bold hover:bg-[#ffe033] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(255,214,10,0.35)] active:translate-y-0 transition-all">
-          Apply Settings
-        </button>
+        <button onclick="applySettings()" class="w-full mt-[18px] bg-[#FFD04E] text-[#111111] rounded-xl py-3 text-sm font-bold hover:bg-[#ffe033] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">Apply Settings</button>
       </div>
-
-      <!-- FocStats -->
       <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
-        <div class="font-bebas text-[#FFD60A] text-xl tracking-wider mb-4">FocStats</div>
+        <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-4">FocStats</div>
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
-            <div class="font-bebas text-[32px] text-[#FFD60A] leading-none" id="stat-sessions">0</div>
+            <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-sessions">0</div>
             <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Sessions</div>
           </div>
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
-            <div class="font-bebas text-[32px] text-[#FFD60A] leading-none" id="stat-minutes">0</div>
+            <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-minutes">0</div>
             <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Min Focus</div>
           </div>
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
-            <div class="font-bebas text-[32px] text-[#FFD60A] leading-none" id="stat-streak">0</div>
+            <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-streak">0</div>
             <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Streak</div>
           </div>
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
-            <div class="font-bebas text-[32px] text-[#FFD60A] leading-none" id="stat-today">0</div>
+            <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-today">0</div>
             <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Today</div>
           </div>
         </div>
       </div>
-
-      <!-- Session Log -->
-      <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6 flex-1">
-        <div class="font-bebas text-[#FFD60A] text-xl tracking-wider mb-4">Session Log</div>
-        <div class="log-scroll flex flex-col gap-2 max-h-[180px] overflow-y-auto" id="log-list">
-          <div class="text-center text-[#555] text-sm py-5">No sessions yet.<br>Start focusing! 🎯</div>
-        </div>
-      </div>
-
     </aside>
 
-    <!-- MAIN AREA -->
-    <main class="flex flex-col items-center pt-16 px-16 pb-6 relative overflow-hidden">
-
-      <div class="absolute w-[600px] h-[600px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(255,214,10,0.04)_0%,transparent_70%)]"></div>
-
-      <!-- Mode Tabs -->
-      <div class="flex bg-[#222222] rounded-full p-[4px] border border-white/[0.07] mb-7 z-10">
-        <button onclick="setMode('focus',this)" id="tab-focus" class="mode-tab px-7 py-[9px] rounded-full text-sm font-bold bg-[#FFD60A] text-[#111111] transition-all">Focus</button>
-        <button onclick="setMode('short',this)" id="tab-short" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Short Break</button>
-        <button onclick="setMode('long',this)" id="tab-long" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Long Break</button>
+    <main class="flex flex-col items-center justify-start px-6 pt-32 pb-6 relative overflow-hidden">
+      <div class="flex bg-[#222222] rounded-full p-[4px] border border-white/[0.07] mb-12">
+        <button onclick="setMode('focus',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111] transition-all">Focus</button>
+        <button onclick="setMode('short',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Short Break</button>
+        <button onclick="setMode('long',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Long Break</button>
       </div>
-
-      <!-- Ring + Timer -->
-      <div class="relative flex items-center justify-center" id="timer-wrap">
-        <div id="timer-pulse" class="pulse-anim hidden absolute w-[320px] h-[320px] rounded-full border border-[#FFD60A]/20"></div>
-
-        <svg class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" width="380" height="380" viewBox="0 0 380 380">
-          <g id="ticks"></g>
-          <circle class="ring-track" cx="190" cy="190" r="170"/>
-          <circle class="ring-progress" id="ring-progress" cx="190" cy="190" r="170" transform="rotate(-90 190 190)"/>
-        </svg>
-
-        <div class="w-[320px] h-[320px] flex flex-col items-center justify-center relative z-10">
-          <div class="font-bebas text-[96px] leading-none tracking-[4px]">
-            <span id="timer-mm">25</span><span class="text-[#555]">:</span><span id="timer-ss">00</span><span class="font-bebas text-[48px] text-[#888] align-bottom ml-0.5" id="timer-ms">.00</span>
-          </div>
-          <div class="text-[13px] font-semibold text-[#888] tracking-[3px] uppercase mt-2" id="timer-status">Time to Focus!</div>
+      <div class="flex flex-col items-center mb-12">
+        <div class="font-bebas leading-none tracking-wider" style="font-size: clamp(80px, 12vw, 140px);">
+          <span id="timer-mm">25</span><span class="text-[white]">.</span><span id="timer-ss">00</span><span id="timer-ms" style="font-size: clamp(40px, 70px);" class="font-bebas text-[white]">.00</span>
         </div>
+        <div class="text-[15px] font-bold text-white tracking-[3px] uppercase mt-5" id="timer-status">Time to Focus!</div>
       </div>
-
-      <!-- Controls -->
-      <div class="flex items-center gap-4 mt-7 z-10">
-        <button onclick="resetTimer()" class="flex items-center gap-2 px-8 py-[14px] rounded-xl text-[15px] font-semibold text-[#888] border border-white/[0.07] hover:border-[#888] hover:text-white hover:bg-[#222222] transition-all">
+      <div class="flex items-center gap-4">
+        <button onclick="resetTimer()" class="flex items-center gap-2 px-20 py-[14px] rounded-xl text-[15px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
           </svg>
           Reset
         </button>
-
-        <button onclick="toggleTimer()" id="start-btn" class="flex items-center justify-center gap-2 px-10 py-[14px] rounded-xl text-[16px] font-bold min-w-[150px] bg-[#FFD60A] text-[#111111] border border-[#FFD60A] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,214,10,0.35)] active:translate-y-0 transition-all">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" id="start-icon">
-            <polygon points="10,8 18,12 10,16"/>
-          </svg>
+        <button onclick="toggleTimer()" id="start-btn" class="flex items-center justify-center gap-2 px-20 py-[14px] rounded-xl text-[16px] font-bold min-w-[160px] bg-[#FFD04E] text-[#111111] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" id="start-icon"><polygon points="10,8 18,12 10,16"/></svg>
           <span id="start-text">Start</span>
         </button>
-
-        <button onclick="skipTimer()" class="flex items-center gap-2 px-8 py-[14px] rounded-xl text-[15px] font-semibold text-[#888] border border-white/[0.07] hover:border-[#888] hover:text-white hover:bg-[#222222] transition-all">
+        <button onclick="skipTimer()" class="flex items-center gap-2 px-20 py-[14px] rounded-xl text-[15px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
           Skip
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/>
           </svg>
         </button>
       </div>
-
     </main>
   </div>
 
-  <!-- MOTIVATE MODAL -->
   <div id="modal" onclick="closeMotivate(event)" class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
     <div id="modal-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-10 max-w-[440px] w-[90%] text-center scale-95 transition-transform duration-200">
       <div class="text-5xl mb-4" id="modal-emoji">💪</div>
       <div class="text-lg leading-relaxed text-[#ddd] font-medium mb-2" id="modal-quote">"The secret of getting ahead is getting started."</div>
       <div class="text-sm text-[#888] mb-7" id="modal-author">— Mark Twain</div>
-      <button onclick="closeMotivate()" class="bg-[#FFD60A] text-[#111111] px-8 py-3 rounded-xl font-bold text-sm">Let's Go! 🚀</button>
+      <button onclick="closeMotivate()" class="bg-[#FFD04E] text-[#111111] px-8 py-3 rounded-xl font-bold text-sm">Let's Go! 🚀</button>
     </div>
   </div>
 
-<script>
-  const settings = { focus: 25, short: 5, long: 10 };
-  let currentMode = 'focus';
-  let totalSeconds = 25 * 60;
-  let remainingSeconds = totalSeconds;
-  let remainingMs = 0;
-  let running = false;
-  let intervalId = null;
-  let startTime = null;
-  let stats = { sessions: 0, minutes: 0, streak: 0, today: 0 };
-  let logs = [];
-  const CIRCUMFERENCE = 2 * Math.PI * 170;
+  <script>
+    const settings = { focus: 25, short: 5, long: 10 };
+    let currentMode = 'focus';
+    let totalSeconds = 25 * 60;
+    let remainingSeconds = totalSeconds;
+    let remainingMs = 0;
+    let running = false;
+    let intervalId = null;
+    let startTime = null;
+    let stats = { sessions: 0, minutes: 0, streak: 0, today: 0 };
+    let logs = [];
 
-  // Draw ticks
-  (function() {
-    const g = document.getElementById('ticks');
-    for (let i = 0; i < 60; i++) {
-      const angle = (i / 60) * 360 - 90;
-      const rad = angle * Math.PI / 180;
-      const isMajor = i % 5 === 0;
-      const r1 = isMajor ? 155 : 160;
-      const x1 = 190 + r1 * Math.cos(rad), y1 = 190 + r1 * Math.sin(rad);
-      const x2 = 190 + 170 * Math.cos(rad), y2 = 190 + 170 * Math.sin(rad);
-      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-      line.setAttribute('x1',x1); line.setAttribute('y1',y1);
-      line.setAttribute('x2',x2); line.setAttribute('y2',y2);
-      line.setAttribute('stroke', isMajor ? '#333' : '#222');
-      line.setAttribute('stroke-width', isMajor ? '2' : '1');
-      g.appendChild(line);
+    function adjustTime(key, delta) {
+      settings[key] = Math.max(1, Math.min(90, settings[key] + delta));
+      document.getElementById('val-' + key).textContent = settings[key];
     }
-  })();
-
-  function adjustTime(key, delta) {
-    settings[key] = Math.max(1, Math.min(90, settings[key] + delta));
-    document.getElementById('val-' + key).textContent = settings[key];
-  }
-
-  function applySettings() {
-    if (running) return;
-    totalSeconds = settings[currentMode] * 60;
-    remainingSeconds = totalSeconds; remainingMs = 0;
-    updateDisplay(); updateRing();
-  }
-
-  function setMode(mode, btn) {
-    if (running) return;
-    currentMode = mode;
-    document.querySelectorAll('.mode-tab').forEach(t => {
-      t.classList.remove('bg-[#FFD60A]','text-[#111111]','font-bold');
-      t.classList.add('text-[#888]','font-semibold');
-    });
-    btn.classList.remove('text-[#888]','font-semibold');
-    btn.classList.add('bg-[#FFD60A]','text-[#111111]','font-bold');
-    totalSeconds = settings[mode] * 60;
-    remainingSeconds = totalSeconds; remainingMs = 0;
-    const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
-    document.getElementById('timer-status').textContent = statuses[mode];
-    updateDisplay(); updateRing();
-  }
-
-  function toggleTimer() { running ? pauseTimer() : startTimer(); }
-
-  function startTimer() {
-    running = true;
-    document.getElementById('start-text').textContent = 'Pause';
-    document.getElementById('start-icon').innerHTML = `<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>`;
-    document.getElementById('timer-pulse').classList.remove('hidden');
-    const leftMs = remainingSeconds * 1000 + remainingMs * 10;
-    startTime = Date.now() - (totalSeconds * 1000 - leftMs);
-    intervalId = setInterval(() => {
-      const left = Math.max(0, totalSeconds * 1000 - (Date.now() - startTime));
-      remainingSeconds = Math.floor(left / 1000);
-      remainingMs = Math.floor((left % 1000) / 10);
-      updateDisplay(); updateRing();
-      if (left <= 0) completeTimer();
-    }, 50);
-  }
-
-  function pauseTimer() {
-    running = false; clearInterval(intervalId);
-    document.getElementById('start-text').textContent = 'Resume';
-    document.getElementById('start-icon').innerHTML = `<polygon points="10,8 18,12 10,16"/>`;
-    document.getElementById('timer-pulse').classList.add('hidden');
-  }
-
-  function resetTimer() {
-    running = false; clearInterval(intervalId);
-    totalSeconds = settings[currentMode] * 60;
-    remainingSeconds = totalSeconds; remainingMs = 0;
-    document.getElementById('start-text').textContent = 'Start';
-    document.getElementById('start-icon').innerHTML = `<polygon points="10,8 18,12 10,16"/>`;
-    document.getElementById('timer-pulse').classList.add('hidden');
-    document.getElementById('ring-progress').classList.remove('done');
-    const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
-    document.getElementById('timer-status').textContent = statuses[currentMode];
-    updateDisplay(); updateRing();
-  }
-
-  function skipTimer() { resetTimer(); }
-
-  function completeTimer() {
-    running = false; clearInterval(intervalId);
-    document.getElementById('timer-pulse').classList.add('hidden');
-    document.getElementById('start-text').textContent = 'Start';
-    document.getElementById('start-icon').innerHTML = `<polygon points="10,8 18,12 10,16"/>`;
-    document.getElementById('ring-progress').classList.add('done');
-    document.getElementById('timer-status').textContent = currentMode === 'focus' ? '✅ Session Complete!' : '✅ Break Done!';
-    if (currentMode === 'focus') {
-      stats.sessions++; stats.minutes += settings.focus; stats.streak++; stats.today++;
-      addLog('focus', settings.focus + ' min focus');
-    } else {
-      addLog('break', (currentMode === 'short' ? settings.short : settings.long) + ' min break');
+    function applySettings() {
+      if (running) return;
+      totalSeconds = settings[currentMode] * 60;
+      remainingSeconds = totalSeconds; remainingMs = 0;
+      updateDisplay();
     }
-    updateStats();
-    try {
-      const ctx = new AudioContext(), osc = ctx.createOscillator(), gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.frequency.setValueAtTime(880, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.5);
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1);
-      osc.start(); osc.stop(ctx.currentTime + 1);
-    } catch(e) {}
-  }
-
-  function updateDisplay() {
-    document.getElementById('timer-mm').textContent = String(Math.floor(remainingSeconds/60)).padStart(2,'0');
-    document.getElementById('timer-ss').textContent = String(remainingSeconds%60).padStart(2,'0');
-    document.getElementById('timer-ms').textContent = '.' + String(remainingMs).padStart(2,'0');
-  }
-
-  function updateRing() {
-    const progress = (remainingSeconds * 1000 + remainingMs * 10) / (totalSeconds * 1000);
-    document.getElementById('ring-progress').style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
-  }
-
-  function updateStats() {
-    ['sessions','minutes','streak','today'].forEach(k =>
-      document.getElementById('stat-' + k).textContent = stats[k]);
-  }
-
-  function addLog(type, text) {
-    const now = new Date();
-    const time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-    logs.unshift({ type, text, time });
-    if (logs.length > 20) logs.pop();
-    renderLogs();
-  }
-
-  function renderLogs() {
-    const el = document.getElementById('log-list');
-    if (!logs.length) {
-      el.innerHTML = '<div class="text-center text-[#555] text-sm py-5">No sessions yet.<br>Start focusing! 🎯</div>';
-      return;
+    function setMode(mode, btn) {
+      if (running) return;
+      currentMode = mode;
+      document.querySelectorAll('.mode-tab').forEach(t => {
+        t.classList.remove('bg-[#FFD04E]','text-[#111111]','font-bold');
+        t.classList.add('text-[#888]','font-semibold');
+      });
+      btn.classList.remove('text-[#888]','font-semibold');
+      btn.classList.add('bg-[#FFD04E]','text-[#111111]','font-bold');
+      totalSeconds = settings[mode] * 60;
+      remainingSeconds = totalSeconds; remainingMs = 0;
+      const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
+      document.getElementById('timer-status').textContent = statuses[mode];
+      updateDisplay();
     }
-    el.innerHTML = logs.map(l => `
-      <div class="log-slide flex items-center gap-2.5 px-3 py-2.5 bg-[#2a2a2a] rounded-xl border border-white/[0.07] text-[13px]">
-        <div class="w-2 h-2 rounded-full flex-shrink-0 ${l.type==='focus' ? 'bg-[#FFD60A]' : 'bg-green-400'}"></div>
-        <span class="text-[#bbb] flex-1">${l.text}</span>
-        <span class="font-bebas text-[#555] text-sm">${l.time}</span>
-      </div>`).join('');
-  }
-
-  const quotes = [
-    { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
-    { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
-    { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
-    { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
-    { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
-    { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
-  ];
-
-  function openMotivate() {
-    const q = quotes[Math.floor(Math.random() * quotes.length)];
-    document.getElementById('modal-emoji').textContent = q.emoji;
-    document.getElementById('modal-quote').textContent = q.quote;
-    document.getElementById('modal-author').textContent = q.author;
-    const m = document.getElementById('modal');
-    m.classList.remove('opacity-0','pointer-events-none');
-    m.classList.add('opacity-100');
-    document.getElementById('modal-box').classList.remove('scale-95');
-    document.getElementById('modal-box').classList.add('scale-100');
-  }
-
-  function closeMotivate(e) {
-    if (!e || e.target === document.getElementById('modal')) {
+    function toggleTimer() { running ? pauseTimer() : startTimer(); }
+    function startTimer() {
+      running = true;
+      document.getElementById('start-text').textContent = 'Pause';
+      document.getElementById('start-icon').innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+      const leftMs = remainingSeconds * 1000 + remainingMs * 10;
+      startTime = Date.now() - (totalSeconds * 1000 - leftMs);
+      intervalId = setInterval(() => {
+        const left = Math.max(0, totalSeconds * 1000 - (Date.now() - startTime));
+        remainingSeconds = Math.floor(left / 1000);
+        remainingMs = Math.floor((left % 1000) / 10);
+        updateDisplay();
+        if (left <= 0) completeTimer();
+      }, 50);
+    }
+    function pauseTimer() {
+      running = false; clearInterval(intervalId);
+      document.getElementById('start-text').textContent = 'Resume';
+      document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
+    }
+    function resetTimer() {
+      running = false; clearInterval(intervalId);
+      totalSeconds = settings[currentMode] * 60;
+      remainingSeconds = totalSeconds; remainingMs = 0;
+      document.getElementById('start-text').textContent = 'Start';
+      document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
+      const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
+      document.getElementById('timer-status').textContent = statuses[currentMode];
+      updateDisplay();
+    }
+    function skipTimer() { resetTimer(); }
+    function completeTimer() {
+      running = false; clearInterval(intervalId);
+      document.getElementById('start-text').textContent = 'Start';
+      document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
+      document.getElementById('timer-status').textContent = currentMode === 'focus' ? '✅ Session Complete!' : '✅ Break Done!';
+      if (currentMode === 'focus') {
+        stats.sessions++; stats.minutes += settings.focus; stats.streak++; stats.today++;
+        addLog('focus', settings.focus + ' min focus');
+      } else {
+        addLog('break', (currentMode === 'short' ? settings.short : settings.long) + ' min break');
+      }
+      updateStats();
+      try {
+        const ctx = new AudioContext(), osc = ctx.createOscillator(), gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.5);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1);
+        osc.start(); osc.stop(ctx.currentTime + 1);
+      } catch(e) {}
+    }
+    function updateDisplay() {
+      document.getElementById('timer-mm').textContent = String(Math.floor(remainingSeconds/60)).padStart(2,'0');
+      document.getElementById('timer-ss').textContent = String(remainingSeconds%60).padStart(2,'0');
+      document.getElementById('timer-ms').textContent = '.' + String(remainingMs).padStart(2,'0');
+    }
+    function updateStats() {
+      ['sessions','minutes','streak','today'].forEach(k =>
+        document.getElementById('stat-' + k).textContent = stats[k]);
+    }
+    function addLog(type, text) {
+      const now = new Date();
+      const time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      logs.unshift({ type, text, time });
+      if (logs.length > 20) logs.pop();
+      renderLogs();
+    }
+    function renderLogs() {
+      const el = document.getElementById('log-list');
+      if (!logs.length) {
+        el.innerHTML = '<div class="text-center text-[#555] text-sm py-5">No sessions yet.<br>Start focusing! 🎯</div>';
+        return;
+      }
+      el.innerHTML = logs.map(l => '<div class="log-slide flex items-center gap-2.5 px-3 py-2.5 bg-[#2a2a2a] rounded-xl border border-white/[0.07] text-[13px]"><div class="w-2 h-2 rounded-full flex-shrink-0 ' + (l.type==='focus' ? 'bg-[#FFD04E]' : 'bg-green-400') + '"></div><span class="text-[#bbb] flex-1">' + l.text + '</span><span class="font-bebas text-[#555] text-sm">' + l.time + '</span></div>').join('');
+    }
+    // const quotes = [
+    //   { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
+    //   { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
+    //   { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
+    //   { emoji:'⚡', quote:""You don't have to be great to start, but you have to start to be great."", author:'— Zig Ziglar' },
+    //   { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
+    //   { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
+    // ];
+    function openMotivate() {
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('modal-emoji').textContent = q.emoji;
+      document.getElementById('modal-quote').textContent = q.quote;
+      document.getElementById('modal-author').textContent = q.author;
       const m = document.getElementById('modal');
-      m.classList.add('opacity-0','pointer-events-none');
-      m.classList.remove('opacity-100');
-      document.getElementById('modal-box').classList.add('scale-95');
-      document.getElementById('modal-box').classList.remove('scale-100');
+      m.classList.remove('opacity-0','pointer-events-none');
+      m.classList.add('opacity-100');
+      document.getElementById('modal-box').classList.remove('scale-95');
+      document.getElementById('modal-box').classList.add('scale-100');
     }
-  }
-
-  updateDisplay(); updateRing();
-</script>
+    function closeMotivate(e) {
+      if (!e || e.target === document.getElementById('modal')) {
+        const m = document.getElementById('modal');
+        m.classList.add('opacity-0','pointer-events-none');
+        m.classList.remove('opacity-100');
+        document.getElementById('modal-box').classList.add('scale-95');
+        document.getElementById('modal-box').classList.remove('scale-100');
+      }
+    }
+    updateDisplay();
+  </script>
 </body>
 </html>

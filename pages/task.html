@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STUTime - Task Manager</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+    .nav-blur { backdrop-filter: blur(20px); }
+
+    .task-scroll::-webkit-scrollbar { width: 4px; }
+    .task-scroll::-webkit-scrollbar-track { background: transparent; }
+    .task-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.2s ease; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .slide-in { animation: slideIn 0.2s ease; }
+
+    input, textarea, select { outline: none; }
+    input:focus, textarea:focus, select:focus { border-color: #FFD04E !important; }
+
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 200; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+  </style>
+</head>
+<body class="bg-[#111111] text-white min-h-screen overflow-x-hidden">
+
+  <!-- NAVBAR -->
+  <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+    <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
+    <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
+      <a href="task.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Task</a>
+      <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">FocTime!</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
+    </div>
+    <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
+  </nav>
+
+  <!-- PINNED BAR -->
+  <div id="pinned-bar" class="hidden border-b border-white/[0.07] bg-[#111111]/95 px-6 py-3">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 flex-shrink-0">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="#FFD04E"><line x1="12" y1="17" x2="12" y2="22" stroke="#FFD04E" stroke-width="2"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z" fill="#FFD04E" stroke="none"/></svg>
+        <span class="text-xs font-bold text-[#FFD04E] uppercase tracking-wider">Pinned</span>
+      </div>
+      <div class="w-px h-4 bg-white/10 flex-shrink-0"></div>
+      <div id="pinned-list" class="flex items-center gap-2 overflow-x-auto task-scroll pb-0.5"></div>
+    </div>
+  </div>
+
+  <!-- PAGE LAYOUT -->
+  <div class="grid grid-cols-[420px_1fr]" style="min-height: calc(100vh - 77px);">
+
+    <!-- SIDEBAR KIRI: Task List -->
+    <aside class="border-r border-white/[0.07] bg-[#1a1a1a] flex flex-col" style="height: calc(100vh - 77px);">
+      <!-- Header sidebar -->
+      <div class="p-5 border-b border-white/[0.07] flex items-center justify-between flex-shrink-0">
+        <div>
+          <div class="font-bebas text-[#FFD04E] text-xl tracking-wider">Jadwal</div>
+          <div class="text-xs text-[#555] mt-0.5" id="task-count">0 jadwal</div>
+        </div>
+        <button onclick="openAddModal()"
+          class="flex items-center gap-2 px-4 py-2 bg-[#FFD04E] text-[#111111] rounded-xl text-sm font-bold hover:bg-[#ffe066] transition-all">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Tambah
+        </button>
+      </div>
+      <!-- List -->
+      <div class="task-scroll overflow-y-auto flex-1 p-5" id="task-list-container"></div>
+    </aside>
+
+    <!-- PANEL KANAN: Detail -->
+    <main class="flex flex-col bg-[#111111]" style="height: calc(100vh - 77px);">
+      <!-- Tombol tambah di atas -->
+      <div class="p-5 border-b border-white/[0.07] flex-shrink-0">
+        <button onclick="openAddModal()"
+          class="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-white/[0.07] bg-[#1a1a1a] text-[#666] hover:border-[#FFD04E] hover:text-[#FFD04E] transition-all text-sm font-semibold">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Tambah jadwal baru
+        </button>
+      </div>
+      <!-- Detail content -->
+      <div class="flex-1 overflow-y-auto task-scroll p-6" id="detail-content"></div>
+    </main>
+  </div>
+
+  <!-- ── MODAL TAMBAH / EDIT ── -->
+  <div id="task-modal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-8 w-full max-w-lg mx-4">
+      <div class="flex items-center justify-between mb-6">
+        <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider" id="modal-title">Tambah Jadwal</div>
+        <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#222] text-[#888] hover:text-white transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <div class="flex flex-col gap-4">
+        <!-- Judul -->
+        <div>
+          <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Judul Task <span class="text-red-400">*</span></label>
+          <input id="form-title" type="text" placeholder="Contoh: Belajar Tailwind CSS"
+            class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-[#444] transition-colors" />
+        </div>
+
+        <!-- Deskripsi -->
+        <div>
+          <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Deskripsi</label>
+          <textarea id="form-desc" rows="3" placeholder="Deskripsi singkat tentang task ini..."
+            class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-[#444] transition-colors resize-none"></textarea>
+        </div>
+
+        <!-- Tanggal & Waktu -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Tanggal <span class="text-red-400">*</span></label>
+            <input id="form-date" type="date"
+              class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white transition-colors" />
+          </div>
+          <div>
+            <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Waktu <span class="text-red-400">*</span></label>
+            <input id="form-time" type="time"
+              class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white transition-colors" />
+          </div>
+        </div>
+
+        <!-- Prioritas -->
+        <div>
+          <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Prioritas</label>
+          <select id="form-priority"
+            class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white transition-colors">
+            <option value="high">🔴 High</option>
+            <option value="medium" selected>🟠 Medium</option>
+            <option value="low">🔵 Low</option>
+          </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-3 mt-2">
+          <button onclick="closeModal()"
+            class="flex-1 py-3 rounded-xl border border-white/[0.07] text-[#888] text-sm font-semibold hover:border-white/20 hover:text-white transition-all">
+            Batal
+          </button>
+          <button onclick="submitTask()"
+            class="flex-1 py-3 rounded-xl bg-[#FFD04E] text-[#111111] text-sm font-bold hover:bg-[#ffe066] transition-all">
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MOTIVATE MODAL ── -->
+  <div id="motivate-modal" onclick="closeMotivate(event)" class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
+    <div id="motivate-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-10 max-w-[440px] w-[90%] text-center scale-95 transition-transform duration-200">
+      <div class="text-5xl mb-4" id="motivate-emoji">💪</div>
+      <div class="text-lg leading-relaxed text-[#ddd] font-medium mb-2" id="motivate-quote"></div>
+      <div class="text-sm text-[#888] mb-7" id="motivate-author"></div>
+      <button onclick="closeMotivate()" class="bg-[#FFD04E] text-[#111111] px-8 py-3 rounded-xl font-bold text-sm">Let's Go! 🚀</button>
+    </div>
+  </div>
+
+  <script src="../src/js/task.js"></script>
+</body>
+</html>
