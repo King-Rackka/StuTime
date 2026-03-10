@@ -4,40 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STUTime — FocTime!</title>
-  <link href="" rel="stylesheet">
+  <link href="../src/css/output.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    body { 
+    body {
         font-family: 'Plus Jakarta Sans', sans-serif; 
     }
+
     .font-bebas { 
         font-family: 'Bebas Neue', sans-serif; 
     }
 
-    .ring-progress {
-        fill: none;
-        stroke: #FFD60A;
-        stroke-width: 6;
-        stroke-linecap: round;
-        stroke-dasharray: 1068;
-        stroke-dashoffset: 0;
-        transition: stroke-dashoffset 0.5s linear;
-        filter: drop-shadow(0 0 8px rgba(255,214,10,0.5));
+    .nav-blur { 
+        backdrop-filter: blur(20px); 
     }
-    .ring-track { fill: none; stroke: #2a2a2a; stroke-width: 6; }
-    .ring-progress.done {
-        stroke: #4ade80;
-        filter: drop-shadow(0 0 10px rgba(74,222,128,0.5));
-    }
-
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.4; }
-      100% { transform: scale(1.08); opacity: 0; }
-    }
-    .pulse-anim { animation: pulse-ring 2s ease-out infinite; }
 
     @keyframes slideIn {
       from { opacity: 0; transform: translateX(-8px); }
@@ -48,12 +31,11 @@
     .log-scroll::-webkit-scrollbar { width: 4px; }
     .log-scroll::-webkit-scrollbar-track { background: transparent; }
     .log-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
-
-    .nav-blur { backdrop-filter: blur(20px); }
   </style>
 </head>
 <body class="bg-[#111111] text-white min-h-screen overflow-x-hidden">
 
+  <!-- NAVBAR -->
   <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
     <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD60A] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
 
@@ -71,7 +53,7 @@
   </nav>
 
   <!-- PAGE LAYOUT -->
-  <div class="grid grid-cols-[420px_1fr] min-h-[calc(100vh-77px)]">
+  <div class="grid grid-cols-[440px_1fr] min-h-[calc(100vh-77px)]">
 
     <!-- SIDEBAR -->
     <aside class="border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex flex-col gap-6">
@@ -135,63 +117,43 @@
         </div>
       </div>
 
-      <!-- Session Log -->
-      <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6 flex-1">
-        <div class="font-bebas text-[#FFD60A] text-xl tracking-wider mb-4">Session Log</div>
-        <div class="log-scroll flex flex-col gap-2 max-h-[180px] overflow-y-auto" id="log-list">
-          <div class="text-center text-[#555] text-sm py-5">No sessions yet.<br>Start focusing! 🎯</div>
-        </div>
-      </div>
-
     </aside>
 
     <!-- MAIN AREA -->
-    <main class="flex flex-col items-center pt-16 px-16 pb-6 relative overflow-hidden">
-
-      <div class="absolute w-[600px] h-[600px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(255,214,10,0.04)_0%,transparent_70%)]"></div>
+    <main class="flex flex-col items-center justify-start px-6 pt-32 pb-6 relative overflow-hidden">
 
       <!-- Mode Tabs -->
-      <div class="flex bg-[#222222] rounded-full p-[4px] border border-white/[0.07] mb-7 z-10">
-        <button onclick="setMode('focus',this)" id="tab-focus" class="mode-tab px-7 py-[9px] rounded-full text-sm font-bold bg-[#FFD60A] text-[#111111] transition-all">Focus</button>
-        <button onclick="setMode('short',this)" id="tab-short" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Short Break</button>
-        <button onclick="setMode('long',this)" id="tab-long" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Long Break</button>
+      <div class="flex bg-[#222222] rounded-full p-[4px] border border-white/[0.07] mb-12">
+        <button onclick="setMode('focus',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-bold bg-[#FFD60A] text-[#111111] transition-all">Focus</button>
+        <button onclick="setMode('short',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Short Break</button>
+        <button onclick="setMode('long',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Long Break</button>
       </div>
 
-      <!-- Ring + Timer -->
-      <div class="relative flex items-center justify-center" id="timer-wrap">
-        <div id="timer-pulse" class="pulse-anim hidden absolute w-[320px] h-[320px] rounded-full border border-[#FFD60A]/20"></div>
-
-        <svg class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" width="380" height="380" viewBox="0 0 380 380">
-          <g id="ticks"></g>
-          <circle class="ring-track" cx="190" cy="190" r="170"/>
-          <circle class="ring-progress" id="ring-progress" cx="190" cy="190" r="170" transform="rotate(-90 190 190)"/>
-        </svg>
-
-        <div class="w-[320px] h-[320px] flex flex-col items-center justify-center relative z-10">
-          <div class="font-bebas text-[96px] leading-none tracking-[4px]">
-            <span id="timer-mm">25</span><span class="text-[#555]">:</span><span id="timer-ss">00</span><span class="font-bebas text-[48px] text-[#888] align-bottom ml-0.5" id="timer-ms">.00</span>
-          </div>
-          <div class="text-[13px] font-semibold text-[#888] tracking-[3px] uppercase mt-2" id="timer-status">Time to Focus!</div>
+      <!-- Timer -->
+      <div class="flex flex-col items-center mb-12">
+        <div class="font-bebas leading-none tracking-wider" style="font-size: clamp(80px, 12vw, 140px);">
+          <span id="timer-mm">25</span><span class="text-[white]">.</span><span id="timer-ss">00</span><span id="timer-ms" style="font-size: clamp(40px, 70px);" class="font-bebas text-[white]">.00</span>
         </div>
+        <div class="text-[15px] font-bold text-white tracking-[3px] uppercase mt-5" id="timer-status">Time to Focus!</div>
       </div>
 
       <!-- Controls -->
-      <div class="flex items-center gap-4 mt-7 z-10">
-        <button onclick="resetTimer()" class="flex items-center gap-2 px-8 py-[14px] rounded-xl text-[15px] font-semibold text-[#888] border border-white/[0.07] hover:border-[#888] hover:text-white hover:bg-[#222222] transition-all">
+      <div class="flex items-center gap-4">
+        <button onclick="resetTimer()" class="flex items-center gap-2 px-8 py-[14px] rounded-xl text-[15px] font-semibold text-[#FFD60A] border border-[#FFD60A]/50 hover:border-[#FFD60A] hover:bg-[#FFD60A]/10 transition-all">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
           </svg>
           Reset
         </button>
 
-        <button onclick="toggleTimer()" id="start-btn" class="flex items-center justify-center gap-2 px-10 py-[14px] rounded-xl text-[16px] font-bold min-w-[150px] bg-[#FFD60A] text-[#111111] border border-[#FFD60A] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,214,10,0.35)] active:translate-y-0 transition-all">
+        <button onclick="toggleTimer()" id="start-btn" class="flex items-center justify-center gap-2 px-12 py-[14px] rounded-xl text-[16px] font-bold min-w-[160px] bg-[#FFD60A] text-[#111111] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,214,10,0.35)] active:translate-y-0 transition-all">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" id="start-icon">
             <polygon points="10,8 18,12 10,16"/>
           </svg>
           <span id="start-text">Start</span>
         </button>
 
-        <button onclick="skipTimer()" class="flex items-center gap-2 px-8 py-[14px] rounded-xl text-[15px] font-semibold text-[#888] border border-white/[0.07] hover:border-[#888] hover:text-white hover:bg-[#222222] transition-all">
+        <button onclick="skipTimer()" class="flex items-center gap-2 px-8 py-[14px] rounded-xl text-[15px] font-semibold text-[#FFD60A] border border-[#FFD60A]/50 hover:border-[#FFD60A] hover:bg-[#FFD60A]/10 transition-all">
           Skip
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/>
@@ -223,26 +185,6 @@
   let startTime = null;
   let stats = { sessions: 0, minutes: 0, streak: 0, today: 0 };
   let logs = [];
-  const CIRCUMFERENCE = 2 * Math.PI * 170;
-
-  // Draw ticks
-  (function() {
-    const g = document.getElementById('ticks');
-    for (let i = 0; i < 60; i++) {
-      const angle = (i / 60) * 360 - 90;
-      const rad = angle * Math.PI / 180;
-      const isMajor = i % 5 === 0;
-      const r1 = isMajor ? 155 : 160;
-      const x1 = 190 + r1 * Math.cos(rad), y1 = 190 + r1 * Math.sin(rad);
-      const x2 = 190 + 170 * Math.cos(rad), y2 = 190 + 170 * Math.sin(rad);
-      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-      line.setAttribute('x1',x1); line.setAttribute('y1',y1);
-      line.setAttribute('x2',x2); line.setAttribute('y2',y2);
-      line.setAttribute('stroke', isMajor ? '#333' : '#222');
-      line.setAttribute('stroke-width', isMajor ? '2' : '1');
-      g.appendChild(line);
-    }
-  })();
 
   function adjustTime(key, delta) {
     settings[key] = Math.max(1, Math.min(90, settings[key] + delta));
@@ -253,7 +195,7 @@
     if (running) return;
     totalSeconds = settings[currentMode] * 60;
     remainingSeconds = totalSeconds; remainingMs = 0;
-    updateDisplay(); updateRing();
+    updateDisplay();
   }
 
   function setMode(mode, btn) {
@@ -269,7 +211,7 @@
     remainingSeconds = totalSeconds; remainingMs = 0;
     const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
     document.getElementById('timer-status').textContent = statuses[mode];
-    updateDisplay(); updateRing();
+    updateDisplay();
   }
 
   function toggleTimer() { running ? pauseTimer() : startTimer(); }
@@ -278,14 +220,13 @@
     running = true;
     document.getElementById('start-text').textContent = 'Pause';
     document.getElementById('start-icon').innerHTML = `<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>`;
-    document.getElementById('timer-pulse').classList.remove('hidden');
     const leftMs = remainingSeconds * 1000 + remainingMs * 10;
     startTime = Date.now() - (totalSeconds * 1000 - leftMs);
     intervalId = setInterval(() => {
       const left = Math.max(0, totalSeconds * 1000 - (Date.now() - startTime));
       remainingSeconds = Math.floor(left / 1000);
       remainingMs = Math.floor((left % 1000) / 10);
-      updateDisplay(); updateRing();
+      updateDisplay();
       if (left <= 0) completeTimer();
     }, 50);
   }
@@ -294,7 +235,6 @@
     running = false; clearInterval(intervalId);
     document.getElementById('start-text').textContent = 'Resume';
     document.getElementById('start-icon').innerHTML = `<polygon points="10,8 18,12 10,16"/>`;
-    document.getElementById('timer-pulse').classList.add('hidden');
   }
 
   function resetTimer() {
@@ -303,21 +243,17 @@
     remainingSeconds = totalSeconds; remainingMs = 0;
     document.getElementById('start-text').textContent = 'Start';
     document.getElementById('start-icon').innerHTML = `<polygon points="10,8 18,12 10,16"/>`;
-    document.getElementById('timer-pulse').classList.add('hidden');
-    document.getElementById('ring-progress').classList.remove('done');
     const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
     document.getElementById('timer-status').textContent = statuses[currentMode];
-    updateDisplay(); updateRing();
+    updateDisplay();
   }
 
   function skipTimer() { resetTimer(); }
 
   function completeTimer() {
     running = false; clearInterval(intervalId);
-    document.getElementById('timer-pulse').classList.add('hidden');
     document.getElementById('start-text').textContent = 'Start';
     document.getElementById('start-icon').innerHTML = `<polygon points="10,8 18,12 10,16"/>`;
-    document.getElementById('ring-progress').classList.add('done');
     document.getElementById('timer-status').textContent = currentMode === 'focus' ? '✅ Session Complete!' : '✅ Break Done!';
     if (currentMode === 'focus') {
       stats.sessions++; stats.minutes += settings.focus; stats.streak++; stats.today++;
@@ -341,11 +277,6 @@
     document.getElementById('timer-mm').textContent = String(Math.floor(remainingSeconds/60)).padStart(2,'0');
     document.getElementById('timer-ss').textContent = String(remainingSeconds%60).padStart(2,'0');
     document.getElementById('timer-ms').textContent = '.' + String(remainingMs).padStart(2,'0');
-  }
-
-  function updateRing() {
-    const progress = (remainingSeconds * 1000 + remainingMs * 10) / (totalSeconds * 1000);
-    document.getElementById('ring-progress').style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
   }
 
   function updateStats() {
@@ -406,7 +337,7 @@
     }
   }
 
-  updateDisplay(); updateRing();
+  updateDisplay();
 </script>
 </body>
 </html>
