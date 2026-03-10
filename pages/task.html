@@ -36,7 +36,7 @@
 </head>
 <body class="bg-[#111111] text-white min-h-screen overflow-x-hidden">
 
-  <!-- NAVBAR -->
+  <!-- Navbar -->
   <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
     <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
     <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
@@ -49,7 +49,7 @@
     <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
   </nav>
 
-  <!-- PINNED BAR -->
+  <!-- Pin task bar -->
   <div id="pinned-bar" class="hidden border-b border-white/[0.07] bg-[#111111]/95 px-6 py-3">
     <div class="flex items-center gap-3">
       <div class="flex items-center gap-1.5 flex-shrink-0">
@@ -61,10 +61,10 @@
     </div>
   </div>
 
-  <!-- PAGE LAYOUT -->
-  <div class="grid grid-cols-[420px_1fr]" style="min-height: calc(100vh - 77px);">
+  <!-- Page Layout -->
+  <div class="grid grid-cols-[400px_1fr]" style="min-height: calc(100vh - 77px);">
 
-    <!-- SIDEBAR KIRI: Task List -->
+    <!-- Sidebar kiri -->
     <aside class="border-r border-white/[0.07] bg-[#1a1a1a] flex flex-col" style="height: calc(100vh - 77px);">
       <!-- Header sidebar -->
       <div class="p-5 border-b border-white/[0.07] flex items-center justify-between flex-shrink-0">
@@ -84,7 +84,7 @@
       <div class="task-scroll overflow-y-auto flex-1 p-5" id="task-list-container"></div>
     </aside>
 
-    <!-- PANEL KANAN: Detail -->
+    <!-- Content sbelah kanan -->
     <main class="flex flex-col bg-[#111111]" style="height: calc(100vh - 77px);">
       <!-- Tombol tambah di atas -->
       <div class="p-5 border-b border-white/[0.07] flex-shrink-0">
@@ -101,7 +101,7 @@
     </main>
   </div>
 
-  <!-- ── MODAL TAMBAH / EDIT ── -->
+  <!-- modal tambah atau edit -->
   <div id="task-modal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
     <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-8 w-full max-w-lg mx-4">
       <div class="flex items-center justify-between mb-6">
@@ -127,7 +127,7 @@
             class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-[#444] transition-colors resize-none"></textarea>
         </div>
 
-        <!-- Tanggal & Waktu -->
+        <!-- Tanggal dan Waktu -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Tanggal <span class="text-red-400">*</span></label>

@@ -190,7 +190,7 @@ function renderTaskList() {
         <span class="text-sm font-bold text-white">${formatDateLabel(date)}</span>
       </div>
       <!-- Tasks -->
-      <div class="ml-[5px] border-l-2 border-[#222] pl-4 flex flex-col gap-2">
+      <div class="ml-[5px] border-l-2 border-[#FFD04E] pl-4 flex flex-col gap-2">
         ${grouped[date].sort((a,b) => a.time.localeCompare(b.time)).map(t => `
           <div onclick="selectTask(${t.id})"
             class="task-card flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all
