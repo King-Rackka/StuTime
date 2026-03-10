@@ -4,773 +4,247 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>STUTime — FocTime!</title>
+  <link href="" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
-    :root {
-      --primary: #FFD60A;
-      --primary-dim: rgba(255, 214, 10, 0.12);
-      --primary-glow: rgba(255, 214, 10, 0.35);
-      --dark: #111111;
-      --dark-2: #1a1a1a;
-      --dark-3: #222222;
-      --dark-4: #2a2a2a;
-      --text: #ffffff;
-      --text-muted: #888888;
-      --text-dim: #555555;
-      --border: rgba(255,255,255,0.07);
-      --radius: 16px;
+    body { 
+        font-family: 'Plus Jakarta Sans', sans-serif; 
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: var(--dark);
-      color: var(--text);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ─── NAVBAR ─── */
-    nav {
-      display: flex;
-      align-items: center;
-      padding: 18px 40px;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      background: rgba(17,17,17,0.92);
-      backdrop-filter: blur(20px);
-      z-index: 100;
-    }
-
-    .nav-avatar {
-      width: 40px; height: 40px;
-      background: var(--primary);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 18px;
-      color: var(--dark);
-      font-weight: 400;
-      flex-shrink: 0;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 4px;
-      background: var(--dark-3);
-      border-radius: 999px;
-      padding: 5px;
-      margin: 0 auto;
-      border: 1px solid var(--border);
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      padding: 8px 20px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-muted);
-      transition: all 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--text); }
-    .nav-links a.active {
-      background: var(--primary);
-      color: var(--dark);
-      font-weight: 700;
-    }
-
-    .nav-motivate {
-      background: transparent;
-      border: 1.5px solid var(--primary);
-      color: var(--primary);
-      padding: 9px 22px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .nav-motivate:hover {
-      background: var(--primary);
-      color: var(--dark);
-    }
-
-    /* ─── LAYOUT ─── */
-    .page {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 0;
-      min-height: calc(100vh - 77px);
-    }
-
-    /* ─── SIDEBAR ─── */
-    .sidebar {
-      border-right: 1px solid var(--border);
-      padding: 32px 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      background: var(--dark-2);
-    }
-
-    .card {
-      background: var(--dark-3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-    }
-
-    .card-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 20px;
-      color: var(--primary);
-      letter-spacing: 1px;
-      margin-bottom: 20px;
-    }
-
-    /* Custom settings */
-    .setting-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .setting-row:last-of-type { border-bottom: none; }
-
-    .setting-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #ccc;
-    }
-
-    .setting-control {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .setting-btn {
-      width: 28px; height: 28px;
-      background: var(--dark-4);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--primary);
-      font-size: 16px;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.15s;
-      font-weight: 700;
-    }
-    .setting-btn:hover {
-      background: var(--primary-dim);
-      border-color: var(--primary);
-    }
-    .setting-btn:active { transform: scale(0.9); }
-
-    .setting-value {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 22px;
-      color: var(--text);
-      min-width: 28px;
-      text-align: center;
-      letter-spacing: 1px;
-    }
-
-    .apply-btn {
-      width: 100%;
-      background: var(--primary);
-      color: var(--dark);
-      border: none;
-      border-radius: 10px;
-      padding: 12px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 18px;
-      transition: all 0.2s;
-      letter-spacing: 0.3px;
-    }
-    .apply-btn:hover {
-      background: #ffe033;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px var(--primary-glow);
-    }
-    .apply-btn:active { transform: translateY(0); }
-
-    /* FocStats */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .stat-item {
-      background: var(--dark-4);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 12px;
-      text-align: center;
-    }
-
-    .stat-value {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
-      color: var(--primary);
-      letter-spacing: 1px;
-      line-height: 1;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 4px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Session Log */
-    .session-log {
-      flex: 1;
-    }
-
-    .log-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    .log-list::-webkit-scrollbar { width: 4px; }
-    .log-list::-webkit-scrollbar-track { background: transparent; }
-    .log-list::-webkit-scrollbar-thumb { background: var(--dark-4); border-radius: 2px; }
-
-    .log-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      background: var(--dark-4);
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      font-size: 13px;
-      animation: slideIn 0.3s ease;
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-10px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .log-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .log-dot.focus { background: var(--primary); }
-    .log-dot.break { background: #4ade80; }
-
-    .log-text { color: #bbb; flex: 1; }
-    .log-duration {
-      font-family: 'Bebas Neue', sans-serif;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-
-    .empty-log {
-      text-align: center;
-      color: var(--text-dim);
-      font-size: 13px;
-      padding: 20px;
-    }
-
-    /* ─── MAIN TIMER ─── */
-    .main-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 60px 24px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* subtle radial bg glow */
-    .main-area::before {
-      content: '';
-      position: absolute;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(255,214,10,0.04) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    /* Mode tabs */
-    .mode-tabs {
-      display: flex;
-      gap: 0;
-      background: var(--dark-3);
-      border-radius: 999px;
-      padding: 4px;
-      border: 1px solid var(--border);
-      margin-bottom: 28px;
-    }
-
-    .mode-tab {
-      padding: 9px 28px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      transition: all 0.25s;
-      white-space: nowrap;
-    }
-
-    .mode-tab.active {
-      background: var(--primary);
-      color: var(--dark);
-    }
-
-    .mode-tab:not(.active):hover { color: var(--text); }
-
-    /* Ring + Timer */
-    .timer-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 28px;
-    }
-
-    .ring-svg {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    /* Outer decorative ring */
-    .ring-track {
-      fill: none;
-      stroke: var(--dark-4);
-      stroke-width: 6;
+    .font-bebas { 
+        font-family: 'Bebas Neue', sans-serif; 
     }
 
     .ring-progress {
-      fill: none;
-      stroke: var(--primary);
-      stroke-width: 6;
-      stroke-linecap: round;
-      transition: stroke-dashoffset 1s linear;
-      filter: drop-shadow(0 0 8px var(--primary-glow));
+        fill: none;
+        stroke: #FFD60A;
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-dasharray: 1068;
+        stroke-dashoffset: 0;
+        transition: stroke-dashoffset 0.5s linear;
+        filter: drop-shadow(0 0 8px rgba(255,214,10,0.5));
     }
-
-    /* tick marks */
-    .ring-tick {
-      stroke: var(--dark-4);
-      stroke-width: 2;
-    }
-
-    .timer-display {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 320px;
-      height: 320px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .timer-digits {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 96px;
-      letter-spacing: 4px;
-      line-height: 1;
-      color: var(--text);
-      transition: color 0.3s;
-    }
-
-    .timer-digits .ms {
-      font-size: 48px;
-      color: var(--text-muted);
-      vertical-align: bottom;
-      margin-left: 2px;
-    }
-
-    .timer-status {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-muted);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-top: 8px;
-    }
-
-    .timer-pulse {
-      position: absolute;
-      width: 100%; height: 100%;
-      border-radius: 50%;
-      border: 1px solid var(--primary-dim);
-      animation: pulse-ring 2s ease-out infinite;
-      opacity: 0;
+    .ring-track { fill: none; stroke: #2a2a2a; stroke-width: 6; }
+    .ring-progress.done {
+        stroke: #4ade80;
+        filter: drop-shadow(0 0 10px rgba(74,222,128,0.5));
     }
 
     @keyframes pulse-ring {
       0% { transform: scale(0.95); opacity: 0.4; }
       100% { transform: scale(1.08); opacity: 0; }
     }
+    .pulse-anim { animation: pulse-ring 2s ease-out infinite; }
 
-    /* Controls */
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-top: 28px;
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
     }
+    .log-slide { animation: slideIn 0.3s ease; }
 
-    .ctrl-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 32px;
-      border-radius: 12px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1.5px solid var(--border);
-      transition: all 0.2s;
-      letter-spacing: 0.3px;
-    }
+    .log-scroll::-webkit-scrollbar { width: 4px; }
+    .log-scroll::-webkit-scrollbar-track { background: transparent; }
+    .log-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
 
-    .ctrl-btn.secondary {
-      background: transparent;
-      color: var(--text-muted);
-    }
-    .ctrl-btn.secondary:hover {
-      border-color: var(--text-muted);
-      color: var(--text);
-      background: var(--dark-3);
-    }
-
-    .ctrl-btn.primary {
-      background: var(--primary);
-      color: var(--dark);
-      border-color: var(--primary);
-      min-width: 150px;
-      justify-content: center;
-      font-size: 16px;
-    }
-    .ctrl-btn.primary:hover {
-      background: #ffe033;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 24px var(--primary-glow);
-    }
-    .ctrl-btn.primary:active { transform: translateY(0); }
-
-    .ctrl-btn.danger {
-      background: transparent;
-      color: #ff6b6b;
-      border-color: rgba(255,107,107,0.3);
-    }
-    .ctrl-btn.danger:hover {
-      background: rgba(255,107,107,0.1);
-      border-color: #ff6b6b;
-    }
-
-    /* Motivate modal */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(8px);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s;
-    }
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .modal {
-      background: var(--dark-2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 40px;
-      max-width: 440px;
-      width: 90%;
-      text-align: center;
-      transform: scale(0.95);
-      transition: transform 0.25s;
-    }
-    .modal-overlay.open .modal { transform: scale(1); }
-
-    .modal-emoji { font-size: 48px; margin-bottom: 16px; }
-    .modal-quote {
-      font-size: 18px;
-      line-height: 1.6;
-      color: #ddd;
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-    .modal-author {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 28px;
-    }
-    .modal-close {
-      background: var(--primary);
-      color: var(--dark);
-      border: none;
-      padding: 12px 32px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 14px;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer;
-    }
-
-    /* Completion flash */
-    @keyframes flash-border {
-      0%, 100% { box-shadow: none; }
-      50% { box-shadow: 0 0 0 4px var(--primary-glow), 0 0 40px var(--primary-glow); }
-    }
-
-    .timer-wrap.done .ring-progress {
-      stroke: #4ade80;
-      filter: drop-shadow(0 0 10px rgba(74,222,128,0.5));
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .page { grid-template-columns: 1fr; }
-      .sidebar { border-right: none; border-bottom: 1px solid var(--border); }
-      .main-area { padding: 32px 24px; }
-    }
+    .nav-blur { backdrop-filter: blur(20px); }
   </style>
 </head>
-<body>
+<body class="bg-[#111111] text-white min-h-screen overflow-x-hidden">
 
-<!-- NAVBAR -->
-<nav>
-  <div class="nav-avatar">D</div>
-  <div class="nav-links">
-    <a href="#">Dashboard</a>
-    <a href="#">Noto</a>
-    <a href="#">Task</a>
-    <a href="#" class="active">FocTime!</a>
-    <a href="#">Calendar</a>
+  <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+    <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD60A] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
+
+    <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD60A] text-[#111111]">FocTime!</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
+    </div>
+
+    <button onclick="openMotivate()" class="border border-[#FFD60A] text-[#FFD60A] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD60A] hover:text-[#111111] transition-all">
+      Motivate
+    </button>
+  </nav>
+
+  <!-- PAGE LAYOUT -->
+  <div class="grid grid-cols-[420px_1fr] min-h-[calc(100vh-77px)]">
+
+    <!-- SIDEBAR -->
+    <aside class="border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex flex-col gap-6">
+
+      <!-- Custom -->
+      <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
+        <div class="font-bebas text-[#FFD60A] text-xl tracking-wider mb-5">Custom</div>
+
+        <div class="flex items-center justify-between py-[10px] border-b border-white/[0.07]">
+          <span class="text-sm font-medium text-[#ccc]">Focus</span>
+          <div class="flex items-center gap-3">
+            <button onclick="adjustTime('focus',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">−</button>
+            <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-focus">25</span>
+            <button onclick="adjustTime('focus',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">+</button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between py-[10px] border-b border-white/[0.07]">
+          <span class="text-sm font-medium text-[#ccc]">Short break</span>
+          <div class="flex items-center gap-3">
+            <button onclick="adjustTime('short',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">−</button>
+            <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-short">5</span>
+            <button onclick="adjustTime('short',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">+</button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between py-[10px]">
+          <span class="text-sm font-medium text-[#ccc]">Long break</span>
+          <div class="flex items-center gap-3">
+            <button onclick="adjustTime('long',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">−</button>
+            <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-long">10</span>
+            <button onclick="adjustTime('long',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD60A] font-bold flex items-center justify-center hover:bg-[#FFD60A]/10 hover:border-[#FFD60A] transition-all active:scale-90">+</button>
+          </div>
+        </div>
+
+        <button onclick="applySettings()" class="w-full mt-[18px] bg-[#FFD60A] text-[#111111] rounded-xl py-3 text-sm font-bold hover:bg-[#ffe033] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(255,214,10,0.35)] active:translate-y-0 transition-all">
+          Apply Settings
+        </button>
+      </div>
+
+      <!-- FocStats -->
+      <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
+        <div class="font-bebas text-[#FFD60A] text-xl tracking-wider mb-4">FocStats</div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
+            <div class="font-bebas text-[32px] text-[#FFD60A] leading-none" id="stat-sessions">0</div>
+            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Sessions</div>
+          </div>
+          <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
+            <div class="font-bebas text-[32px] text-[#FFD60A] leading-none" id="stat-minutes">0</div>
+            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Min Focus</div>
+          </div>
+          <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
+            <div class="font-bebas text-[32px] text-[#FFD60A] leading-none" id="stat-streak">0</div>
+            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Streak</div>
+          </div>
+          <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
+            <div class="font-bebas text-[32px] text-[#FFD60A] leading-none" id="stat-today">0</div>
+            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Today</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Log -->
+      <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6 flex-1">
+        <div class="font-bebas text-[#FFD60A] text-xl tracking-wider mb-4">Session Log</div>
+        <div class="log-scroll flex flex-col gap-2 max-h-[180px] overflow-y-auto" id="log-list">
+          <div class="text-center text-[#555] text-sm py-5">No sessions yet.<br>Start focusing! 🎯</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- MAIN AREA -->
+    <main class="flex flex-col items-center pt-16 px-16 pb-6 relative overflow-hidden">
+
+      <div class="absolute w-[600px] h-[600px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(255,214,10,0.04)_0%,transparent_70%)]"></div>
+
+      <!-- Mode Tabs -->
+      <div class="flex bg-[#222222] rounded-full p-[4px] border border-white/[0.07] mb-7 z-10">
+        <button onclick="setMode('focus',this)" id="tab-focus" class="mode-tab px-7 py-[9px] rounded-full text-sm font-bold bg-[#FFD60A] text-[#111111] transition-all">Focus</button>
+        <button onclick="setMode('short',this)" id="tab-short" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Short Break</button>
+        <button onclick="setMode('long',this)" id="tab-long" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Long Break</button>
+      </div>
+
+      <!-- Ring + Timer -->
+      <div class="relative flex items-center justify-center" id="timer-wrap">
+        <div id="timer-pulse" class="pulse-anim hidden absolute w-[320px] h-[320px] rounded-full border border-[#FFD60A]/20"></div>
+
+        <svg class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" width="380" height="380" viewBox="0 0 380 380">
+          <g id="ticks"></g>
+          <circle class="ring-track" cx="190" cy="190" r="170"/>
+          <circle class="ring-progress" id="ring-progress" cx="190" cy="190" r="170" transform="rotate(-90 190 190)"/>
+        </svg>
+
+        <div class="w-[320px] h-[320px] flex flex-col items-center justify-center relative z-10">
+          <div class="font-bebas text-[96px] leading-none tracking-[4px]">
+            <span id="timer-mm">25</span><span class="text-[#555]">:</span><span id="timer-ss">00</span><span class="font-bebas text-[48px] text-[#888] align-bottom ml-0.5" id="timer-ms">.00</span>
+          </div>
+          <div class="text-[13px] font-semibold text-[#888] tracking-[3px] uppercase mt-2" id="timer-status">Time to Focus!</div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-4 mt-7 z-10">
+        <button onclick="resetTimer()" class="flex items-center gap-2 px-8 py-[14px] rounded-xl text-[15px] font-semibold text-[#888] border border-white/[0.07] hover:border-[#888] hover:text-white hover:bg-[#222222] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+          </svg>
+          Reset
+        </button>
+
+        <button onclick="toggleTimer()" id="start-btn" class="flex items-center justify-center gap-2 px-10 py-[14px] rounded-xl text-[16px] font-bold min-w-[150px] bg-[#FFD60A] text-[#111111] border border-[#FFD60A] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,214,10,0.35)] active:translate-y-0 transition-all">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" id="start-icon">
+            <polygon points="10,8 18,12 10,16"/>
+          </svg>
+          <span id="start-text">Start</span>
+        </button>
+
+        <button onclick="skipTimer()" class="flex items-center gap-2 px-8 py-[14px] rounded-xl text-[15px] font-semibold text-[#888] border border-white/[0.07] hover:border-[#888] hover:text-white hover:bg-[#222222] transition-all">
+          Skip
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/>
+          </svg>
+        </button>
+      </div>
+
+    </main>
   </div>
-  <button class="nav-motivate" onclick="openMotivate()">Motivate</button>
-</nav>
 
-<!-- PAGE -->
-<div class="page">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-
-    <!-- Custom Settings -->
-    <div class="card">
-      <div class="card-title">Custom</div>
-
-      <div class="setting-row">
-        <span class="setting-label">Focus</span>
-        <div class="setting-control">
-          <button class="setting-btn" onclick="adjustTime('focus', -1)">−</button>
-          <span class="setting-value" id="val-focus">25</span>
-          <button class="setting-btn" onclick="adjustTime('focus', 1)">+</button>
-        </div>
-      </div>
-
-      <div class="setting-row">
-        <span class="setting-label">Short break</span>
-        <div class="setting-control">
-          <button class="setting-btn" onclick="adjustTime('short', -1)">−</button>
-          <span class="setting-value" id="val-short">5</span>
-          <button class="setting-btn" onclick="adjustTime('short', 1)">+</button>
-        </div>
-      </div>
-
-      <div class="setting-row">
-        <span class="setting-label">Long break</span>
-        <div class="setting-control">
-          <button class="setting-btn" onclick="adjustTime('long', -1)">−</button>
-          <span class="setting-value" id="val-long">10</span>
-          <button class="setting-btn" onclick="adjustTime('long', 1)">+</button>
-        </div>
-      </div>
-
-      <button class="apply-btn" onclick="applySettings()">Apply Settings</button>
+  <!-- MOTIVATE MODAL -->
+  <div id="modal" onclick="closeMotivate(event)" class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
+    <div id="modal-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-10 max-w-[440px] w-[90%] text-center scale-95 transition-transform duration-200">
+      <div class="text-5xl mb-4" id="modal-emoji">💪</div>
+      <div class="text-lg leading-relaxed text-[#ddd] font-medium mb-2" id="modal-quote">"The secret of getting ahead is getting started."</div>
+      <div class="text-sm text-[#888] mb-7" id="modal-author">— Mark Twain</div>
+      <button onclick="closeMotivate()" class="bg-[#FFD60A] text-[#111111] px-8 py-3 rounded-xl font-bold text-sm">Let's Go! 🚀</button>
     </div>
-
-    <!-- FocStats -->
-    <div class="card">
-      <div class="card-title">FocStats</div>
-      <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-value" id="stat-sessions">0</div>
-          <div class="stat-label">Sessions</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="stat-minutes">0</div>
-          <div class="stat-label">Min Focus</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="stat-streak">0</div>
-          <div class="stat-label">Streak</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="stat-today">0</div>
-          <div class="stat-label">Today</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Session Log -->
-    <div class="card session-log">
-      <div class="card-title">Session Log</div>
-      <div class="log-list" id="log-list">
-        <div class="empty-log">No sessions yet.<br>Start focusing! 🎯</div>
-      </div>
-    </div>
-
-  </aside>
-
-  <!-- MAIN TIMER AREA -->
-  <main class="main-area">
-
-    <!-- Mode Tabs -->
-    <div class="mode-tabs">
-      <button class="mode-tab active" onclick="setMode('focus', this)">Focus</button>
-      <button class="mode-tab" onclick="setMode('short', this)">Short Break</button>
-      <button class="mode-tab" onclick="setMode('long', this)">Long Break</button>
-    </div>
-
-    <!-- Ring + Timer -->
-    <div class="timer-wrap" id="timer-wrap">
-      <div class="timer-pulse" id="timer-pulse" style="display:none"></div>
-
-      <!-- SVG Ring -->
-      <svg class="ring-svg" width="380" height="380" viewBox="0 0 380 380">
-        <!-- Tick marks -->
-        <g id="ticks"></g>
-        <!-- Track -->
-        <circle class="ring-track" cx="190" cy="190" r="170"/>
-        <!-- Progress -->
-        <circle class="ring-progress" id="ring-progress"
-          cx="190" cy="190" r="170"
-          stroke-dasharray="1068"
-          stroke-dashoffset="0"
-          transform="rotate(-90 190 190)"/>
-      </svg>
-
-      <div class="timer-display">
-        <div class="timer-digits">
-          <span id="timer-mm">25</span><span style="color:var(--text-muted)">:</span><span id="timer-ss">00</span><span class="ms" id="timer-ms">.00</span>
-        </div>
-        <div class="timer-status" id="timer-status">Time to Focus!</div>
-      </div>
-    </div>
-
-    <!-- Controls -->
-    <div class="controls">
-      <button class="ctrl-btn secondary" onclick="resetTimer()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-          <path d="M3 3v5h5"/>
-        </svg>
-        Reset
-      </button>
-
-      <button class="ctrl-btn primary" id="start-btn" onclick="toggleTimer()">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" id="start-icon">
-          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="0"/>
-          <polygon points="10,8 18,12 10,16"/>
-        </svg>
-        <span id="start-text">Start</span>
-      </button>
-
-      <button class="ctrl-btn secondary" onclick="skipTimer()">
-        Skip
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="5,4 15,12 5,20"/>
-          <line x1="19" y1="5" x2="19" y2="19"/>
-        </svg>
-      </button>
-    </div>
-
-  </main>
-</div>
-
-<!-- MOTIVATE MODAL -->
-<div class="modal-overlay" id="modal" onclick="closeMotivate(event)">
-  <div class="modal">
-    <div class="modal-emoji" id="modal-emoji">💪</div>
-    <div class="modal-quote" id="modal-quote">"The secret of getting ahead is getting started."</div>
-    <div class="modal-author" id="modal-author">— Mark Twain</div>
-    <button class="modal-close" onclick="closeMotivate()">Let's Go! 🚀</button>
   </div>
-</div>
 
 <script>
-  // ─── STATE ───
   const settings = { focus: 25, short: 5, long: 10 };
-  const MODES = { focus: 'focus', short: 'short', long: 'long' };
-
   let currentMode = 'focus';
-  let totalSeconds = settings.focus * 60;
+  let totalSeconds = 25 * 60;
   let remainingSeconds = totalSeconds;
   let remainingMs = 0;
   let running = false;
   let intervalId = null;
+  let startTime = null;
   let stats = { sessions: 0, minutes: 0, streak: 0, today: 0 };
   let logs = [];
-
-  // Ring circumference for r=170: 2π×170 ≈ 1068
   const CIRCUMFERENCE = 2 * Math.PI * 170;
 
-  // ─── INIT TICKS ───
-  (function drawTicks() {
+  // Draw ticks
+  (function() {
     const g = document.getElementById('ticks');
     for (let i = 0; i < 60; i++) {
       const angle = (i / 60) * 360 - 90;
-      const rad = (angle * Math.PI) / 180;
+      const rad = angle * Math.PI / 180;
       const isMajor = i % 5 === 0;
       const r1 = isMajor ? 155 : 160;
-      const r2 = 170;
-      const x1 = 190 + r1 * Math.cos(rad);
-      const y1 = 190 + r1 * Math.sin(rad);
-      const x2 = 190 + r2 * Math.cos(rad);
-      const y2 = 190 + r2 * Math.sin(rad);
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', x1); line.setAttribute('y1', y1);
-      line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+      const x1 = 190 + r1 * Math.cos(rad), y1 = 190 + r1 * Math.sin(rad);
+      const x2 = 190 + 170 * Math.cos(rad), y2 = 190 + 170 * Math.sin(rad);
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+      line.setAttribute('x2',x2); line.setAttribute('y2',y2);
       line.setAttribute('stroke', isMajor ? '#333' : '#222');
       line.setAttribute('stroke-width', isMajor ? '2' : '1');
       g.appendChild(line);
     }
   })();
 
-  // ─── SETTINGS ───
   function adjustTime(key, delta) {
-    const map = { focus: 'focus', short: 'short', long: 'long' };
     settings[key] = Math.max(1, Math.min(90, settings[key] + delta));
     document.getElementById('val-' + key).textContent = settings[key];
   }
@@ -778,125 +252,82 @@
   function applySettings() {
     if (running) return;
     totalSeconds = settings[currentMode] * 60;
-    remainingSeconds = totalSeconds;
-    remainingMs = 0;
-    updateDisplay();
-    updateRing();
+    remainingSeconds = totalSeconds; remainingMs = 0;
+    updateDisplay(); updateRing();
   }
 
-  // ─── MODE ───
   function setMode(mode, btn) {
     if (running) return;
     currentMode = mode;
-    document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-
-    const map = { focus: settings.focus, short: settings.short, long: settings.long };
-    totalSeconds = map[mode] * 60;
-    remainingSeconds = totalSeconds;
-    remainingMs = 0;
-
-    const statuses = { focus: 'Time to Focus!', short: 'Short Break 🌿', long: 'Long Break ☕' };
+    document.querySelectorAll('.mode-tab').forEach(t => {
+      t.classList.remove('bg-[#FFD60A]','text-[#111111]','font-bold');
+      t.classList.add('text-[#888]','font-semibold');
+    });
+    btn.classList.remove('text-[#888]','font-semibold');
+    btn.classList.add('bg-[#FFD60A]','text-[#111111]','font-bold');
+    totalSeconds = settings[mode] * 60;
+    remainingSeconds = totalSeconds; remainingMs = 0;
+    const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
     document.getElementById('timer-status').textContent = statuses[mode];
-
-    updateDisplay();
-    updateRing();
+    updateDisplay(); updateRing();
   }
 
-  // ─── TIMER ───
-  function toggleTimer() {
-    if (running) {
-      pauseTimer();
-    } else {
-      startTimer();
-    }
-  }
+  function toggleTimer() { running ? pauseTimer() : startTimer(); }
 
   function startTimer() {
     running = true;
     document.getElementById('start-text').textContent = 'Pause';
-    document.getElementById('start-icon').innerHTML = `
-      <rect x="6" y="4" width="4" height="16" rx="1"/>
-      <rect x="14" y="4" width="4" height="16" rx="1"/>`;
-    document.getElementById('timer-pulse').style.display = 'block';
-
-    const startTime = Date.now() - ((totalSeconds - remainingSeconds) * 1000 + (1000 - remainingMs * 10));
-
+    document.getElementById('start-icon').innerHTML = `<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>`;
+    document.getElementById('timer-pulse').classList.remove('hidden');
+    const leftMs = remainingSeconds * 1000 + remainingMs * 10;
+    startTime = Date.now() - (totalSeconds * 1000 - leftMs);
     intervalId = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const totalMs = totalSeconds * 1000;
-      const leftMs = Math.max(0, totalMs - elapsed);
-
-      remainingSeconds = Math.floor(leftMs / 1000);
-      remainingMs = Math.floor((leftMs % 1000) / 10);
-
-      updateDisplay();
-      updateRing();
-
-      if (leftMs <= 0) {
-        completeTimer();
-      }
+      const left = Math.max(0, totalSeconds * 1000 - (Date.now() - startTime));
+      remainingSeconds = Math.floor(left / 1000);
+      remainingMs = Math.floor((left % 1000) / 10);
+      updateDisplay(); updateRing();
+      if (left <= 0) completeTimer();
     }, 50);
   }
 
   function pauseTimer() {
-    running = false;
-    clearInterval(intervalId);
+    running = false; clearInterval(intervalId);
     document.getElementById('start-text').textContent = 'Resume';
     document.getElementById('start-icon').innerHTML = `<polygon points="10,8 18,12 10,16"/>`;
-    document.getElementById('timer-pulse').style.display = 'none';
+    document.getElementById('timer-pulse').classList.add('hidden');
   }
 
   function resetTimer() {
-    running = false;
-    clearInterval(intervalId);
+    running = false; clearInterval(intervalId);
     totalSeconds = settings[currentMode] * 60;
-    remainingSeconds = totalSeconds;
-    remainingMs = 0;
+    remainingSeconds = totalSeconds; remainingMs = 0;
     document.getElementById('start-text').textContent = 'Start';
     document.getElementById('start-icon').innerHTML = `<polygon points="10,8 18,12 10,16"/>`;
-    document.getElementById('timer-pulse').style.display = 'none';
-    document.getElementById('timer-wrap').classList.remove('done');
-    document.getElementById('timer-status').textContent = currentMode === 'focus' ? 'Time to Focus!' :
-      currentMode === 'short' ? 'Short Break 🌿' : 'Long Break ☕';
-    updateDisplay();
-    updateRing();
+    document.getElementById('timer-pulse').classList.add('hidden');
+    document.getElementById('ring-progress').classList.remove('done');
+    const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
+    document.getElementById('timer-status').textContent = statuses[currentMode];
+    updateDisplay(); updateRing();
   }
 
-  function skipTimer() {
-    resetTimer();
-    // Auto-advance mode
-    const order = ['focus', 'short', 'focus', 'long'];
-    // just reset for now
-  }
+  function skipTimer() { resetTimer(); }
 
   function completeTimer() {
-    running = false;
-    clearInterval(intervalId);
-    document.getElementById('timer-pulse').style.display = 'none';
+    running = false; clearInterval(intervalId);
+    document.getElementById('timer-pulse').classList.add('hidden');
     document.getElementById('start-text').textContent = 'Start';
     document.getElementById('start-icon').innerHTML = `<polygon points="10,8 18,12 10,16"/>`;
-    document.getElementById('timer-wrap').classList.add('done');
+    document.getElementById('ring-progress').classList.add('done');
     document.getElementById('timer-status').textContent = currentMode === 'focus' ? '✅ Session Complete!' : '✅ Break Done!';
-
-    // Update stats
     if (currentMode === 'focus') {
-      stats.sessions++;
-      stats.minutes += settings.focus;
-      stats.streak++;
-      stats.today++;
-      addLog('focus', settings.focus + 'min focus');
+      stats.sessions++; stats.minutes += settings.focus; stats.streak++; stats.today++;
+      addLog('focus', settings.focus + ' min focus');
     } else {
-      addLog('break', (currentMode === 'short' ? settings.short : settings.long) + 'min break');
+      addLog('break', (currentMode === 'short' ? settings.short : settings.long) + ' min break');
     }
-
     updateStats();
-
-    // Play sound (optional bell)
     try {
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+      const ctx = new AudioContext(), osc = ctx.createOscillator(), gain = ctx.createGain();
       osc.connect(gain); gain.connect(ctx.destination);
       osc.frequency.setValueAtTime(880, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.5);
@@ -906,36 +337,25 @@
     } catch(e) {}
   }
 
-  // ─── DISPLAY ───
   function updateDisplay() {
-    const mm = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
-    const ss = String(remainingSeconds % 60).padStart(2, '0');
-    const ms = String(remainingMs).padStart(2, '0');
-    document.getElementById('timer-mm').textContent = mm;
-    document.getElementById('timer-ss').textContent = ss;
-    document.getElementById('timer-ms').textContent = '.' + ms;
+    document.getElementById('timer-mm').textContent = String(Math.floor(remainingSeconds/60)).padStart(2,'0');
+    document.getElementById('timer-ss').textContent = String(remainingSeconds%60).padStart(2,'0');
+    document.getElementById('timer-ms').textContent = '.' + String(remainingMs).padStart(2,'0');
   }
 
   function updateRing() {
-    const totalMs = totalSeconds * 1000;
-    const leftMs = remainingSeconds * 1000 + remainingMs * 10;
-    const progress = leftMs / totalMs;
-    const offset = CIRCUMFERENCE * (1 - progress);
-    document.getElementById('ring-progress').style.strokeDashoffset = offset;
-    document.getElementById('ring-progress').style.strokeDasharray = CIRCUMFERENCE;
+    const progress = (remainingSeconds * 1000 + remainingMs * 10) / (totalSeconds * 1000);
+    document.getElementById('ring-progress').style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
   }
 
-  // ─── STATS ───
   function updateStats() {
-    document.getElementById('stat-sessions').textContent = stats.sessions;
-    document.getElementById('stat-minutes').textContent = stats.minutes;
-    document.getElementById('stat-streak').textContent = stats.streak;
-    document.getElementById('stat-today').textContent = stats.today;
+    ['sessions','minutes','streak','today'].forEach(k =>
+      document.getElementById('stat-' + k).textContent = stats[k]);
   }
 
   function addLog(type, text) {
     const now = new Date();
-    const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+    const time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
     logs.unshift({ type, text, time });
     if (logs.length > 20) logs.pop();
     renderLogs();
@@ -943,27 +363,25 @@
 
   function renderLogs() {
     const el = document.getElementById('log-list');
-    if (logs.length === 0) {
-      el.innerHTML = '<div class="empty-log">No sessions yet.<br>Start focusing! 🎯</div>';
+    if (!logs.length) {
+      el.innerHTML = '<div class="text-center text-[#555] text-sm py-5">No sessions yet.<br>Start focusing! 🎯</div>';
       return;
     }
     el.innerHTML = logs.map(l => `
-      <div class="log-item">
-        <div class="log-dot ${l.type === 'focus' ? 'focus' : 'break'}"></div>
-        <span class="log-text">${l.text}</span>
-        <span class="log-duration">${l.time}</span>
-      </div>
-    `).join('');
+      <div class="log-slide flex items-center gap-2.5 px-3 py-2.5 bg-[#2a2a2a] rounded-xl border border-white/[0.07] text-[13px]">
+        <div class="w-2 h-2 rounded-full flex-shrink-0 ${l.type==='focus' ? 'bg-[#FFD60A]' : 'bg-green-400'}"></div>
+        <span class="text-[#bbb] flex-1">${l.text}</span>
+        <span class="font-bebas text-[#555] text-sm">${l.time}</span>
+      </div>`).join('');
   }
 
-  // ─── MOTIVATE ───
   const quotes = [
-    { emoji: '💪', quote: '"The secret of getting ahead is getting started."', author: '— Mark Twain' },
-    { emoji: '🔥', quote: '"Focus on being productive instead of busy."', author: '— Tim Ferriss' },
-    { emoji: '🎯', quote: '"Do the hard jobs first. The easy jobs will take care of themselves."', author: '— Dale Carnegie' },
-    { emoji: '⚡', quote: '"You don\'t have to be great to start, but you have to start to be great."', author: '— Zig Ziglar' },
-    { emoji: '🌟', quote: '"The way to get started is to quit talking and begin doing."', author: '— Walt Disney' },
-    { emoji: '🧠', quote: '"It always seems impossible until it is done."', author: '— Nelson Mandela' },
+    { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
+    { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
+    { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
+    { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
+    { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
+    { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
   ];
 
   function openMotivate() {
@@ -971,18 +389,24 @@
     document.getElementById('modal-emoji').textContent = q.emoji;
     document.getElementById('modal-quote').textContent = q.quote;
     document.getElementById('modal-author').textContent = q.author;
-    document.getElementById('modal').classList.add('open');
+    const m = document.getElementById('modal');
+    m.classList.remove('opacity-0','pointer-events-none');
+    m.classList.add('opacity-100');
+    document.getElementById('modal-box').classList.remove('scale-95');
+    document.getElementById('modal-box').classList.add('scale-100');
   }
 
   function closeMotivate(e) {
     if (!e || e.target === document.getElementById('modal')) {
-      document.getElementById('modal').classList.remove('open');
+      const m = document.getElementById('modal');
+      m.classList.add('opacity-0','pointer-events-none');
+      m.classList.remove('opacity-100');
+      document.getElementById('modal-box').classList.add('scale-95');
+      document.getElementById('modal-box').classList.remove('scale-100');
     }
   }
 
-  // Init
-  updateDisplay();
-  updateRing();
+  updateDisplay(); updateRing();
 </script>
 </body>
 </html>
