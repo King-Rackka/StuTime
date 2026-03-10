@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+     body { 
+        font-family: 'Plus Jakarta Sans', sans-serif; 
+    }
+    .font-bebas { 
+        font-family: 'Bebas Neue', sans-serif; 
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.4; }
+      100% { transform: scale(1.08); opacity: 0; }
+    }
+    .pulse-anim { animation: pulse-ring 2s ease-out infinite; }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    /* Memastikan list (bullet/angka) tetap rapi di dalam editor */
+        .note-body ul { list-style-type: disc; margin-left: 1.5rem; margin-top: 0.5rem; }
+        .note-body ol { list-style-type: decimal; margin-left: 1.5rem; margin-top: 0.5rem; }
+        
+        /* Class khusus untuk state tombol aktif */
+        .active-btn {
+            background-color: #FFD15C !important;
+            color: #1E1E20 !important;
+        }
+  </style>
+</head>
+<body class="bg-[#1E1E20] text-[#F0F0F0] h-screen flex flex-col overflow-x-hidden">
+    <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+    <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
+
+    <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
+      <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">FocTime!</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
+    </div>
+
+    <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD60A] hover:text-[#111111] transition-all">
+      Motivate
+    </button>
+  </nav>
+                <div class="flex justify-center items-center  py-6">
+                    <button class="bg-[#FFD04E] text-[#1E1E20] font-semibold py-3 w-[730px] rounded-md text-lg border-none cursor-pointer">
+                        Notes
+                    </button>
+                    
+                    <button class="bg-transparent text-[#FFD04E] font-normal py-3 w-[730px] rounded-md text-lg border-none cursor-pointer hover:bg-[#FFD15C]/10 transition duration-200">
+                        Journal Searcher
+                    </button>
+                </div>
+            </div>
+
+
+    <main class="px-10 py-8 flex-grow flex flex-col gap-5 overflow-hidden">
+        
+
+        <div class="flex gap-8 flex-grow overflow-hidden">
+            <div class="flex-1 border border-[#FFD15C] rounded-xl bg-transparent"></div>
+
+            <div class="flex-[2.5] bg-[#323236] rounded-xl p-8 flex flex-col gap-5 overflow-hidden">
+                
+                <div class="flex gap-4 pb-5 border-b border-gray-600 flex-wrap">
+                    <button onclick="formatText('undo')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-rotate-left"></i></button>
+                    <button onclick="formatText('redo')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-rotate-right"></i></button>
+                    <button onclick="customAction('columns')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-table-columns"></i></button>
+                    
+                    <button data-command="bold" onclick="formatText('bold')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-bold"></i></button>
+                    <button data-command="italic" onclick="formatText('italic')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-italic"></i></button>
+                    <button data-command="underline" onclick="formatText('underline')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-underline"></i></button>
+                    <button data-command="strikeThrough" onclick="formatText('strikeThrough')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-strikethrough"></i></button>
+                    <div class="relative inline-block">
+                        <button id="align-dropdown-btn" onclick="toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15">
+                            <i id="current-align-icon" class="fa-solid fa-align-left"></i>
+                            <i class="fa-solid fa-caret-down text-[10px] ml-1"></i> 
+                        </button>
+
+                        <div id="align-menu" class="hidden absolute top-full mt-2 left-0 z-10 bg-[#2A2A2D] border border-[#FFD15C] rounded-md shadow-lg flex flex-col items-center py-2 gap-2 w-[45px]">
+                            <button data-command="justifyLeft" onclick="formatText('justifyLeft'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15">
+                                <i class="fa-solid fa-align-left"></i>
+                            </button>
+                            <button data-command="justifyCenter" onclick="formatText('justifyCenter'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15">
+                                <i class="fa-solid fa-align-center"></i>
+                            </button>
+                            <button data-command="justifyRight" onclick="formatText('justifyRight'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15">
+                                <i class="fa-solid fa-align-right"></i>
+                            </button>
+                            <button data-command="justifyFull" onclick="formatText('justifyFull'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15">
+                                <i class="fa-solid fa-align-justify"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button data-command="insertOrderedList" onclick="formatText('insertOrderedList')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-list-ol"></i></button>
+                    <button onclick="formatText('outdent')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-outdent"></i></button>
+                    <button data-command="insertUnorderedList" onclick="formatText('insertUnorderedList')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-list-ul"></i></button>
+                    <button onclick="toggleFavorite()" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-regular fa-star" id="fav-icon"></i></button>
+                </div>
+
+                <input type="text" class="note-title bg-transparent border-none text-white text-2xl font-bold outline-none w-full" value="Pergi ke pasar membeli ikan">
+
+                <div class="note-body flex-grow text-[#F0F0F0] leading-relaxed outline-none text-[0.95rem] overflow-y-auto" contenteditable="true">
+                    Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep
+                    <ul>
+                        <li>Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi</li>
+                        <li>ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke</li>
+                    </ul>
+                </div>
+
+                <div class="flex gap-4 mt-auto pt-2 shrink-0">
+                    <button class="flex-1 py-3 rounded-md font-semibold cursor-pointer text-base flex justify-center items-center gap-2 bg-[#FFD15C] border-none text-black hover:bg-[#e6bc53] transition duration-200">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan
+                    </button>
+                    <button class="flex-1 py-3 rounded-md font-semibold cursor-pointer text-base flex justify-center items-center gap-2 bg-transparent border border-[#FFD15C] text-[#FFD15C] hover:bg-[#FFD15C]/10 transition duration-200">
+                        <i class="fa-solid fa-trash"></i> Hapus
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+        
+    <script>
+        function formatText(command) {
+            // 1. Panggil kursor masuk ke area teks DULUAN
+            document.querySelector('.note-body').focus(); 
+            
+            // 2. Baru eksekusi perintah format teksnya (Rata Tengah, Bold, dll)
+            document.execCommand(command, false, null);
+            
+            // 3. Cek perubahan ikon
+            checkActiveButtons();
+        }
+
+        // Fungsi untuk memunculkan/menyembunyikan menu dropdown
+        function toggleDropdown(menuId) {
+            const menu = document.getElementById(menuId);
+            menu.classList.toggle('hidden');
+        }
+
+        // Menutup dropdown secara otomatis jika user klik area kosong di luar menu
+        window.addEventListener('click', function(e) {
+            const alignBtn = document.getElementById('align-dropdown-btn');
+            const alignMenu = document.getElementById('align-menu');
+            
+            // Cek apakah yang diklik BUKAN tombol utama atau isi menu
+            if (alignBtn && alignMenu) {
+                if (!alignBtn.contains(e.target) && !alignMenu.contains(e.target)) {
+                    alignMenu.classList.add('hidden'); // Sembunyikan menu
+                }
+            }
+        });
+       function checkActiveButtons() {
+        // 1. Cek tombol-tombol toggle (Bold, Italic, dll)
+        const buttons = document.querySelectorAll('button[data-command]');
+        
+        buttons.forEach(button => {
+            const command = button.getAttribute('data-command');
+            if (document.queryCommandState(command)) {
+                button.classList.add('active-btn');
+            } else {
+                button.classList.remove('active-btn');
+            }
+        });
+
+        // 2. BARU: Cek status perataan teks (Alignment) untuk mengubah ikon utama
+        const alignIcon = document.getElementById('current-align-icon');
+        
+        if (alignIcon) {
+            if (document.queryCommandState('justifyCenter')) {
+                alignIcon.className = 'fa-solid fa-align-center';
+            } else if (document.queryCommandState('justifyRight')) {
+                alignIcon.className = 'fa-solid fa-align-right';
+            } else if (document.queryCommandState('justifyFull')) {
+                alignIcon.className = 'fa-solid fa-align-justify';
+            } else {
+                // Default kembali ke rata kiri
+                alignIcon.className = 'fa-solid fa-align-left';
+                }
+            }
+        }
+
+
+        const editor = document.querySelector('.note-body');
+        editor.addEventListener('keyup', checkActiveButtons);
+        editor.addEventListener('mouseup', checkActiveButtons);
+
+        function toggleFavorite() {
+            const icon = document.getElementById('fav-icon');
+            if(icon.classList.contains('fa-regular')) {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
+            } else {
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular');
+            }
+        }
+
+        function customAction(action) {
+            if(action === 'columns') {
+                alert('Fitur kolom belum diaktifkan.');
+            }
+        }
+        // Mencegah tombol toolbar dan dropdown merebut fokus dari area teks
+            document.addEventListener('mousedown', function(e) {
+                // Jika yang diklik adalah tombol yang ada di dalam toolbar atau dropdown
+                const clickedButton = e.target.closest('button');
+                
+                if (clickedButton && (clickedButton.hasAttribute('data-command') || clickedButton.id === 'align-dropdown-btn')) {
+                    e.preventDefault(); // Cegah browser memindahkan kursor dari teks ke tombol
+                }
+            });
+        // Jalankan fungsi ini otomatis saat halaman pertama kali dibuka
+            window.addEventListener('DOMContentLoaded', function() {
+                const editor = document.querySelector('.note-body');
+                
+                // 1. Kursor otomatis fokus ke area note supaya siap diketik
+                editor.focus(); 
+                
+                // 2. Langsung cek tombol mana yang harus nyala
+                checkActiveButtons(); 
+                
+                // 3. (Opsional/Pencegahan) Karena beberapa browser kadang tidak membaca 'rata kiri' 
+                // sebagai format aktif di awal, kita paksa tombol rata kiri nyala secara default
+                if (!document.queryCommandState('justifyCenter') && 
+                    !document.queryCommandState('justifyRight') && 
+                    !document.queryCommandState('justifyFull')) {
+                    
+                    const leftAlignBtn = document.querySelector('button[data-command="justifyLeft"]');
+                    if (leftAlignBtn) {
+                        leftAlignBtn.classList.add('active-btn');
+                    }
+                }
+            });
+    </script>
+
+</body>
+</html>
