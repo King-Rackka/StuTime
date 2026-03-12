@@ -1,11 +1,502 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendar</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STUTime — Calendar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
+    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+    .nav-blur { backdrop-filter: blur(20px); }
+    .cal-scroll::-webkit-scrollbar { width: 4px; }
+    .cal-scroll::-webkit-scrollbar-track { background: transparent; }
+    .cal-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.2s ease; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .slide-in { animation: slideIn 0.2s ease; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 200; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    input, textarea { outline: none; }
+    input:focus, textarea:focus { border-color: #FFD04E !important; }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .today-num { position: relative; }
+    .today-num::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: #FFD04E;
+      animation: pulse-ring 2s ease-out infinite;
+      z-index: -1;
+    }
+  </style>
 </head>
-<body>
-    
+<body class="bg-[#111111] text-white h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <nav class="nav-blur flex-shrink-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+    <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
+    <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
+      <a href="dashboard.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
+      <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
+      <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
+      <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">FocTime!</a>
+      <a href="calender.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Calendar</a>
+    </div>
+    <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
+  </nav>
+
+  <!-- Layout -->
+  <div class="flex-1 grid grid-cols-[320px_1fr] overflow-hidden">
+
+    <!-- Sidebar: upcoming schedule -->
+    <aside class="border-r border-white/[0.07] bg-[#1a1a1a] flex flex-col overflow-hidden">
+      <div class="p-6 border-b border-white/[0.07] flex-shrink-0">
+        <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider">Schedule</div>
+        <div class="w-16 h-0.5 bg-[#FFD04E]/30 mt-1"></div>
+      </div>
+      <div class="cal-scroll overflow-y-auto flex-1 p-4 flex flex-col gap-2" id="schedule-list"></div>
+    </aside>
+
+    <!-- Calendar -->
+    <main class="flex flex-col overflow-hidden bg-[#111111]">
+      <!-- Month nav -->
+      <div class="flex items-center justify-between px-8 pt-5 pb-3 flex-shrink-0">
+        <button onclick="prevMonth()" class="w-9 h-9 rounded-xl border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15,18 9,12 15,6"/></svg>
+        </button>
+        <div class="text-center">
+          <div class="font-bebas text-3xl tracking-wider" id="month-label">Maret</div>
+          <div class="text-xs text-[#555]" id="year-label">2026</div>
+        </div>
+        <button onclick="nextMonth()" class="w-9 h-9 rounded-xl border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+        </button>
+      </div>
+
+      <!-- Day headers -->
+      <div class="grid grid-cols-7 px-6 pb-2 flex-shrink-0" id="day-headers"></div>
+
+      <!-- Grid -->
+      <div class="flex-1 overflow-y-auto cal-scroll px-6 pb-4" id="cal-grid"></div>
+    </main>
+  </div>
+
+  <!-- Day detail modal -->
+  <div id="day-modal" class="modal-overlay" onclick="if(event.target===this)closeDayModal()">
+    <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl w-full max-w-lg mx-4 overflow-hidden fade-in">
+      <div class="flex items-center justify-between px-7 py-5 border-b border-white/[0.07]">
+        <button onclick="prevDay()" class="w-8 h-8 rounded-lg border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15,18 9,12 15,6"/></svg>
+        </button>
+        <div class="text-center">
+          <div class="font-bebas text-xl tracking-wider" id="modal-day-label"></div>
+          <div id="holiday-label" class="text-xs text-red-400 mt-0.5 hidden"></div>
+        </div>
+        <button onclick="nextDay()" class="w-8 h-8 rounded-lg border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+        </button>
+      </div>
+      <div class="border-t border-dashed border-white/[0.05]"></div>
+      <div class="cal-scroll overflow-y-auto max-h-72 px-6 py-4" id="modal-task-list"></div>
+      <div class="px-6 pb-6" id="modal-add-btn-wrap">
+        <button onclick="openAddFromCalendar()" class="w-full py-3.5 rounded-xl border border-[#FFD04E] text-[#FFD04E] text-sm font-bold hover:bg-[#FFD04E]/10 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(255,208,78,0.2)] active:translate-y-0 transition-all">
+          + Add new schedule
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add task modal -->
+  <div id="add-modal" class="modal-overlay" onclick="if(event.target===this)closeAddModal()" style="z-index:300">
+    <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-8 w-full max-w-lg mx-4">
+      <div class="flex items-center justify-between mb-6">
+        <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider">Tambah Jadwal</div>
+        <button onclick="closeAddModal()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#222] text-[#888] hover:text-white transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="flex flex-col gap-4">
+        <div>
+          <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Judul Task <span class="text-red-400">*</span></label>
+          <input id="add-title" type="text" placeholder="Contoh: Belajar Tailwind CSS"
+            class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-[#444] transition-colors"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Deskripsi</label>
+          <textarea id="add-desc" rows="3" placeholder="Deskripsi singkat..."
+            class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white placeholder-[#444] transition-colors resize-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Tanggal <span class="text-red-400">*</span></label>
+            <input id="add-date" type="date" class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white transition-colors"/>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-[#555] uppercase tracking-wider block mb-1.5">Waktu <span class="text-red-400">*</span></label>
+            <input id="add-time" type="time" class="w-full bg-[#222] border border-white/[0.07] rounded-xl px-4 py-3 text-sm text-white transition-colors"/>
+          </div>
+        </div>
+        <div class="flex gap-3 mt-2">
+          <button onclick="closeAddModal()" class="flex-1 py-3 rounded-xl border border-white/[0.07] text-[#888] text-sm font-semibold hover:border-white/20 hover:text-white transition-all">Batal</button>
+          <button onclick="submitAddTask()" class="flex-1 py-3 rounded-xl bg-[#FFD04E] text-[#111111] text-sm font-bold hover:bg-[#ffe066] transition-all">Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Motivate Modal -->
+  <div id="motivate-modal" onclick="closeMotivate(event)" class="fixed inset-0 bg-black/75 flex items-center justify-center z-[400] opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
+    <div id="motivate-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-10 max-w-[440px] w-[90%] text-center scale-95 transition-transform duration-200">
+      <div class="text-5xl mb-4" id="motivate-emoji">💪</div>
+      <div class="text-lg leading-relaxed text-[#ddd] font-medium mb-2" id="motivate-quote"></div>
+      <div class="text-sm text-[#888] mb-7" id="motivate-author"></div>
+      <button onclick="closeMotivate()" class="bg-[#FFD04E] text-[#111111] px-8 py-3 rounded-xl font-bold text-sm">Let's Go! 🚀</button>
+    </div>
+  </div>
+
+  <script>
+    const holidays = {
+      '2026-01-01':'Tahun Baru Masehi','2026-01-27':'Isra Miraj','2026-01-29':'Tahun Baru Imlek',
+      '2026-03-20':'Hari Raya Nyepi','2026-03-22':'Idul Fitri 1447 H','2026-03-23':'Idul Fitri 1447 H (Hari Kedua)',
+      '2026-04-03':'Wafat Yesus Kristus','2026-04-06':'Paskah','2026-05-01':'Hari Buruh Internasional',
+      '2026-05-14':'Kenaikan Yesus Kristus','2026-05-24':'Hari Raya Waisak',
+      '2026-05-29':'Idul Adha 1447 H','2026-06-06':'Tahun Baru Islam 1448 H',
+      '2026-08-17':'Hari Kemerdekaan RI','2026-09-14':'Maulid Nabi Muhammad SAW',
+      '2026-12-25':'Hari Raya Natal','2026-12-26':'Cuti Bersama Natal',
+      '2027-01-01':'Tahun Baru Masehi','2027-01-16':'Isra Miraj','2027-01-17':'Tahun Baru Imlek',
+      '2027-03-11':'Idul Fitri 1448 H','2027-03-12':'Idul Fitri 1448 H (Hari Kedua)',
+      '2027-03-26':'Hari Raya Nyepi','2027-04-02':'Wafat Yesus Kristus','2027-05-01':'Hari Buruh Internasional',
+      '2027-05-18':'Idul Adha 1448 H','2027-05-26':'Tahun Baru Islam 1449 H',
+      '2027-06-03':'Kenaikan Yesus Kristus','2027-06-13':'Hari Raya Waisak',
+      '2027-08-17':'Hari Kemerdekaan RI','2027-09-03':'Maulid Nabi Muhammad SAW','2027-12-25':'Hari Raya Natal',
+      '2028-01-01':'Tahun Baru Masehi','2028-01-06':'Tahun Baru Imlek','2028-01-25':'Isra Miraj',
+      '2028-02-28':'Idul Fitri 1449 H','2028-02-29':'Idul Fitri 1449 H (Hari Kedua)',
+      '2028-03-14':'Hari Raya Nyepi','2028-04-14':'Wafat Yesus Kristus','2028-05-01':'Hari Buruh Internasional',
+      '2028-05-06':'Idul Adha 1449 H','2028-05-14':'Tahun Baru Islam 1450 H',
+      '2028-05-22':'Kenaikan Yesus Kristus','2028-06-01':'Hari Raya Waisak',
+      '2028-08-17':'Hari Kemerdekaan RI','2028-08-22':'Maulid Nabi Muhammad SAW','2028-12-25':'Hari Raya Natal',
+      '2029-01-01':'Tahun Baru Masehi','2029-01-14':'Isra Miraj','2029-01-26':'Tahun Baru Imlek',
+      '2029-02-14':'Idul Fitri 1450 H','2029-02-15':'Idul Fitri 1450 H (Hari Kedua)',
+      '2029-03-05':'Hari Raya Nyepi','2029-03-30':'Wafat Yesus Kristus',
+      '2029-04-26':'Idul Adha 1450 H','2029-05-01':'Hari Buruh Internasional',
+      '2029-05-03':'Tahun Baru Islam 1451 H','2029-05-10':'Kenaikan Yesus Kristus',
+      '2029-05-21':'Hari Raya Waisak','2029-08-12':'Maulid Nabi Muhammad SAW',
+      '2029-08-17':'Hari Kemerdekaan RI','2029-12-25':'Hari Raya Natal',
+      '2030-01-01':'Tahun Baru Masehi','2030-01-03':'Isra Miraj',
+      '2030-01-17':'Idul Fitri 1451 H','2030-01-18':'Idul Fitri 1451 H (Hari Kedua)',
+      '2030-02-03':'Tahun Baru Imlek','2030-02-22':'Hari Raya Nyepi',
+      '2030-04-16':'Idul Adha 1451 H','2030-04-19':'Wafat Yesus Kristus',
+      '2030-04-23':'Tahun Baru Islam 1452 H','2030-05-01':'Hari Buruh Internasional',
+      '2030-05-09':'Kenaikan Yesus Kristus','2030-05-10':'Hari Raya Waisak',
+      '2030-08-01':'Maulid Nabi Muhammad SAW','2030-08-17':'Hari Kemerdekaan RI','2030-12-25':'Hari Raya Natal',
+    };
+
+    const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const DAYS_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+    const DAYS_SHORT = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+
+    const _now = new Date();
+    let viewYear = _now.getFullYear();
+    let viewMonth = _now.getMonth();
+    let selectedDate = null;
+
+    function todayStr() {
+      const n = new Date();
+      return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0') + '-' + String(n.getDate()).padStart(2,'0');
+    }
+    function isPast(dateStr) { return dateStr < todayStr(); }
+    function shiftDate(dateStr, delta) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const dt = new Date(y, m-1, d+delta);
+      return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
+    }
+    function formatDate(d) { return d.toISOString().split('T')[0]; }
+
+    function loadTasks() {
+      const s = localStorage.getItem('stutime_tasks');
+      return s ? JSON.parse(s) : [];
+    }
+    function saveTasks(tasks) {
+      localStorage.setItem('stutime_tasks', JSON.stringify(tasks));
+    }
+
+    function formatDateLabel(dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      const dt = new Date(y, m-1, d);
+      const ts = todayStr();
+      const [ty, tm, td] = ts.split('-').map(Number);
+      const todayDt = new Date(ty, tm-1, td);
+      const diff = Math.round((dt - todayDt) / 86400000);
+      const label = diff === 0 ? 'Hari ini' : diff === 1 ? 'Besok' : DAYS_ID[dt.getDay()];
+      return label + ', ' + dt.getDate() + ' ' + MONTHS[dt.getMonth()] + ' ' + dt.getFullYear();
+    }
+
+    // ─── RENDER CALENDAR ───
+    function renderCalendar() {
+      document.getElementById('month-label').textContent = MONTHS[viewMonth];
+      document.getElementById('year-label').textContent = viewYear;
+
+      // Day headers
+      const headersEl = document.getElementById('day-headers');
+      headersEl.innerHTML = DAYS_SHORT.map((d, i) =>
+        `<div class="text-center text-xs font-bold uppercase tracking-wider py-1 ${i===0||i===6 ? 'text-[#FFD04E]/60' : 'text-[#444]'}">${d}</div>`
+      ).join('');
+
+      const tasks = loadTasks();
+      const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+      const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+      const daysInPrev = new Date(viewYear, viewMonth, 0).getDate();
+
+      let cells = [];
+      for (let i = firstDay - 1; i >= 0; i--) cells.push({ day: daysInPrev - i, current: false });
+      for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, current: true });
+      while (cells.length < 42) cells.push({ day: cells.length - daysInMonth - firstDay + 1, current: false });
+
+      const grid = document.getElementById('cal-grid');
+      grid.innerHTML = '';
+
+      for (let row = 0; row < 6; row++) {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'grid grid-cols-7 gap-1 mb-1';
+
+        for (let col = 0; col < 7; col++) {
+          const cell = cells[row * 7 + col];
+          const dateStr = cell.current
+            ? `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(cell.day).padStart(2,'0')}`
+            : null;
+
+          const isToday = dateStr === todayStr();
+          const isHoliday = dateStr && !!holidays[dateStr];
+          const cellTasks = dateStr ? tasks.filter(t => t.date === dateStr) : [];
+          const past = dateStr && isPast(dateStr);
+          const isWeekend = col === 0 || col === 6;
+
+          const el = document.createElement('div');
+          el.className = [
+            'relative min-h-[68px] rounded-xl p-1.5 transition-all select-none',
+            cell.current ? 'cursor-pointer' : 'opacity-20 pointer-events-none',
+            isToday ? 'bg-[#FFD04E]/10 border border-[#FFD04E]/40' : 'border border-transparent',
+            cell.current && !isToday ? 'hover:bg-[#1c1c1c] hover:border-white/[0.06]' : '',
+          ].join(' ');
+
+          if (cell.current) el.onclick = () => openDayModal(dateStr);
+
+          // Nomor tanggal
+          const numEl = document.createElement('div');
+          numEl.className = [
+            'text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full mb-1',
+            isToday ? 'bg-[#FFD04E] text-[#111111] today-num' : '',
+            !isToday && past ? 'text-[#3a3a3a]' : '',
+            !isToday && !past && isWeekend ? 'text-[#FFD04E]/70' : '',
+            !isToday && !past && !isWeekend ? 'text-[#aaa]' : '',
+          ].join(' ');
+          numEl.textContent = cell.day;
+          el.appendChild(numEl);
+
+          // Holiday dot
+          if (isHoliday) {
+            const dot = document.createElement('div');
+            dot.className = 'absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-red-400/80';
+            dot.title = holidays[dateStr];
+            el.appendChild(dot);
+          }
+
+          // Task chips
+          if (cellTasks.length > 0) {
+            const wrap = document.createElement('div');
+            wrap.className = 'flex flex-col gap-0.5';
+            cellTasks.slice(0, 2).forEach(t => {
+              const chip = document.createElement('div');
+              chip.className = `text-[9px] font-semibold px-1.5 py-0.5 rounded truncate leading-tight
+                ${past ? 'bg-white/[0.04] text-[#444]' : 'bg-[#FFD04E]/20 text-[#FFD04E]'}`;
+              chip.textContent = t.title;
+              wrap.appendChild(chip);
+            });
+            if (cellTasks.length > 2) {
+              const more = document.createElement('div');
+              more.className = 'text-[9px] text-[#555] px-1.5';
+              more.textContent = `+${cellTasks.length - 2} lagi`;
+              wrap.appendChild(more);
+            }
+            el.appendChild(wrap);
+          }
+
+          rowEl.appendChild(el);
+        }
+        grid.appendChild(rowEl);
+      }
+
+      renderScheduleList(tasks);
+    }
+
+    function renderScheduleList(tasks) {
+      const list = document.getElementById('schedule-list');
+      const upcoming = tasks
+        .filter(t => t.date >= todayStr())
+        .sort((a,b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+
+      if (upcoming.length === 0) {
+        list.innerHTML = `<div class="flex flex-col items-center justify-center h-40 text-center"><div class="text-3xl mb-3">📅</div><div class="text-[#555] text-sm">Belum ada jadwal mendatang.</div></div>`;
+        return;
+      }
+      list.innerHTML = upcoming.map(t => `
+        <div onclick="openDayModal('${t.date}')"
+          class="slide-in flex items-center gap-3 p-4 bg-[#222222] border-l-[3px] border-[#FFD04E] rounded-xl cursor-pointer hover:bg-[#2a2a2a] transition-all">
+          <div class="flex-1 min-w-0">
+            <div class="text-[11px] text-[#666] mb-0.5">${formatDateLabel(t.date)}</div>
+            <div class="text-sm font-bold text-white truncate">${t.title}</div>
+            <div class="text-xs text-[#FFD04E] font-bebas mt-0.5">${t.time}</div>
+          </div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+        </div>
+      `).join('');
+    }
+
+    // ─── DAY MODAL ───
+    function openDayModal(dateStr) {
+      selectedDate = dateStr;
+      renderDayModal();
+      document.getElementById('day-modal').classList.add('open');
+    }
+
+    function renderDayModal() {
+      const d = new Date(selectedDate + 'T00:00:00');
+      const tasks = loadTasks().filter(t => t.date === selectedDate).sort((a,b) => a.time.localeCompare(b.time));
+      const past = isPast(selectedDate);
+
+      document.getElementById('modal-day-label').textContent =
+        `${DAYS_ID[d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+
+      const holEl = document.getElementById('holiday-label');
+      if (holidays[selectedDate]) {
+        holEl.textContent = '🎉 ' + holidays[selectedDate];
+        holEl.classList.remove('hidden');
+      } else {
+        holEl.classList.add('hidden');
+      }
+
+      const listEl = document.getElementById('modal-task-list');
+      if (tasks.length === 0) {
+        listEl.innerHTML = `<div class="flex flex-col items-center justify-center py-8 text-center"><div class="text-3xl mb-2">📭</div><div class="text-[#555] text-sm">${past ? 'Tidak ada jadwal di hari ini.' : 'Belum ada jadwal.'}<br>${!past ? '<span class="text-[#444]">Tambah jadwal baru di bawah.</span>' : ''}</div></div>`;
+      } else {
+        listEl.innerHTML = tasks.map(t => `
+          <div class="flex items-center gap-4 py-3 border-b border-white/[0.05] last:border-0">
+            <div class="font-bebas text-[#FFD04E] text-base w-12 flex-shrink-0">${t.time}</div>
+            <div class="w-0.5 h-8 rounded-full flex-shrink-0 ${past ? 'bg-white/10' : 'bg-[#FFD04E]/40'}"></div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-bold ${past ? 'text-[#555]' : 'text-white'} truncate">${t.title}</div>
+              ${t.desc ? `<div class="text-xs text-[#555] truncate mt-0.5">${t.desc}</div>` : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Sembunyikan tombol add kalau sudah lewat
+      document.getElementById('modal-add-btn-wrap').classList.toggle('hidden', past);
+    }
+
+    function closeDayModal() {
+      document.getElementById('day-modal').classList.remove('open');
+    }
+
+    function prevDay() {
+      selectedDate = shiftDate(selectedDate, -1);
+      const [y, m] = selectedDate.split('-').map(Number);
+      if (m-1 !== viewMonth || y !== viewYear) {
+        viewMonth = m-1; viewYear = y;
+        renderCalendar();
+      }
+      renderDayModal();
+    }
+
+    function nextDay() {
+      selectedDate = shiftDate(selectedDate, 1);
+      const [y, m] = selectedDate.split('-').map(Number);
+      if (m-1 !== viewMonth || y !== viewYear) {
+        viewMonth = m-1; viewYear = y;
+        renderCalendar();
+      }
+      renderDayModal();
+    }
+
+    // ─── ADD TASK ───
+    function openAddFromCalendar() {
+      document.getElementById('add-title').value = '';
+      document.getElementById('add-desc').value = '';
+      document.getElementById('add-date').value = selectedDate;
+      document.getElementById('add-time').value = '';
+      document.getElementById('add-modal').classList.add('open');
+    }
+
+    function closeAddModal() {
+      document.getElementById('add-modal').classList.remove('open');
+    }
+
+    function submitAddTask() {
+      const title = document.getElementById('add-title').value.trim();
+      const desc = document.getElementById('add-desc').value.trim();
+      const date = document.getElementById('add-date').value;
+      const time = document.getElementById('add-time').value;
+      if (!title || !date || !time) { alert('Judul, tanggal, dan waktu wajib diisi!'); return; }
+      const tasks = loadTasks();
+      const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+      tasks.push({ id: newId, title, desc, date, time: time.replace(':', '.'), pinned: false, done: false });
+      saveTasks(tasks);
+      closeAddModal();
+      renderCalendar();
+      renderDayModal();
+    }
+
+    // ─── MONTH NAV ───
+    function prevMonth() {
+      viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+      renderCalendar();
+    }
+    function nextMonth() {
+      viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+      renderCalendar();
+    }
+
+    // ─── MOTIVATE ───
+    const quotes = [
+      { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
+      { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
+      { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
+      { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
+      { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
+      { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
+    ];
+    function openMotivate() {
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('motivate-emoji').textContent = q.emoji;
+      document.getElementById('motivate-quote').textContent = q.quote;
+      document.getElementById('motivate-author').textContent = q.author;
+      const m = document.getElementById('motivate-modal');
+      m.classList.remove('opacity-0','pointer-events-none'); m.classList.add('opacity-100');
+      document.getElementById('motivate-box').classList.remove('scale-95'); document.getElementById('motivate-box').classList.add('scale-100');
+    }
+    function closeMotivate(e) {
+      if (!e || e.target === document.getElementById('motivate-modal')) {
+        const m = document.getElementById('motivate-modal');
+        m.classList.add('opacity-0','pointer-events-none'); m.classList.remove('opacity-100');
+        document.getElementById('motivate-box').classList.add('scale-95'); document.getElementById('motivate-box').classList.remove('scale-100');
+      }
+    }
+
+    renderCalendar();
+  </script>
 </body>
 </html>

@@ -4,12 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STUTime — FocTime!</title>
+  <title>STUTime - FocTime!</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-
-
     body { 
       font-family: 'Plus Jakarta Sans', sans-serif;
       overflow: hidden; /* no scroll sama sekali */
@@ -18,30 +16,6 @@
       font-family: 'Bebas Neue', sans-serif; 
     }
     .nav-blur { backdrop-filter: blur(20px); }
-
-    .ring-progress {
-        fill: none;
-        stroke: #FFD04E;
-        stroke-width: 6;
-        stroke-linecap: round;
-        stroke-dasharray: 1068;
-        stroke-dashoffset: 0;
-        transition: stroke-dashoffset 0.5s linear;
-        filter: drop-shadow(0 0 8px rgba(255,214,10,0.5));
-    }
-    .ring-track { fill: none; stroke: #2a2a2a; stroke-width: 6; }
-    .ring-progress.done {
-        stroke: #4ade80;
-        filter: drop-shadow(0 0 10px rgba(74,222,128,0.5));
-    }
-
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.4; }
-      100% { transform: scale(1.08); opacity: 0; }
-    }
-    .pulse-anim { animation: pulse-ring 2s ease-out infinite; }
-
-
 
     @keyframes slideIn {
       from { opacity: 0; transform: translateX(-8px); }
@@ -54,21 +28,17 @@
   </style>
 </head>
 
+<body class="bg-[#111111] text-[#F0F0F0] h-screen flex flex-col">
 
-
-
-
-<body class="bg-[#111111] text-[#F0F0F0] h-screen flex flex-col overflow-x-hidden"></body>
-
-
-  <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+  <!-- Navbar -->
+  <nav class="nav-blur flex-shrink-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
     <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
     <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
       <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
       <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
       <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">FocTime!</a>
-      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
+      <a href="calender.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
     </div>
     <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
   </nav>
@@ -114,11 +84,11 @@
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
             <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-sessions">0</div>
-            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Sessions Today</div>
+            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Sessions</div>
           </div>
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
             <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-minutes">0</div>
-            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Streak</div>
+            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Min Focus</div>
           </div>
         </div>
       </div>
@@ -127,18 +97,18 @@
     <!-- Main timer area -->
     <main class="flex flex-col items-center justify-center px-6 pb-6 relative overflow-hidden">
 
-      <!-- Mode tabs  -->
+      <!-- Mode tabs — style berbeda dari navbar: kotak dengan border, bukan pill -->
       <div class="flex gap-2 mb-12">
         <button onclick="setMode('focus',this)" id="tab-focus"
-          class="mode-tab px-6 py-2 rounded-xl text-sm font-bold bg-[#FFD04E] text-[#111111] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
+          class="mode-tab px-6 py-2 rounded-xl text-sm font-bold bg-[#FFD04E] text-[#111111] border border-[#FFD04E] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
           Focus
         </button>
         <button onclick="setMode('short',this)" id="tab-short"
-          class="mode-tab px-6 py-2 rounded-xl text-sm font-semibold text-[#555] border border-white/[0.07] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          class="mode-tab px-6 py-2 rounded-xl text-sm font-semibold text-white border border-white/[0.07] hover:border-[#FFD04E] hover:text-[#FFD04E] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)] active:translate-y-0 transition-all">
           Short Break
         </button>
         <button onclick="setMode('long',this)" id="tab-long"
-          class="mode-tab px-6 py-2 rounded-xl text-sm font-semibold text-[#555] border border-white/[0.07] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          class="mode-tab px-6 py-2 rounded-xl text-sm font-semibold text-white border border-white/[0.07] hover:border-[#FFD04E] hover:text-[#FFD04E] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)] active:translate-y-0 transition-all">
           Long Break
         </button>
       </div>
@@ -208,11 +178,11 @@
       if (running) return;
       currentMode = mode;
       document.querySelectorAll('.mode-tab').forEach(t => {
-        t.classList.remove('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
-        t.classList.add('text-[#555]', 'font-semibold', 'border', 'border-white/[0.07]');
+        t.classList.remove('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+        t.classList.add('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
       });
-      btn.classList.remove('text-[#555]', 'font-semibold', 'border', 'border-white/[0.07]');
-      btn.classList.add('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+      btn.classList.remove('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
+      btn.classList.add('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
       totalSeconds = settings[mode] * 60;
       remainingSeconds = totalSeconds; remainingMs = 0;
       const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
@@ -308,177 +278,6 @@
       }
     }
     updateDisplay();
-     // --- STATE MANAGEMENT DAFPUS ---
-    let currentSourceType = 'book';
-    let currentFormat = 'APA';
-    let savedDafpus = [];
-
-    // --- 1. FUNGSI GANTI SUMBER (Book/Journal/Website) ---
-    function setSourceType(type, btn) {
-        currentSourceType = type;
-        
-        // Pindah warna tombol aktif
-        document.querySelectorAll('.source-type-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Tampilkan kolom input yang sesuai
-        renderInputFields();
-    }
-
-    // --- 2. FUNGSI GANTI FORMAT (APA/IEEE/Chicago) ---
-    function setFormat(format, btn) {
-        currentFormat = format;
-        
-        document.querySelectorAll('.fmt-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    // --- 3. FUNGSI MENGGAMBAR KOLOM INPUT (Dinamis) ---
-    function renderInputFields() {
-        const container = document.getElementById('inputFields');
-        let html = '';
-
-        // Class Tailwind bawaan untuk input biar senada dengan dark mode Noto
-        const inputClass = "w-full bg-[#2A2A2D] border border-gray-600 rounded-md p-2 text-white mb-3 text-sm outline-none focus:border-[#FFD15C]";
-
-        if (currentSourceType === 'book') {
-            html = `
-                <input type="text" id="daf-author" placeholder="Nama Penulis (contoh: Doe, J.)" class="${inputClass}">
-                <input type="text" id="daf-year" placeholder="Tahun Terbit (contoh: 2023)" class="${inputClass}">
-                <input type="text" id="daf-title" placeholder="Judul Buku" class="${inputClass}">
-                <input type="text" id="daf-publisher" placeholder="Penerbit" class="${inputClass}">
-                <input type="text" id="daf-city" placeholder="Kota Terbit" class="${inputClass}">
-            `;
-        } else if (currentSourceType === 'journal') {
-            html = `
-                <input type="text" id="daf-author" placeholder="Nama Penulis" class="${inputClass}">
-                <input type="text" id="daf-year" placeholder="Tahun" class="${inputClass}">
-                <input type="text" id="daf-title" placeholder="Judul Artikel Jurnal" class="${inputClass}">
-                <input type="text" id="daf-journal" placeholder="Nama Jurnal" class="${inputClass}">
-                <div style="display:flex; gap:8px;">
-                    <input type="text" id="daf-vol" placeholder="Volume" class="${inputClass}">
-                    <input type="text" id="daf-issue" placeholder="Issue" class="${inputClass}">
-                    <input type="text" id="daf-pages" placeholder="Halaman (ex: 12-20)" class="${inputClass}">
-                </div>
-            `;
-        } else if (currentSourceType === 'website') {
-            html = `
-                <input type="text" id="daf-author" placeholder="Nama Penulis / Web" class="${inputClass}">
-                <input type="text" id="daf-year" placeholder="Tahun (atau ND jika tidak ada)" class="${inputClass}">
-                <input type="text" id="daf-title" placeholder="Judul Halaman" class="${inputClass}">
-                <input type="text" id="daf-url" placeholder="URL Lengkap (https://...)" class="${inputClass}">
-            `;
-        }
-        
-        container.innerHTML = html;
-    }
-
-    // --- 4. FUNGSI GENERATE SITASI ---
-    function generate() {
-        // Ambil data (pakai opsional chaining biar gak error kalau kolomnya gak ada)
-        const author = document.getElementById('daf-author')?.value || 'Penulis';
-        const year = document.getElementById('daf-year')?.value || 'Tahun';
-        const title = document.getElementById('daf-title')?.value || 'Judul';
-        
-        let resultText = '';
-
-        // Logika penyusunan teks (Contoh Sederhana untuk APA Format)
-        if (currentFormat === 'APA') {
-            if (currentSourceType === 'book') {
-                const pub = document.getElementById('daf-publisher')?.value || 'Penerbit';
-                resultText = `${author}. (${year}). <i>${title}</i>. ${pub}.`;
-            } else if (currentSourceType === 'journal') {
-                const journal = document.getElementById('daf-journal')?.value || 'Jurnal';
-                const vol = document.getElementById('daf-vol')?.value || 'Vol';
-                const pages = document.getElementById('daf-pages')?.value || 'Hal';
-                resultText = `${author}. (${year}). ${title}. <i>${journal}</i>, ${vol}, ${pages}.`;
-            } else if (currentSourceType === 'website') {
-                const url = document.getElementById('daf-url')?.value || 'URL';
-                resultText = `${author}. (${year}). <i>${title}</i>. Diakses dari ${url}`;
-            }
-        } 
-        // Logika penyusunan teks (Contoh Sederhana untuk IEEE)
-        else if (currentFormat === 'IEEE') {
-            if (currentSourceType === 'book') {
-                const pub = document.getElementById('daf-publisher')?.value || 'Penerbit';
-                const city = document.getElementById('daf-city')?.value || 'Kota';
-                resultText = `${author}, <i>${title}</i>. ${city}: ${pub}, ${year}.`;
-            }
-            // ... (Bisa dikembangkan lagi sesuai standar persis IEEE/Chicago)
-            else {
-                resultText = `${author}, "${title}," ${year}.`;
-            }
-        }
-        // Chicago (Standar Dasar)
-        else {
-            resultText = `${author}. <i>${title}</i>. (${year}).`;
-        }
-
-        document.getElementById('dafpusResult').innerHTML = resultText;
-    }
-
-    // --- 5. FUNGSI COPY, SAVE, & CLEAR ---
-    function copyResult() {
-        const text = document.getElementById('dafpusResult').innerText;
-        if(text.includes('Fill in the form')) return;
-        
-        navigator.clipboard.writeText(text);
-        alert('Sitasi disalin ke clipboard!');
-    }
-
-    function clearResult() {
-        document.getElementById('dafpusResult').innerHTML = 'Fill in the form and click Generate to see your bibliography entry here.';
-        renderInputFields(); // Kosongkan form juga
-    }
-
-    function saveResult() {
-        const text = document.getElementById('dafpusResult').innerHTML;
-        if(text.includes('Fill in the form')) return;
-        
-        savedDafpus.push(text);
-        renderSavedEntries();
-    }
-
-    function renderSavedEntries() {
-        const container = document.getElementById('savedEntries');
-        if(savedDafpus.length === 0) return;
-
-        container.innerHTML = savedDafpus.map((entry, index) => `
-            <div class="saved-entry">
-                <div class="saved-entry-text">${entry}</div>
-                <button class="del-btn" onclick="deleteSavedEntry(${index})"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-        `).join('');
-    }
-
-    function deleteSavedEntry(index) {
-        savedDafpus.splice(index, 1);
-        if(savedDafpus.length === 0) {
-            document.getElementById('savedEntries').innerHTML = '<div class="empty-state" style="padding:20px 0;"><p>No saved entries yet</p></div>';
-        } else {
-            renderSavedEntries();
-        }
-    }
-
-    function exportAll() {
-        if(savedDafpus.length === 0) {
-            alert("Belum ada daftar pustaka yang disimpan!"); return;
-        }
-        
-        // Ubah format HTML (<i>) ke teks biasa untuk file .txt
-        const plainTextContent = savedDafpus.map(entry => entry.replace(/<\/?i>/g, '')).join('\n\n');
-        
-        const blob = new Blob([plainTextContent], { type: "text/plain;charset=utf-8" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Daftar_Pustaka.txt";
-        link.click();
-    }
-
-    // Panggil fungsi render pertama kali saat website dibuka
-    window.addEventListener('DOMContentLoaded', () => {
-        renderInputFields();
-    });
   </script>
 </body>
 </html>
