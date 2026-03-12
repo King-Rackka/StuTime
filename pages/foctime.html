@@ -309,6 +309,177 @@
       }
     }
     updateDisplay();
+     // --- STATE MANAGEMENT DAFPUS ---
+    let currentSourceType = 'book';
+    let currentFormat = 'APA';
+    let savedDafpus = [];
+
+    // --- 1. FUNGSI GANTI SUMBER (Book/Journal/Website) ---
+    function setSourceType(type, btn) {
+        currentSourceType = type;
+        
+        // Pindah warna tombol aktif
+        document.querySelectorAll('.source-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Tampilkan kolom input yang sesuai
+        renderInputFields();
+    }
+
+    // --- 2. FUNGSI GANTI FORMAT (APA/IEEE/Chicago) ---
+    function setFormat(format, btn) {
+        currentFormat = format;
+        
+        document.querySelectorAll('.fmt-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    // --- 3. FUNGSI MENGGAMBAR KOLOM INPUT (Dinamis) ---
+    function renderInputFields() {
+        const container = document.getElementById('inputFields');
+        let html = '';
+
+        // Class Tailwind bawaan untuk input biar senada dengan dark mode Noto
+        const inputClass = "w-full bg-[#2A2A2D] border border-gray-600 rounded-md p-2 text-white mb-3 text-sm outline-none focus:border-[#FFD15C]";
+
+        if (currentSourceType === 'book') {
+            html = `
+                <input type="text" id="daf-author" placeholder="Nama Penulis (contoh: Doe, J.)" class="${inputClass}">
+                <input type="text" id="daf-year" placeholder="Tahun Terbit (contoh: 2023)" class="${inputClass}">
+                <input type="text" id="daf-title" placeholder="Judul Buku" class="${inputClass}">
+                <input type="text" id="daf-publisher" placeholder="Penerbit" class="${inputClass}">
+                <input type="text" id="daf-city" placeholder="Kota Terbit" class="${inputClass}">
+            `;
+        } else if (currentSourceType === 'journal') {
+            html = `
+                <input type="text" id="daf-author" placeholder="Nama Penulis" class="${inputClass}">
+                <input type="text" id="daf-year" placeholder="Tahun" class="${inputClass}">
+                <input type="text" id="daf-title" placeholder="Judul Artikel Jurnal" class="${inputClass}">
+                <input type="text" id="daf-journal" placeholder="Nama Jurnal" class="${inputClass}">
+                <div style="display:flex; gap:8px;">
+                    <input type="text" id="daf-vol" placeholder="Volume" class="${inputClass}">
+                    <input type="text" id="daf-issue" placeholder="Issue" class="${inputClass}">
+                    <input type="text" id="daf-pages" placeholder="Halaman (ex: 12-20)" class="${inputClass}">
+                </div>
+            `;
+        } else if (currentSourceType === 'website') {
+            html = `
+                <input type="text" id="daf-author" placeholder="Nama Penulis / Web" class="${inputClass}">
+                <input type="text" id="daf-year" placeholder="Tahun (atau ND jika tidak ada)" class="${inputClass}">
+                <input type="text" id="daf-title" placeholder="Judul Halaman" class="${inputClass}">
+                <input type="text" id="daf-url" placeholder="URL Lengkap (https://...)" class="${inputClass}">
+            `;
+        }
+        
+        container.innerHTML = html;
+    }
+
+    // --- 4. FUNGSI GENERATE SITASI ---
+    function generate() {
+        // Ambil data (pakai opsional chaining biar gak error kalau kolomnya gak ada)
+        const author = document.getElementById('daf-author')?.value || 'Penulis';
+        const year = document.getElementById('daf-year')?.value || 'Tahun';
+        const title = document.getElementById('daf-title')?.value || 'Judul';
+        
+        let resultText = '';
+
+        // Logika penyusunan teks (Contoh Sederhana untuk APA Format)
+        if (currentFormat === 'APA') {
+            if (currentSourceType === 'book') {
+                const pub = document.getElementById('daf-publisher')?.value || 'Penerbit';
+                resultText = `${author}. (${year}). <i>${title}</i>. ${pub}.`;
+            } else if (currentSourceType === 'journal') {
+                const journal = document.getElementById('daf-journal')?.value || 'Jurnal';
+                const vol = document.getElementById('daf-vol')?.value || 'Vol';
+                const pages = document.getElementById('daf-pages')?.value || 'Hal';
+                resultText = `${author}. (${year}). ${title}. <i>${journal}</i>, ${vol}, ${pages}.`;
+            } else if (currentSourceType === 'website') {
+                const url = document.getElementById('daf-url')?.value || 'URL';
+                resultText = `${author}. (${year}). <i>${title}</i>. Diakses dari ${url}`;
+            }
+        } 
+        // Logika penyusunan teks (Contoh Sederhana untuk IEEE)
+        else if (currentFormat === 'IEEE') {
+            if (currentSourceType === 'book') {
+                const pub = document.getElementById('daf-publisher')?.value || 'Penerbit';
+                const city = document.getElementById('daf-city')?.value || 'Kota';
+                resultText = `${author}, <i>${title}</i>. ${city}: ${pub}, ${year}.`;
+            }
+            // ... (Bisa dikembangkan lagi sesuai standar persis IEEE/Chicago)
+            else {
+                resultText = `${author}, "${title}," ${year}.`;
+            }
+        }
+        // Chicago (Standar Dasar)
+        else {
+            resultText = `${author}. <i>${title}</i>. (${year}).`;
+        }
+
+        document.getElementById('dafpusResult').innerHTML = resultText;
+    }
+
+    // --- 5. FUNGSI COPY, SAVE, & CLEAR ---
+    function copyResult() {
+        const text = document.getElementById('dafpusResult').innerText;
+        if(text.includes('Fill in the form')) return;
+        
+        navigator.clipboard.writeText(text);
+        alert('Sitasi disalin ke clipboard!');
+    }
+
+    function clearResult() {
+        document.getElementById('dafpusResult').innerHTML = 'Fill in the form and click Generate to see your bibliography entry here.';
+        renderInputFields(); // Kosongkan form juga
+    }
+
+    function saveResult() {
+        const text = document.getElementById('dafpusResult').innerHTML;
+        if(text.includes('Fill in the form')) return;
+        
+        savedDafpus.push(text);
+        renderSavedEntries();
+    }
+
+    function renderSavedEntries() {
+        const container = document.getElementById('savedEntries');
+        if(savedDafpus.length === 0) return;
+
+        container.innerHTML = savedDafpus.map((entry, index) => `
+            <div class="saved-entry">
+                <div class="saved-entry-text">${entry}</div>
+                <button class="del-btn" onclick="deleteSavedEntry(${index})"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        `).join('');
+    }
+
+    function deleteSavedEntry(index) {
+        savedDafpus.splice(index, 1);
+        if(savedDafpus.length === 0) {
+            document.getElementById('savedEntries').innerHTML = '<div class="empty-state" style="padding:20px 0;"><p>No saved entries yet</p></div>';
+        } else {
+            renderSavedEntries();
+        }
+    }
+
+    function exportAll() {
+        if(savedDafpus.length === 0) {
+            alert("Belum ada daftar pustaka yang disimpan!"); return;
+        }
+        
+        // Ubah format HTML (<i>) ke teks biasa untuk file .txt
+        const plainTextContent = savedDafpus.map(entry => entry.replace(/<\/?i>/g, '')).join('\n\n');
+        
+        const blob = new Blob([plainTextContent], { type: "text/plain;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "Daftar_Pustaka.txt";
+        link.click();
+    }
+
+    // Panggil fungsi render pertama kali saat website dibuka
+    window.addEventListener('DOMContentLoaded', () => {
+        renderInputFields();
+    });
   </script>
 </body>
 </html>
