@@ -1,77 +1,3 @@
-// ─── DATA DUMMY ───
-const dummyTasks = [
-  {
-    id: 1,
-    title: "Belajar Tailwind CSS",
-    desc: "Pelajari utility class Tailwind v4 untuk styling halaman STUTime secara konsisten.",
-    date: getTodayStr(),
-    time: "08.00",
-    priority: "high",
-    pinned: true,
-    done: false
-  },
-  {
-    id: 2,
-    title: "Mengerjakan tugas Basis Data",
-    desc: "Buat ERD dan implementasi SQL untuk tugas akhir semester mata kuliah Basis Data.",
-    date: getTodayStr(),
-    time: "13.00",
-    priority: "high",
-    pinned: true,
-    done: false
-  },
-  {
-    id: 3,
-    title: "Review materi Algoritma",
-    desc: "Review bab sorting dan searching untuk persiapan UTS minggu depan.",
-    date: getTodayStr(),
-    time: "15.00",
-    priority: "medium",
-    pinned: false,
-    done: false
-  },
-  {
-    id: 4,
-    title: "Meeting kelompok WDC",
-    desc: "Diskusi pembagian tugas coding untuk lomba WDC 2026 IFest #14.",
-    date: getTodayStr(),
-    time: "19.00",
-    priority: "high",
-    pinned: false,
-    done: false
-  },
-  {
-    id: 5,
-    title: "Kerjakan laporan PKL",
-    desc: "Tulis bab 3 laporan PKL tentang implementasi sistem informasi.",
-    date: getTomorrowStr(),
-    time: "09.00",
-    priority: "medium",
-    pinned: false,
-    done: false
-  },
-  {
-    id: 6,
-    title: "Presentasi Jaringan Komputer",
-    desc: "Persiapkan slide presentasi topik subnetting dan CIDR.",
-    date: getTomorrowStr(),
-    time: "10.30",
-    priority: "low",
-    pinned: false,
-    done: false
-  },
-  {
-    id: 7,
-    title: "Kumpulkan tugas Statistika",
-    desc: "Selesaikan soal regresi linear dan upload ke e-learning.",
-    date: getDateStr(2),
-    time: "23.59",
-    priority: "medium",
-    pinned: false,
-    done: false
-  }
-];
-
 // ─── HELPERS ───
 function getTodayStr() {
   return formatDate(new Date());
@@ -87,7 +13,7 @@ function getDateStr(daysFromNow) {
   return formatDate(d);
 }
 function formatDate(d) {
-  return d.toISOString().split('T')[0]; // YYYY-MM-DD
+  return d.toISOString().split('T')[0];
 }
 function formatDateLabel(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
@@ -98,13 +24,18 @@ function formatDateLabel(dateStr) {
   const label = diff === 0 ? 'Hari ini' : diff === 1 ? 'Besok' : diff === -1 ? 'Kemarin' : days[d.getDay()];
   return `${label}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
-function priorityColor(p) {
-  return p === 'high' ? 'text-red-400 border-red-400/30 bg-red-400/10'
-       : p === 'medium' ? 'text-orange-400 border-orange-400/30 bg-orange-400/10'
-       : 'text-blue-400 border-blue-400/30 bg-blue-400/10';
-}
-function priorityLabel(p) {
-  return p === 'high' ? 'High' : p === 'medium' ? 'Medium' : 'Low';
+
+// ─── INIT DUMMY DATA ───
+function initDummyTasks() {
+  return [
+    { id:1, title:"Belajar Tailwind CSS", desc:"Pelajari utility class Tailwind v4 untuk styling halaman STUTime secara konsisten.", date:getTodayStr(), time:"08.00", pinned:true, done:false },
+    { id:2, title:"Mengerjakan tugas Basis Data", desc:"Buat ERD dan implementasi SQL untuk tugas akhir semester mata kuliah Basis Data.", date:getTodayStr(), time:"13.00", pinned:true, done:false },
+    { id:3, title:"Review materi Algoritma", desc:"Review bab sorting dan searching untuk persiapan UTS minggu depan.", date:getTodayStr(), time:"15.00", pinned:false, done:false },
+    { id:4, title:"Meeting kelompok WDC", desc:"Diskusi pembagian tugas coding untuk lomba WDC 2026 IFest #14.", date:getTodayStr(), time:"19.00", pinned:false, done:false },
+    { id:5, title:"Kerjakan laporan PKL", desc:"Tulis bab 3 laporan PKL tentang implementasi sistem informasi.", date:getTomorrowStr(), time:"09.00", pinned:false, done:false },
+    { id:6, title:"Presentasi Jaringan Komputer", desc:"Persiapkan slide presentasi topik subnetting dan CIDR.", date:getTomorrowStr(), time:"10.30", pinned:false, done:false },
+    { id:7, title:"Kumpulkan tugas Statistika", desc:"Selesaikan soal regresi linear dan upload ke e-learning.", date:getDateStr(2), time:"23.59", pinned:false, done:false }
+  ];
 }
 
 // ─── STATE ───
@@ -112,13 +43,13 @@ let tasks = [];
 let selectedId = null;
 let editingId = null;
 
-// Local Storage
+// ─── LOCALSTORAGE ───
 function loadTasks() {
   const saved = localStorage.getItem('stutime_tasks');
   if (saved) {
     tasks = JSON.parse(saved);
   } else {
-    tasks = dummyTasks;
+    tasks = initDummyTasks();
     saveTasks();
   }
 }
@@ -157,7 +88,6 @@ function renderTaskList() {
   const container = document.getElementById('task-list-container');
   const today = getTodayStr();
 
-  // Group by date, sort ascending
   const grouped = {};
   tasks.forEach(t => {
     if (!grouped[t.date]) grouped[t.date] = [];
@@ -165,13 +95,14 @@ function renderTaskList() {
   });
 
   const sortedDates = Object.keys(grouped).sort();
-
-  // Prioritaskan hari ini di atas
   const reordered = [
     ...sortedDates.filter(d => d === today),
     ...sortedDates.filter(d => d > today),
     ...sortedDates.filter(d => d < today),
   ];
+
+  const countEl = document.getElementById('task-count');
+  if (countEl) countEl.textContent = tasks.length + ' jadwal';
 
   if (tasks.length === 0) {
     container.innerHTML = `
@@ -184,32 +115,23 @@ function renderTaskList() {
 
   container.innerHTML = reordered.map(date => `
     <div class="mb-6 slide-in">
-      <!-- Date header -->
       <div class="flex items-center gap-3 mb-3">
         <div class="w-2.5 h-2.5 rounded-full bg-[#FFD04E] flex-shrink-0"></div>
         <span class="text-sm font-bold text-white">${formatDateLabel(date)}</span>
       </div>
-      <!-- Tasks -->
       <div class="ml-[5px] border-l-2 border-[#FFD04E] pl-4 flex flex-col gap-2">
         ${grouped[date].sort((a,b) => a.time.localeCompare(b.time)).map(t => `
           <div onclick="selectTask(${t.id})"
             class="task-card flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all
-              ${selectedId === t.id
-                ? 'bg-[#FFD04E]/10 border-[#FFD04E]/50'
-                : 'bg-[#222222] border-white/[0.07] hover:border-white/20'
-              }
+              ${selectedId === t.id ? 'bg-[#FFD04E]/10 border-[#FFD04E]/50' : 'bg-[#222222] border-white/[0.07] hover:border-white/20'}
               ${t.done ? 'opacity-50' : ''}">
-            <!-- Time + pin -->
             <div class="flex flex-col items-center gap-1 flex-shrink-0 w-10">
               <span class="text-[11px] font-bold text-[#FFD04E]">${t.time}</span>
-              ${t.pinned ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="#FFD04E"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>' : ''}
             </div>
-            <!-- Title -->
             <div class="flex-1 min-w-0">
               <div class="text-sm font-semibold text-white truncate ${t.done ? 'line-through' : ''}">${t.title}</div>
               <div class="text-xs text-[#666] truncate mt-0.5">${t.desc}</div>
             </div>
-            <!-- Arrow -->
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0">
               <polyline points="9,18 15,12 9,6"/>
             </svg>
@@ -236,17 +158,11 @@ function renderDetail() {
 
   panel.innerHTML = `
     <div class="fade-in flex flex-col h-full">
-      <!-- Header -->
       <div class="flex items-start justify-between gap-4 mb-6">
         <div class="flex-1">
-          <div class="flex items-center gap-3 mb-2">
-            <span class="text-xs font-bold px-2 py-1 rounded-lg border ${priorityColor(t.priority)}">${priorityLabel(t.priority)}</span>
-            ${t.done ? '<span class="text-xs font-bold px-2 py-1 rounded-lg border text-green-400 border-green-400/30 bg-green-400/10">Selesai ✓</span>' : ''}
-          </div>
+          ${t.done ? '<div class="mb-2"><span class="text-xs font-bold px-2 py-1 rounded-lg border text-green-400 border-green-400/30 bg-green-400/10">Selesai ✓</span></div>' : ''}
           <h2 class="text-2xl font-bold text-white leading-tight">${t.title}</h2>
         </div>
-        
-        <!-- Pin button -->
         <button onclick="togglePin(${t.id})" title="${t.pinned ? 'Unpin' : 'Pin task'}"
           class="flex-shrink-0 w-9 h-9 rounded-xl border flex items-center justify-center transition-all
             ${t.pinned ? 'bg-[#FFD04E]/15 border-[#FFD04E]/50 text-[#FFD04E]' : 'bg-[#1a1a1a] border-white/[0.07] text-[#555] hover:border-[#FFD04E] hover:text-[#FFD04E]'}">
@@ -256,7 +172,6 @@ function renderDetail() {
         </button>
       </div>
 
-      <!-- Info tanggal & waktu -->
       <div class="flex items-center gap-4 mb-6 p-4 bg-[#1a1a1a] border border-white/[0.07] rounded-xl">
         <div class="flex items-center gap-2 text-sm text-[#aaa]">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFD04E" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -269,13 +184,11 @@ function renderDetail() {
         </div>
       </div>
 
-      <!-- Deskripsi -->
       <div class="mb-6 flex-1">
         <div class="text-xs font-bold text-[#555] uppercase tracking-widest mb-2">Deskripsi</div>
         <p class="text-sm text-[#bbb] leading-relaxed">${t.desc || '<span class="text-[#444] italic">Tidak ada deskripsi</span>'}</p>
       </div>
 
-      <!-- Tutorial buttons -->
       <div class="grid grid-cols-2 gap-3 mb-4">
         <button onclick="openYoutube('${encodeURIComponent(t.title)}')"
           class="flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-white/[0.07] rounded-xl hover:border-red-500/50 hover:bg-red-500/5 transition-all group">
@@ -286,7 +199,6 @@ function renderDetail() {
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" class="ml-auto"><polyline points="9,18 15,12 9,6"/></svg>
         </button>
-
         <button onclick="openGoogle('${encodeURIComponent(t.title)}')"
           class="flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-white/[0.07] rounded-xl hover:border-blue-500/50 hover:bg-blue-500/5 transition-all group">
           <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
@@ -298,7 +210,6 @@ function renderDetail() {
         </button>
       </div>
 
-      <!-- Action buttons -->
       <div class="grid grid-cols-3 gap-3">
         <button onclick="openEditModal(${t.id})"
           class="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#FFD04E]/40 text-[#FFD04E] text-sm font-bold hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all">
@@ -329,11 +240,6 @@ function selectTask(id) {
 function togglePin(id) {
   const t = tasks.find(t => t.id === id);
   if (!t) return;
-  const pinned = tasks.filter(t => t.pinned);
-  if (!t.pinned && pinned.length >= 5) {
-    alert('Maksimal 5 task yang bisa di-pin!');
-    return;
-  }
   t.pinned = !t.pinned;
   saveTasks();
   render();
@@ -367,7 +273,6 @@ function openAddModal() {
   document.getElementById('form-desc').value = '';
   document.getElementById('form-date').value = getTodayStr();
   document.getElementById('form-time').value = '';
-  document.getElementById('form-priority').value = 'medium';
   document.getElementById('task-modal').classList.add('open');
 }
 
@@ -380,7 +285,6 @@ function openEditModal(id) {
   document.getElementById('form-desc').value = t.desc;
   document.getElementById('form-date').value = t.date;
   document.getElementById('form-time').value = t.time;
-  document.getElementById('form-priority').value = t.priority;
   document.getElementById('task-modal').classList.add('open');
 }
 
@@ -394,23 +298,20 @@ function submitTask() {
   const desc = document.getElementById('form-desc').value.trim();
   const date = document.getElementById('form-date').value;
   const time = document.getElementById('form-time').value;
-  const priority = document.getElementById('form-priority').value;
 
   if (!title || !date || !time) {
     alert('Judul, tanggal, dan waktu wajib diisi!');
     return;
   }
 
-  // Format time HH.MM
   const formattedTime = time.replace(':', '.');
 
   if (editingId) {
     const t = tasks.find(t => t.id === editingId);
-    t.title = title; t.desc = desc; t.date = date;
-    t.time = formattedTime; t.priority = priority;
+    t.title = title; t.desc = desc; t.date = date; t.time = formattedTime;
   } else {
     const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-    tasks.push({ id: newId, title, desc, date, time: formattedTime, priority, pinned: false, done: false });
+    tasks.push({ id: newId, title, desc, date, time: formattedTime, pinned: false, done: false });
     selectedId = newId;
   }
 
