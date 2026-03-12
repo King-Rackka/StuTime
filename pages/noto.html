@@ -36,15 +36,15 @@
         }
   </style>
 </head>
-<body class="bg-[#1E1E20] text-[#F0F0F0] h-screen flex flex-col overflow-x-hidden">
-    <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+<body class="bg-[#1E1E20] text-[#F0F0F0] h-screen flex flex-col overflow-hidden">
+    <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90 shrink-0">
     <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
 
     <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
-      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
-      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
-      <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">FocTime!</a>
+      <a href="#" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Noto</a>
+      <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
+      <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">FocTime!</a>
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
     </div>
 
@@ -52,27 +52,36 @@
       Motivate
     </button>
   </nav>
-                <div class="flex justify-center items-center  py-6">
-                    <button class="bg-[#FFD04E] text-[#1E1E20] font-semibold py-3 w-[730px] rounded-md text-lg border-none cursor-pointer">
+                <div class="flex justify-center items-center  py-6 shrink-0">
+                    <button class="bg-[#FFD04E] text-[#1E1E20] font-semibold py-3 w-[660px] rounded-md text-lg border-none cursor-pointer">
                         Notes
                     </button>
                     
-                    <button class="bg-transparent text-[#FFD04E] font-normal py-3 w-[730px] rounded-md text-lg border-none cursor-pointer hover:bg-[#FFD15C]/10 transition duration-200">
+                    <button class="bg-transparent text-[#FFD04E] font-normal py-3 w-[660px] rounded-md text-lg border-none cursor-pointer hover:bg-[#FFD15C]/10 transition duration-200">
                         Journal Searcher
                     </button>
                 </div>
             </div>
 
 
-    <main class="px-10 py-8 flex-grow flex flex-col gap-5 overflow-hidden">
+    <main class="px-10 py-8 flex-grow flex gap-8 overflow-hidden max-w-[1400px] w-full mx-auto">
         
 
-        <div class="flex gap-8 flex-grow overflow-hidden">
-            <div class="flex-1 border border-[#FFD15C] rounded-xl bg-transparent"></div>
+        <div class="flex gap-8 flex-grow overflow-hidden ">
+            <div class="w-[350px] shrink-0 bg-[#323236] rounded-xl flex flex-col overflow-hidden">
+                <div class="p-4 border-b border-gray-600 shrink-0">
+                <button onclick="createNewNote()" class="w-full bg-[#FFD15C] text-[#1E1E20] font-bold py-3 rounded-md flex justify-center items-center gap-2 hover:bg-[#e6bc53] transition duration-200 shadow-sm">
+                    <i class="fa-solid fa-plus text-lg"></i> Tambah Catatan
+                </button>
+                </div>
+                 <div id="notes-list" class="flex flex-col gap-3 p-4 overflow-y-auto h-full">
+                </div>
 
-            <div class="flex-[2.5] bg-[#323236] rounded-xl p-8 flex flex-col gap-5 overflow-hidden">
+            </div>
+
+            <div class="flex-1 max-w-[1000px] bg-[#323236] rounded-xl p-6 flex flex-col gap-3 overflow-hidden">
                 
-                <div class="flex gap-4 pb-5 border-b border-gray-600 flex-wrap">
+                <div class="flex gap-10  pb-5 border-b border-gray-600 flex-wrap shrink-0">
                     <button onclick="formatText('undo')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-rotate-left"></i></button>
                     <button onclick="formatText('redo')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-rotate-right"></i></button>
                     <button onclick="customAction('columns')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-solid fa-table-columns"></i></button>
@@ -108,21 +117,17 @@
                     <button onclick="toggleFavorite()" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[35px] h-[35px] rounded-full flex justify-center items-center transition duration-200 hover:bg-[#FFD15C]/15"><i class="fa-regular fa-star" id="fav-icon"></i></button>
                 </div>
 
-                <input type="text" class="note-title bg-transparent border-none text-white text-2xl font-bold outline-none w-full" value="Pergi ke pasar membeli ikan">
+                <input type="text" class="note-title bg-transparent border-none text-white text-2xl font-bold outline-none w-full shrink-0" value="Pergi ke pasar membeli ikan ">
 
                 <div class="note-body flex-grow text-[#F0F0F0] leading-relaxed outline-none text-[0.95rem] overflow-y-auto" contenteditable="true">
-                    Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep
-                    <ul>
-                        <li>Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi</li>
-                        <li>ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakepPergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan, cakep Pergi ke</li>
-                    </ul>
+                    
                 </div>
 
                 <div class="flex gap-4 mt-auto pt-2 shrink-0">
-                    <button class="flex-1 py-3 rounded-md font-semibold cursor-pointer text-base flex justify-center items-center gap-2 bg-[#FFD15C] border-none text-black hover:bg-[#e6bc53] transition duration-200">
+                    <button onclick="saveNote()"class="flex-1 py-3 rounded-md font-semibold cursor-pointer text-base flex justify-center items-center gap-2 bg-[#FFD15C] border-none text-black hover:bg-[#e6bc53] transition duration-200">
                         <i class="fa-solid fa-floppy-disk"></i> Simpan
                     </button>
-                    <button class="flex-1 py-3 rounded-md font-semibold cursor-pointer text-base flex justify-center items-center gap-2 bg-transparent border border-[#FFD15C] text-[#FFD15C] hover:bg-[#FFD15C]/10 transition duration-200">
+                    <button onclick="deleteNote()"class="flex-1 py-3 rounded-md font-semibold cursor-pointer text-base flex justify-center items-center gap-2 bg-transparent border border-[#FFD15C] text-[#FFD15C] hover:bg-[#FFD15C]/10 transition duration-200">
                         <i class="fa-solid fa-trash"></i> Hapus
                     </button>
                 </div>
@@ -130,8 +135,25 @@
             </div>
         </div>
     </main>
-        
+
+    
+    <script src="/src/js/noto.js"></script>
     <script>
+         function setMode(mode, btn) {
+            if (running) return;
+            currentMode = mode;
+            document.querySelectorAll('.mode-tab').forEach(t => {
+                t.classList.remove('bg-[#FFD04E]','text-[#111111]','font-bold');
+                t.classList.add('text-[#888]','font-semibold');
+            });
+            btn.classList.remove('text-[#888]','font-semibold');
+            btn.classList.add('bg-[#FFD04E]','text-[#111111]','font-bold');
+            totalSeconds = settings[mode] * 60;
+            remainingSeconds = totalSeconds; remainingMs = 0;
+            const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
+            document.getElementById('timer-status').textContent = statuses[mode];
+            updateDisplay();
+            }
         function formatText(command) {
             // 1. Panggil kursor masuk ke area teks DULUAN
             document.querySelector('.note-body').focus(); 
@@ -197,13 +219,18 @@
         editor.addEventListener('mouseup', checkActiveButtons);
 
         function toggleFavorite() {
-            const icon = document.getElementById('fav-icon');
-            if(icon.classList.contains('fa-regular')) {
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid');
-            } else {
-                icon.classList.remove('fa-solid');
-                icon.classList.add('fa-regular');
+            if (!activeNoteId) return;
+
+            const noteIndex = dummyNotes.findIndex(n => n.id === activeNoteId);
+            if (noteIndex !== -1) {
+                // Balikkan statusnya (kalau true jadi false, kalau false jadi true)
+                dummyNotes[noteIndex].isFavorite = !dummyNotes[noteIndex].isFavorite;
+                
+                // Render ulang panel kiri (Siapa tahu mau nambahin icon bintang di card-nya nanti)
+                renderNotesList(); 
+                
+                // Panggil fungsi untuk mengubah UI bintang di toolbar
+                updateFavoriteIcon(dummyNotes[noteIndex].isFavorite);
             }
         }
 
@@ -242,7 +269,154 @@
                         leftAlignBtn.classList.add('active-btn');
                     }
                 }
+                renderNotesList();
             });
+            // 2. Tentukan ID catatan mana yang sedang aktif/dipilih (Default kita pilih ID 1)
+            let activeNoteId = 1;
+
+            // 3. Fungsi untuk menggambar (me-render) kartu ke dalam HTML
+            function renderNotesList() {
+                const listContainer = document.getElementById('notes-list');
+                listContainer.innerHTML = ''; // Bersihkan wadah sebelum diisi ulang
+
+                // Ulangi pembuatan kartu sebanyak jumlah data di dummyNotes
+                dummyNotes.forEach(note => {
+                    // Cek apakah kartu ini sedang aktif
+                    const isActive = note.id === activeNoteId;
+                    
+                    // Logika Tailwind: Kalau aktif, kasih border kiri kuning & bg agak terang. Kalau nggak, bg gelap biasa.
+                    const cardClasses = isActive 
+                        ? 'border-l-4 border-[#FFD15C] bg-[#3A3A3F]' 
+                        : 'border-l-4 border-transparent bg-[#2A2A2D] hover:bg-[#3A3A3F]';
+
+                    // Menyiapkan ikon bintang jika catatan ini adalah favorit
+                    const favoriteIcon = note.isFavorite 
+                        ? '<i class="fa-solid fa-star text-[#FFD15C] text-sm shrink-0 mt-1"></i>' 
+                        : '';
+
+                    // Buat struktur HTML per kartu
+                    const noteHTML = `
+                        <div onclick="selectNote(${note.id})" class="cursor-pointer p-4 rounded-lg transition duration-200 flex-shrink-0 ${cardClasses}">
+                            
+                            <div class="flex justify-between items-start mb-2 gap-2">
+                                <h3 class="text-white font-bold text-lg truncate">${note.title}</h3>
+                                ${favoriteIcon}
+                            </div>
+                            
+                            <p class="text-[#B0B0B0] text-sm leading-relaxed line-clamp-3">${note.body}</p>
+                        </div>
+                    `;
+                    
+                    // Masukkan HTML tadi ke dalam list container
+                    listContainer.innerHTML += noteHTML;
+                });
+            }           
+
+            // 4. Fungsi saat salah satu kartu diklik
+            function selectNote(id) {
+                activeNoteId = id;
+                renderNotesList();
+                
+                const selectedNote = dummyNotes.find(n => n.id === id);
+                if(selectedNote) {
+                    document.querySelector('.note-title').value = selectedNote.title;
+                    document.querySelector('.note-body').innerHTML = selectedNote.body;
+                    
+                    // Update bintang di toolbar sesuai status catatan yang baru diklik
+                    updateFavoriteIcon(selectedNote.isFavorite);
+                }
+            }  
+            // --- FUNGSI SIMPAN ---
+                function saveNote() {
+                    if (!activeNoteId) return; // Kalau gak ada catatan yang dipilih, diam saja
+
+                    // Ambil isi teks dari layar
+                    const currentTitle = document.querySelector('.note-title').value;
+                    const currentBody = document.querySelector('.note-body').innerHTML;
+
+                    // Cari catatan yang sedang aktif di database dummy kita, lalu update isinya
+                    const noteIndex = dummyNotes.findIndex(n => n.id === activeNoteId);
+                    if (noteIndex !== -1) {
+                        dummyNotes[noteIndex].title = currentTitle;
+                        dummyNotes[noteIndex].body = currentBody;
+                        
+                        renderNotesList(); // Render ulang panel kiri biar judul barunya muncul
+                        
+                        // Kasih efek visual sedikit ke tombol simpan biar user tahu udah tersimpan
+                        const saveBtn = document.querySelector('button[onclick="saveNote()"]');
+                        const originalText = saveBtn.innerHTML;
+                        saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> Tersimpan!';
+                        setTimeout(() => saveBtn.innerHTML = originalText, 1500); // Balik normal setelah 1.5 detik
+                    }
+                }
+
+                // --- FUNGSI HAPUS ---
+                function deleteNote() {
+                    if (!activeNoteId) return;
+
+                    // Munculkan pop-up konfirmasi
+                    const isConfirmed = confirm(" Ingin menghapus catatan ini?");
+                    if (!isConfirmed) return;
+
+                    // Hapus dari array database
+                    dummyNotes = dummyNotes.filter(n => n.id !== activeNoteId);
+
+                    // Kalau masih ada catatan sisa, buka catatan pertama. Kalau habis, kosongkan layar.
+                    if (dummyNotes.length > 0) {
+                        selectNote(dummyNotes[0].id);
+                    } else {
+                        activeNoteId = null;
+                        document.querySelector('.note-title').value = '';
+                        document.querySelector('.note-body').innerHTML = '';
+                        renderNotesList();
+                    }
+                }            
+                function updateFavoriteIcon(isFav) {
+                const icon = document.getElementById('fav-icon');
+                if (isFav) {
+                    icon.className = 'fa-solid fa-star';
+                    icon.style.color = '#FFD15C';
+                } else {
+                    icon.className = 'fa-regular fa-star';
+                    icon.style.color = '';
+                }
+            }
+            // buat tambah catatan baru
+            // --- FUNGSI TAMBAH CATATAN BARU ---
+            function createNewNote() {
+                // 1. Buat ID unik menggunakan waktu saat ini (timestamp)
+                const newId = Date.now();
+                
+                // 2. Buat struktur data catatan kosong
+                const newNote = {
+                    id: newId,
+                    title: "Catatan Baru",
+                    body: "",
+                    isFavorite: false
+                };
+                
+                // 3. Masukkan catatan baru ini ke urutan PALING ATAS di array dummyNotes
+                dummyNotes.unshift(newNote);
+                
+                // 4. Jadikan catatan baru ini sebagai catatan yang sedang aktif
+                activeNoteId = newId;
+                
+                // 5. Render ulang panel kiri biar kartu barunya muncul
+                renderNotesList();
+                
+                // 6. Siapkan editor di panel kanan
+                const titleInput = document.querySelector('.note-title');
+                const bodyInput = document.querySelector('.note-body');
+                
+                titleInput.value = newNote.title;
+                bodyInput.innerHTML = newNote.body;
+                updateFavoriteIcon(newNote.isFavorite); // Reset icon bintang
+                
+                // 7. UX Magic: Langsung fokuskan kursor ke judul dan blok teksnya
+                // Jadi saat user ngetik, teks "Catatan Baru" langsung tertimpa otomatis
+                titleInput.focus();
+                titleInput.select();
+            }
     </script>
 
 </body>

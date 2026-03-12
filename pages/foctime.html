@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+
+
     body { 
       font-family: 'Plus Jakarta Sans', sans-serif;
       overflow: hidden; /* no scroll sama sekali */
@@ -16,6 +18,30 @@
       font-family: 'Bebas Neue', sans-serif; 
     }
     .nav-blur { backdrop-filter: blur(20px); }
+
+    .ring-progress {
+        fill: none;
+        stroke: #FFD04E;
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-dasharray: 1068;
+        stroke-dashoffset: 0;
+        transition: stroke-dashoffset 0.5s linear;
+        filter: drop-shadow(0 0 8px rgba(255,214,10,0.5));
+    }
+    .ring-track { fill: none; stroke: #2a2a2a; stroke-width: 6; }
+    .ring-progress.done {
+        stroke: #4ade80;
+        filter: drop-shadow(0 0 10px rgba(74,222,128,0.5));
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.4; }
+      100% { transform: scale(1.08); opacity: 0; }
+    }
+    .pulse-anim { animation: pulse-ring 2s ease-out infinite; }
+
+
 
     @keyframes slideIn {
       from { opacity: 0; transform: translateX(-8px); }
@@ -28,10 +54,14 @@
   </style>
 </head>
 
-<body class="bg-[#111111] text-[#F0F0F0] h-screen flex flex-col">
 
-  <!-- Navbar -->
-  <nav class="nav-blur flex-shrink-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+
+
+
+<body class="bg-[#111111] text-[#F0F0F0] h-screen flex flex-col overflow-x-hidden"></body>
+
+
+  <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
     <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
     <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
