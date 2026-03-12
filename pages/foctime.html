@@ -9,11 +9,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { 
-        font-family: 'Plus Jakarta Sans', sans-serif; 
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow: hidden; /* no scroll sama sekali */
     }
     .font-bebas { 
-        font-family: 'Bebas Neue', sans-serif; 
+      font-family: 'Bebas Neue', sans-serif; 
     }
+    .nav-blur { backdrop-filter: blur(20px); }
 
     @keyframes slideIn {
       from { opacity: 0; transform: translateX(-8px); }
@@ -25,9 +27,11 @@
     .log-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
   </style>
 </head>
-<body class="bg-[#111111] text-[#F0F0F0] h-screen flex flex-col overflow-x-hidden"></body>
 
-  <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+<body class="bg-[#111111] text-[#F0F0F0] h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <nav class="nav-blur flex-shrink-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
     <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
     <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
       <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
@@ -39,8 +43,12 @@
     <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
   </nav>
 
-  <div class="grid grid-cols-[400px_1fr] min-h-[calc(100vh-77px)]">
-    <aside class="border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex flex-col gap-6">
+  <!-- Content area: fixed height = sisa setelah navbar -->
+  <div class="flex-1 grid grid-cols-[400px_1fr] overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex flex-col gap-6 overflow-hidden">
+      <!-- Custom settings -->
       <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
         <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-5">Custom</div>
         <div class="flex items-center justify-between py-[10px] border-b border-white/[0.07]">
@@ -69,41 +77,51 @@
         </div>
         <button onclick="applySettings()" class="w-full mt-[18px] bg-[#FFD04E] text-[#111111] rounded-xl py-3 text-sm font-bold hover:bg-[#ffe033] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">Apply Settings</button>
       </div>
+
+      <!-- FocStats -->
       <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
         <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-4">FocStats</div>
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
             <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-sessions">0</div>
-            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Sessions</div>
+            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Sessions Today</div>
           </div>
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
             <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-minutes">0</div>
-            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Min Focus</div>
-          </div>
-          <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
-            <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-streak">0</div>
             <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Streak</div>
-          </div>
-          <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
-            <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-today">0</div>
-            <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Today</div>
           </div>
         </div>
       </div>
     </aside>
 
-    <main class="flex flex-col items-center justify-start px-6 pt-20 pb-6 relative overflow-hidden">
-      <div class="flex bg-[#222222] rounded-full p-[4px] border border-white/[0.07] mb-12">
-        <button onclick="setMode('focus',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111] transition-all">Focus</button>
-        <button onclick="setMode('short',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Short Break</button>
-        <button onclick="setMode('long',this)" class="mode-tab px-7 py-[9px] rounded-full text-sm font-semibold text-[#888] hover:text-white transition-all">Long Break</button>
+    <!-- Main timer area -->
+    <main class="flex flex-col items-center justify-center px-6 pb-6 relative overflow-hidden">
+
+      <!-- Mode tabs  -->
+      <div class="flex gap-2 mb-12">
+        <button onclick="setMode('focus',this)" id="tab-focus"
+          class="mode-tab px-6 py-2 rounded-xl text-sm font-bold bg-[#FFD04E] text-[#111111] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
+          Focus
+        </button>
+        <button onclick="setMode('short',this)" id="tab-short"
+          class="mode-tab px-6 py-2 rounded-xl text-sm font-semibold text-[#555] border border-white/[0.07] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          Short Break
+        </button>
+        <button onclick="setMode('long',this)" id="tab-long"
+          class="mode-tab px-6 py-2 rounded-xl text-sm font-semibold text-[#555] border border-white/[0.07] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          Long Break
+        </button>
       </div>
+
+      <!-- Timer -->
       <div class="flex flex-col items-center mb-12">
         <div class="font-bebas leading-none tracking-wider" style="font-size: clamp(80px, 12vw, 140px);">
-          <span id="timer-mm">25</span><span class="text-[white]">.</span><span id="timer-ss">00</span><span id="timer-ms" style="font-size: clamp(40px, 70px);" class="font-bebas text-[white]">.00</span>
+          <span id="timer-mm">25</span><span class="text-white">.</span><span id="timer-ss">00</span><span id="timer-ms" class="font-bebas text-white" style="font-size: clamp(40px, 6vw, 70px);">.00</span>
         </div>
         <div class="text-[15px] font-bold text-white tracking-[3px] uppercase mt-5" id="timer-status">Time to Focus!</div>
       </div>
+
+      <!-- Buttons -->
       <div class="flex items-center gap-4">
         <button onclick="resetTimer()" class="flex items-center gap-2 px-20 py-[14px] rounded-xl text-[15px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -125,11 +143,12 @@
     </main>
   </div>
 
+  <!-- Motivate Modal -->
   <div id="modal" onclick="closeMotivate(event)" class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
     <div id="modal-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-10 max-w-[440px] w-[90%] text-center scale-95 transition-transform duration-200">
       <div class="text-5xl mb-4" id="modal-emoji">💪</div>
-      <div class="text-lg leading-relaxed text-[#ddd] font-medium mb-2" id="modal-quote">"The secret of getting ahead is getting started."</div>
-      <div class="text-sm text-[#888] mb-7" id="modal-author">— Mark Twain</div>
+      <div class="text-lg leading-relaxed text-[#ddd] font-medium mb-2" id="modal-quote"></div>
+      <div class="text-sm text-[#888] mb-7" id="modal-author"></div>
       <button onclick="closeMotivate()" class="bg-[#FFD04E] text-[#111111] px-8 py-3 rounded-xl font-bold text-sm">Let's Go! 🚀</button>
     </div>
   </div>
@@ -143,8 +162,7 @@
     let running = false;
     let intervalId = null;
     let startTime = null;
-    let stats = { sessions: 0, minutes: 0, streak: 0, today: 0 };
-    let logs = [];
+    let stats = { sessions: 0, minutes: 0 };
 
     function adjustTime(key, delta) {
       settings[key] = Math.max(1, Math.min(90, settings[key] + delta));
@@ -160,11 +178,11 @@
       if (running) return;
       currentMode = mode;
       document.querySelectorAll('.mode-tab').forEach(t => {
-        t.classList.remove('bg-[#FFD04E]','text-[#111111]','font-bold');
-        t.classList.add('text-[#888]','font-semibold');
+        t.classList.remove('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+        t.classList.add('text-[#555]', 'font-semibold', 'border', 'border-white/[0.07]');
       });
-      btn.classList.remove('text-[#888]','font-semibold');
-      btn.classList.add('bg-[#FFD04E]','text-[#111111]','font-bold');
+      btn.classList.remove('text-[#555]', 'font-semibold', 'border', 'border-white/[0.07]');
+      btn.classList.add('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
       totalSeconds = settings[mode] * 60;
       remainingSeconds = totalSeconds; remainingMs = 0;
       const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
@@ -208,12 +226,9 @@
       document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
       document.getElementById('timer-status').textContent = currentMode === 'focus' ? '✅ Session Complete!' : '✅ Break Done!';
       if (currentMode === 'focus') {
-        stats.sessions++; stats.minutes += settings.focus; stats.streak++; stats.today++;
-        addLog('focus', settings.focus + ' min focus');
-      } else {
-        addLog('break', (currentMode === 'short' ? settings.short : settings.long) + ' min break');
+        stats.sessions++; stats.minutes += settings.focus;
+        updateStats();
       }
-      updateStats();
       try {
         const ctx = new AudioContext(), osc = ctx.createOscillator(), gain = ctx.createGain();
         osc.connect(gain); gain.connect(ctx.destination);
@@ -230,32 +245,18 @@
       document.getElementById('timer-ms').textContent = '.' + String(remainingMs).padStart(2,'0');
     }
     function updateStats() {
-      ['sessions','minutes','streak','today'].forEach(k =>
-        document.getElementById('stat-' + k).textContent = stats[k]);
+      document.getElementById('stat-sessions').textContent = stats.sessions;
+      document.getElementById('stat-minutes').textContent = stats.minutes;
     }
-    function addLog(type, text) {
-      const now = new Date();
-      const time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-      logs.unshift({ type, text, time });
-      if (logs.length > 20) logs.pop();
-      renderLogs();
-    }
-    function renderLogs() {
-      const el = document.getElementById('log-list');
-      if (!logs.length) {
-        el.innerHTML = '<div class="text-center text-[#555] text-sm py-5">No sessions yet.<br>Start focusing! 🎯</div>';
-        return;
-      }
-      el.innerHTML = logs.map(l => '<div class="log-slide flex items-center gap-2.5 px-3 py-2.5 bg-[#2a2a2a] rounded-xl border border-white/[0.07] text-[13px]"><div class="w-2 h-2 rounded-full flex-shrink-0 ' + (l.type==='focus' ? 'bg-[#FFD04E]' : 'bg-green-400') + '"></div><span class="text-[#bbb] flex-1">' + l.text + '</span><span class="font-bebas text-[#555] text-sm">' + l.time + '</span></div>').join('');
-    }
-    // const quotes = [
-    //   { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
-    //   { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
-    //   { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
-    //   { emoji:'⚡', quote:""You don't have to be great to start, but you have to start to be great."", author:'— Zig Ziglar' },
-    //   { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
-    //   { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
-    // ];
+
+    const quotes = [
+      { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
+      { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
+      { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
+      { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
+      { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
+      { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
+    ];
     function openMotivate() {
       const q = quotes[Math.floor(Math.random() * quotes.length)];
       document.getElementById('modal-emoji').textContent = q.emoji;
