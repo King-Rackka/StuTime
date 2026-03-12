@@ -36,7 +36,7 @@
         }
   </style>
 </head>
-<body class="bg-[#1E1E20] text-[#F0F0F0] h-screen flex flex-col overflow-hidden">
+<body class="bg-[#1E1E20] text-[#F0F0F0] h-screen flex flex-col overflow-hidden overflow-x-hidden">
     <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90 shrink-0">
     <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
 
@@ -52,19 +52,19 @@
       Motivate
     </button>
   </nav>
-                <div class="flex justify-center items-center  py-6 shrink-0">
-                    <button class="bg-[#FFD04E] text-[#1E1E20] font-semibold py-3 w-[660px] rounded-md text-lg border-none cursor-pointer">
+                <div class="flex justify-center items-center py-6 shrink-0 gap-4 w-full">
+                    <button id="btn-tab-notes" onclick="switchMainTab('notes')"class="bg-[#FFD04E] text-[#1E1E20] font-semibold py-3 w-[644px] rounded-md text-lg border-none cursor-pointer">
                         Notes
                     </button>
                     
-                    <button class="bg-transparent text-[#FFD04E] font-normal py-3 w-[660px] rounded-md text-lg border-none cursor-pointer hover:bg-[#FFD15C]/10 transition duration-200">
+                    <button id="btn-tab-dafpus" onclick="switchMainTab('dafpus')"class="bg-transparent text-[#FFD04E] font-normal py-3 w-[668px] rounded-md text-lg border-none cursor-pointer hover:bg-[#FFD15C]/10 transition duration-200">
                         Journal Searcher
                     </button>
                 </div>
             </div>
 
 
-    <main class="px-10 py-8 flex-grow flex gap-8 overflow-hidden max-w-[1400px] w-full mx-auto">
+    <main id="tab-notes"class="px-10 py-8 flex-grow flex gap-8 overflow-hidden max-w-[1400px] w-full mx-auto">
         
 
         <div class="flex gap-8 flex-grow overflow-hidden ">
@@ -134,6 +134,62 @@
 
             </div>
         </div>
+    </main>
+    <main id="tab-dafpus" class="hidden px-10 py-8 flex-grow overflow-y-auto max-w-[1400px] w-full mx-auto   ">
+            <div class="flex gap-8 w-full h-full">
+
+                    <div class="w-[600px] bg-[#323236] rounded-xl p-8 flex flex-col gap-5 overflow-y-auto shrink-0">
+                        
+                        <div class="font-bebas text-lg tracking-wider text-[#FFD15C] mb-2">SOURCE TYPE</div>
+                        <div class="flex gap-2 mb-2 flex-wrap">
+                            <button class="source-type-btn active px-4 py-2 rounded-lg border border-[#FFD15C] bg-[#FFD15C] text-[#1E1E20] font-semibold text-sm transition" onclick="setSourceType('book',this)">📚 Book</button>
+                            <button class="source-type-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-semibold text-sm transition hover:text-white" onclick="setSourceType('journal',this)">📄 Journal</button>
+                            <button class="source-type-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-semibold text-sm transition hover:text-white" onclick="setSourceType('website',this)">🌐 Website</button>
+                        </div>
+
+                        <div class="font-bebas text-lg tracking-wider text-[#FFD15C] mb-2 mt-4">FORMAT</div>
+                        <div class="flex gap-2 mb-2">
+                            <button class="fmt-btn active px-4 py-2 rounded-lg border border-[#FFD15C] bg-[#2A2A2D] text-[#FFD15C] font-bold text-sm transition" onclick="setFormat('APA',this)">APA</button>
+                            <button class="fmt-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-bold text-sm transition hover:text-white" onclick="setFormat('IEEE',this)">IEEE</button>
+                            <button class="fmt-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-bold text-sm transition hover:text-white" onclick="setFormat('Chicago',this)">Chicago</button>
+                        </div>
+
+                        <div id="inputFields" class="flex flex-col gap-3 mt-2"></div>
+
+                        <button class="w-full mt-auto py-3 rounded-md font-bold cursor-pointer text-base bg-[#FFD15C] border-none text-black hover:bg-[#e6bc53] transition duration-200" onclick="generate()">
+                            Generate →
+                        </button>
+                    </div>
+
+                    <div class="w-[688px]  flex flex-col gap-6 overflow-hidden shrink-0">
+                        
+                        <div class="bg-[#323236] rounded-xl p-8 flex flex-col gap-4 shrink-0">
+                            <div class="font-bebas text-lg tracking-wider text-[#FFD15C]">RESULT</div>
+                            
+                            <div class="bg-[#2A2A2D] border border-gray-600 rounded-xl p-5 min-h-[120px] text-sm text-white leading-relaxed whitespace-pre-wrap" id="dafpusResult">Fill in the form and click Generate to see your bibliography entry here.</div>
+                            
+                            <div class="flex gap-2 mt-2">
+                                <button class="flex-1 py-2 rounded-md font-semibold bg-[#FFD15C] text-black hover:bg-[#e6bc53] transition" onclick="copyResult()">📋 Copy</button>
+                                <button class="flex-1 py-2 rounded-md font-semibold bg-transparent border border-[#FFD15C] text-[#FFD15C] hover:bg-[#FFD15C]/10 transition" onclick="saveResult()">💾 Save</button>
+                                <button class="flex-1 py-2 rounded-md font-semibold bg-transparent border border-red-500 text-red-500 hover:bg-red-500/10 transition" onclick="clearResult()">🗑 Clear</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#323236] rounded-xl p-8 flex flex-col  flex-grow overflow-hidden">
+                            <div class="font-bebas text-lg tracking-wider text-[#FFD15C]">SAVED ENTRIES</div>
+                            
+                            <div class="flex flex-col gap-2 overflow-y-auto h-full pr-2" id="savedEntries">
+                                <div class="text-center text-gray-500 py-5"><p>No saved entries yet</p></div>
+                            </div>
+                            
+                            <button class="w-full mt-2 py-2 rounded-md font-semibold bg-transparent border border-gray-500 text-gray-400 hover:text-white hover:border-white transition shrink-0" onclick="exportAll()">
+                                ⬇ Export All as .txt
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
     </main>
 
     
@@ -309,6 +365,7 @@
                     
                     // Masukkan HTML tadi ke dalam list container
                     listContainer.innerHTML += noteHTML;
+                    
                 });
             }           
 
@@ -417,6 +474,253 @@
                 titleInput.focus();
                 titleInput.select();
             }
+
+                    // --- FUNGSI PINDAH TAB (Notes <-> Journal) ---
+               // --- FUNGSI PINDAH TAB (Versi Aman untuk Ukuran) ---
+                function switchMainTab(tabName) {
+    const tabNotes = document.getElementById('tab-notes');
+    const tabDafpus = document.getElementById('tab-dafpus');
+    const btnNotes = document.getElementById('btn-tab-notes');
+    const btnDafpus = document.getElementById('btn-tab-dafpus');
+
+    // HANYA GANTI WARNA, JANGAN SENTUH UKURAN (w-[500px])
+    const activeStyle = ['bg-[#FFD04E]', 'text-[#1E1E20]', 'font-semibold'];
+    const inactiveStyle = ['bg-transparent', 'text-[#FFD04E]', 'font-normal', 'hover:bg-[#FFD15C]/10'];
+
+    if (tabName === 'notes') {
+        tabNotes.classList.remove('hidden'); tabNotes.classList.add('flex');
+        tabDafpus.classList.add('hidden'); tabDafpus.classList.remove('flex');
+
+        btnNotes.classList.remove(...inactiveStyle); btnNotes.classList.add(...activeStyle);
+        btnDafpus.classList.remove(...activeStyle); btnDafpus.classList.add(...inactiveStyle);
+    } else if (tabName === 'dafpus') {
+        tabNotes.classList.add('hidden'); tabNotes.classList.remove('flex');
+        tabDafpus.classList.remove('hidden'); tabDafpus.classList.add('flex');
+
+        btnDafpus.classList.remove(...inactiveStyle); btnDafpus.classList.add(...activeStyle);
+        btnNotes.classList.remove(...activeStyle); btnNotes.classList.add(...inactiveStyle);
+    }
+}
+            // --- STATE MANAGEMENT DAFPUS ---
+                    let currentSourceType = 'book';
+                    let currentFormat = 'APA';
+                    let savedDafpus = [];
+                    // --- KONFIGURASI FORM INPUT DAFPUS ---
+                const FIELDS = {
+                    book: [
+                    { id:'author', label:'Author(s)', placeholder:'e.g. John Doe' },
+                    { id:'title', label:'Book Title', placeholder:'e.g. Introduction to Algorithms' },
+                    { id:'year', label:'Year', placeholder:'e.g. 2023' },
+                    { id:'city', label:'City', placeholder:'e.g. Jakarta' },
+                    { id:'publisher', label:'Publisher', placeholder:'e.g. Gramedia' },
+                    { id:'edition', label:'Edition (optional)', placeholder:'e.g. 3rd' },
+                    ],
+                    journal: [
+                    { id:'author', label:'Author(s)', placeholder:'e.g. Jane Smith' },
+                    { id:'title', label:'Article Title', placeholder:'e.g. Study on Productivity' },
+                    { id:'journal', label:'Journal Name', placeholder:'e.g. Jurnal Pendidikan' },
+                    { id:'year', label:'Year', placeholder:'e.g. 2023' },
+                    { id:'volume', label:'Volume', placeholder:'e.g. 5' },
+                    { id:'issue', label:'Issue/Number', placeholder:'e.g. 2' },
+                    { id:'pages', label:'Pages', placeholder:'e.g. 100-115' },
+                    ],
+                    website: [
+                    { id:'author', label:'Author(s)', placeholder:'e.g. Admin Kompas' },
+                    { id:'title', label:'Page Title', placeholder:'e.g. Cara Belajar Efektif' },
+                    { id:'site', label:'Website Name', placeholder:'e.g. Kompas.com' },
+                    { id:'year', label:'Year Published', placeholder:'e.g. 2023' },
+                    { id:'url', label:'URL', placeholder:'https://...' },
+                    { id:'accessed', label:'Date Accessed', placeholder:'e.g. 13 March 2026' }, // Aku update dikit ke hari ini ya!
+                    ]
+                };      
+
+                    // --- 1. FUNGSI GANTI SUMBER (Book/Journal/Website) ---
+                    function setSourceType(type, btn) {
+                        currentSourceType = type;
+                        
+                        // Siapkan daftar warna untuk status Aktif dan Tidak Aktif
+                        const activeStyles = ['border-[#FFD15C]', 'bg-[#FFD15C]', 'text-[#1E1E20]'];
+                        const inactiveStyles = ['border-gray-600', 'bg-transparent', 'text-gray-400', 'hover:text-white'];
+
+                        // Reset semua tombol source-type jadi abu-abu (Tidak Aktif)
+                        document.querySelectorAll('.source-type-btn').forEach(b => {
+                            b.classList.remove(...activeStyles);
+                            b.classList.add(...inactiveStyles);
+                        });
+                        
+                        // Ubah tombol yang sedang diklik jadi kuning (Aktif)
+                        btn.classList.remove(...inactiveStyles);
+                        btn.classList.add(...activeStyles);
+                        
+                        // Tampilkan kolom input yang sesuai
+                        renderInputFields();
+                    }       
+
+                    // --- 2. FUNGSI GANTI FORMAT (APA/IEEE/Chicago) ---
+                    function setFormat(format, btn) {
+                    currentFormat = format;
+                    
+                    // Format punya style aktif yang sedikit beda (bg gelap, teks kuning)
+                    const activeStyles = ['border-[#FFD15C]', 'bg-[#2A2A2D]', 'text-[#FFD15C]'];
+                    const inactiveStyles = ['border-gray-600', 'bg-transparent', 'text-gray-400', 'hover:text-white'];
+
+                    // Reset semua tombol format jadi abu-abu (Tidak Aktif)
+                    document.querySelectorAll('.fmt-btn').forEach(b => {
+                        b.classList.remove(...activeStyles);
+                        b.classList.add(...inactiveStyles);
+                    });
+                    
+                    // Ubah tombol yang sedang diklik jadi kuning (Aktif)
+                    btn.classList.remove(...inactiveStyles);
+                    btn.classList.add(...activeStyles);
+                }
+
+                    // --- 3. FUNGSI MENGGAMBAR KOLOM INPUT (Pakai Data FIELDS) ---
+                            function renderInputFields() {
+                                const container = document.getElementById('inputFields');
+                                let html = '';
+
+                                // Cetakan HTML kita
+                                const createInput = (id, label, placeholder) => `
+                                    <div class="mb-4">
+                                        <label class="block text-[#888888] text-[11px] font-bold tracking-widest mb-2 uppercase">${label}</label>
+                                        <input type="text" id="daf-${id}" placeholder="${placeholder}" class="w-full bg-[#222222] border border-white/[0.07] rounded-lg px-4 py-3 text-[#F0F0F0] text-sm outline-none focus:border-[#FFD15C] transition-all">
+                                    </div>
+                                `;
+
+                                // Loop otomatis mengambil data berdasarkan Source Type yang aktif
+                                FIELDS[currentSourceType].forEach(field => {
+                                    html += createInput(field.id, field.label, field.placeholder);
+                                });
+
+                                container.innerHTML = html;
+                            }       
+                            // --- HELPER FUNGSI APA (Karena di kodemu dipanggil formatAuthorAPA) ---
+                                function formatAuthorAPA(authorStr) {
+                                    if (!authorStr) return '';
+                                    // Kalau kamu mau bikin logika pemotongan nama jadi inisial (misal: "Doe, J."), bisa ditaruh di sini.
+                                    // Tapi untuk amannya sementara, kita kembalikan string aslinya.
+                                    return authorStr; 
+                                }
+                    // --- 4. FUNGSI GENERATE SITASI ---
+                    // --- 4. FUNGSI GENERATE SITASI ---
+function generate() {
+    const getVal = (id) => document.getElementById('daf-' + id)?.value.trim() || '';
+    
+    // Looping otomatis untuk mengambil value dari input yang ada di layar
+    const v = {};
+    FIELDS[currentSourceType].forEach(f => v[f.id] = getVal(f.id));
+
+    if (!v.author || !v.title) { 
+        alert('⚠️ Author and Title are required'); 
+        return; 
+    }
+
+    let result = '';
+    const format = currentFormat;
+    const sourceType = currentSourceType;
+
+    // Logika penyusunan sitasi (Sama persis dengan buatanmu yang rapi tadi)
+    if (format === 'APA') {
+        const auth = formatAuthorAPA(v.author);
+        if (sourceType === 'book') {
+            result = `${auth} (${v.year||'n.d.'}). *${v.title}*${v.edition ? ` (${v.edition} ed.)` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}.`;
+        } else if (sourceType === 'journal') {
+            result = `${auth} (${v.year||'n.d.'}). ${v.title}. *${v.journal}*, *${v.volume}*(${v.issue}), ${v.pages}.`;
+        } else {
+            result = `${auth} (${v.year||'n.d.'}). *${v.title}*. ${v.site}. Retrieved ${v.accessed} from ${v.url}`;
+        }
+    } else if (format === 'IEEE') {
+        const auth = v.author;
+        if (sourceType === 'book') {
+            result = `${auth}, *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+        } else if (sourceType === 'journal') {
+            result = `${auth}, "${v.title}," *${v.journal}*, vol. ${v.volume}, no. ${v.issue}, pp. ${v.pages}, ${v.year||'n.d.'}.`;
+        } else {
+            result = `${auth}, "${v.title}," *${v.site}*. [Online]. Available: ${v.url}. [Accessed: ${v.accessed}].`;
+        }
+    } else { // Chicago
+        if (sourceType === 'book') {
+            result = `${v.author}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+        } else if (sourceType === 'journal') {
+            result = `${v.author}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year||'n.d.'}): ${v.pages}.`;
+        } else {
+            result = `${v.author}. "${v.title}." *${v.site}*. Last modified ${v.year||'n.d.'}. Accessed ${v.accessed}. ${v.url}.`;
+        }
+    }
+
+    // Ubah markdown bintang (*teks*) menjadi miring
+    const finalHTML = result.replace(/\*(.*?)\*/g, '<i>$1</i>');
+    document.getElementById('dafpusResult').innerHTML = finalHTML;
+}
+
+// Helper kosong jika kamu belum membuat fungsi formatAuthorAPA
+function formatAuthorAPA(authorStr) {
+    return authorStr;
+}
+
+                    // --- 5. FUNGSI COPY, SAVE, & CLEAR ---
+                    function copyResult() {
+                        const text = document.getElementById('dafpusResult').innerText;
+                        if(text.includes('Fill in the form')) return;
+                        
+                        navigator.clipboard.writeText(text);
+                        alert('Sitasi disalin ke clipboard!');
+                    }
+
+                    function clearResult() {
+                        document.getElementById('dafpusResult').innerHTML = 'Fill in the form and click Generate to see your bibliography entry here.';
+                        renderInputFields(); // Kosongkan form juga
+                    }
+
+                    function saveResult() {
+                        const text = document.getElementById('dafpusResult').innerHTML;
+                        if(text.includes('Fill in the form')) return;
+                        
+                        savedDafpus.push(text);
+                        renderSavedEntries();
+                    }
+
+                    function renderSavedEntries() {
+                        const container = document.getElementById('savedEntries');
+                        if(savedDafpus.length === 0) return;
+
+                        container.innerHTML = savedDafpus.map((entry, index) => `
+                            <div class="saved-entry">
+                                <div class="saved-entry-text">${entry}</div>
+                                <button class="del-btn" onclick="deleteSavedEntry(${index})"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        `).join('');
+                    }
+
+                    function deleteSavedEntry(index) {
+                        savedDafpus.splice(index, 1);
+                        if(savedDafpus.length === 0) {
+                            document.getElementById('savedEntries').innerHTML = '<div class="empty-state" style="padding:20px 0;"><p>No saved entries yet</p></div>';
+                        } else {
+                            renderSavedEntries();
+                        }
+                    }
+
+                    function exportAll() {
+                        if(savedDafpus.length === 0) {
+                            alert("Belum ada daftar pustaka yang disimpan!"); return;
+                        }
+                        
+                        // Ubah format HTML (<i>) ke teks biasa untuk file .txt
+                        const plainTextContent = savedDafpus.map(entry => entry.replace(/<\/?i>/g, '')).join('\n\n');
+                        
+                        const blob = new Blob([plainTextContent], { type: "text/plain;charset=utf-8" });
+                        const link = document.createElement("a");
+                        link.href = URL.createObjectURL(blob);
+                        link.download = "Daftar_Pustaka.txt";
+                        link.click();
+                    }
+
+                    // Panggil fungsi render pertama kali saat website dibuka
+                    window.addEventListener('DOMContentLoaded', () => {
+                        renderInputFields();
+                    });
     </script>
 
 </body>
