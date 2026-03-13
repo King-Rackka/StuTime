@@ -8,7 +8,7 @@ function getTomorrowStr() {
   return formatDate(d);
 }
 function getDateStr(daysFromNow) {
-  const d = new Date();
+  const d = new Date(); 
   d.setDate(d.getDate() + daysFromNow);
   return formatDate(d);
 }
@@ -127,6 +127,7 @@ function renderTaskList() {
               ${t.done ? 'opacity-50' : ''}">
             <div class="flex flex-col items-center gap-1 flex-shrink-0 w-10">
               <span class="text-[11px] font-bold text-[#FFD04E]">${t.time}</span>
+              ${t.pinned ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="#FFD04E"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>' : ''}
             </div>
             <div class="flex-1 min-w-0">
               <div class="text-sm font-semibold text-white truncate ${t.done ? 'line-through' : ''}">${t.title}</div>
@@ -355,5 +356,26 @@ function closeMotivate(e) {
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded', () => {
   loadTasks();
+  // Auto-select task dari query param ?id= (dari calendar)
+  const params = new URLSearchParams(window.location.search);
+  const idParam = params.get('id');
+  if (idParam) {
+    selectedId = parseInt(idParam);
+  }
   render();
+  // Scroll ke task yang dipilih di sidebar setelah render
+  if (idParam) {
+    setTimeout(() => {
+      const selected = document.querySelector('.task-card.bg-\\[\\#FFD04E\\]');
+      const container = document.getElementById('task-list-container');
+      if (container) {
+        const cards = container.querySelectorAll('.task-card');
+        cards.forEach(card => {
+          if (card.classList.contains('border-[#FFD04E]') || card.style.borderColor) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        });
+      }
+    }, 100);
+  }
 });

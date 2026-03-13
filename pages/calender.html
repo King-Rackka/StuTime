@@ -53,13 +53,13 @@
       <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
       <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
       <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">FocTime!</a>
-      <a href="calender.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Calendar</a>
+      <a href="calendar.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Calendar</a>
     </div>
     <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
   </nav>
 
   <!-- Layout -->
-  <div class="flex-1 grid grid-cols-[320px_1fr] overflow-hidden">
+  <div class="flex-1 grid grid-cols-[400px_1fr] overflow-hidden">
 
     <!-- Sidebar: upcoming schedule -->
     <aside class="border-r border-white/[0.07] bg-[#1a1a1a] flex flex-col overflow-hidden">
@@ -103,7 +103,7 @@
         </button>
         <div class="text-center">
           <div class="font-bebas text-xl tracking-wider" id="modal-day-label"></div>
-          <div id="holiday-label" class="text-xs text-red-400 mt-0.5 hidden"></div>
+          <div id="holiday-label" class="text-xs text-green-400 mt-0.5 hidden"></div>
         </div>
         <button onclick="nextDay()" class="w-8 h-8 rounded-lg border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
@@ -168,6 +168,7 @@
   </div>
 
   <script>
+    // ─── HARI BESAR 2026–2030 ───
     const holidays = {
       '2026-01-01':'Tahun Baru Masehi','2026-01-27':'Isra Miraj','2026-01-29':'Tahun Baru Imlek',
       '2026-03-20':'Hari Raya Nyepi','2026-03-22':'Idul Fitri 1447 H','2026-03-23':'Idul Fitri 1447 H (Hari Kedua)',
@@ -286,7 +287,7 @@
 
           const el = document.createElement('div');
           el.className = [
-            'relative min-h-[68px] rounded-xl p-1.5 transition-all select-none',
+            'relative min-h-[80px] rounded-xl p-1.5 transition-all select-none',
             cell.current ? 'cursor-pointer' : 'opacity-20 pointer-events-none',
             isToday ? 'bg-[#FFD04E]/10 border border-[#FFD04E]/40' : 'border border-transparent',
             cell.current && !isToday ? 'hover:bg-[#1c1c1c] hover:border-white/[0.06]' : '',
@@ -306,12 +307,13 @@
           numEl.textContent = cell.day;
           el.appendChild(numEl);
 
-          // Holiday dot
+          // Holiday chip
           if (isHoliday) {
-            const dot = document.createElement('div');
-            dot.className = 'absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-red-400/80';
-            dot.title = holidays[dateStr];
-            el.appendChild(dot);
+            const chip = document.createElement('div');
+            chip.className = 'text-[9px] font-semibold px-1.5 py-0.5 rounded truncate leading-tight bg-green-500/20 text-green-400 mt-0.5';
+            chip.textContent = holidays[dateStr];
+            chip.title = holidays[dateStr];
+            el.appendChild(chip);
           }
 
           // Task chips
@@ -353,12 +355,11 @@
         return;
       }
       list.innerHTML = upcoming.map(t => `
-        <div onclick="openDayModal('${t.date}')"
+        <div onclick="goToTask(${t.id})""
           class="slide-in flex items-center gap-3 p-4 bg-[#222222] border-l-[3px] border-[#FFD04E] rounded-xl cursor-pointer hover:bg-[#2a2a2a] transition-all">
           <div class="flex-1 min-w-0">
             <div class="text-[11px] text-[#666] mb-0.5">${formatDateLabel(t.date)}</div>
             <div class="text-sm font-bold text-white truncate">${t.title}</div>
-            <div class="text-xs text-[#FFD04E] font-bebas mt-0.5">${t.time}</div>
           </div>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
         </div>
@@ -494,6 +495,10 @@
         m.classList.add('opacity-0','pointer-events-none'); m.classList.remove('opacity-100');
         document.getElementById('motivate-box').classList.add('scale-95'); document.getElementById('motivate-box').classList.remove('scale-100');
       }
+    }
+
+    function goToTask(id) {
+      window.location.href = 'task.html?id=' + id;
     }
 
     renderCalendar();
