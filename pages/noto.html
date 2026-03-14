@@ -58,7 +58,7 @@
                     </button>
                     
                     <button id="btn-tab-dafpus" onclick="switchMainTab('dafpus')"class="bg-transparent text-[#FFD04E] font-normal py-3 w-[668px] rounded-md text-lg border-none cursor-pointer hover:bg-[#FFD15C]/10 transition duration-200">
-                        Journal Searcher
+                        Journal Formatter
                     </button>
                 </div>
             </div>
@@ -576,88 +576,257 @@
                 }
 
                     // --- 3. FUNGSI MENGGAMBAR KOLOM INPUT (Pakai Data FIELDS) ---
-                            function renderInputFields() {
-                                const container = document.getElementById('inputFields');
-                                let html = '';
+                            // --- 3. FUNGSI MENGGAMBAR KOLOM INPUT (UPDATE MULTI-AUTHOR) ---
+function renderInputFields() {
+    const container = document.getElementById('inputFields');
+    let html = '';
 
-                                // Cetakan HTML kita
-                                const createInput = (id, label, placeholder) => `
-                                    <div class="mb-4">
-                                        <label class="block text-[#888888] text-[11px] font-bold tracking-widest mb-2 uppercase">${label}</label>
-                                        <input type="text" id="daf-${id}" placeholder="${placeholder}" class="w-full bg-[#222222] border border-white/[0.07] rounded-lg px-4 py-3 text-[#F0F0F0] text-sm outline-none focus:border-[#FFD15C] transition-all">
-                                    </div>
-                                `;
+    const createInput = (id, label, placeholder) => {
+        // KHUSUS UNTUK AUTHOR: Kita bikin dinamis ada tombol '+' nya
+        if (id === 'author') {
+            return `
+            <div class="mb-4">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-[#888888] text-[11px] font-bold tracking-widest uppercase">${label}</label>
+                    <button type="button" onclick="addAuthorField()" class="text-[#FFD15C] text-[10px] font-bold tracking-wider hover:text-[#1E1E20] hover:bg-[#FFD15C] transition bg-[#FFD15C]/10 px-3 py-1 rounded-md border border-[#FFD15C]/30 cursor-pointer">
+                        <i class="fa-solid fa-plus"></i> ADD AUTHOR
+                    </button>
+                </div>
+                <div id="author-container" class="flex flex-col gap-2">
+                    <div class="flex gap-2 author-row">
+                        <input type="text" class="daf-author-input w-full bg-[#222222] border border-white/[0.07] rounded-lg px-4 py-3 text-[#F0F0F0] text-sm outline-none focus:border-[#FFD15C] transition-all" placeholder="${placeholder}">
+                    </div>
+                </div>
+            </div>
+            `;
+        }
 
-                                // Loop otomatis mengambil data berdasarkan Source Type yang aktif
-                                FIELDS[currentSourceType].forEach(field => {
-                                    html += createInput(field.id, field.label, field.placeholder);
-                                });
+        // UNTUK KOLOM BIASA (Title, Year, dll)
+        return `
+        <div class="mb-4">
+            <label class="block text-[#888888] text-[11px] font-bold tracking-widest mb-2 uppercase">${label}</label>
+            <input type="text" id="daf-${id}" placeholder="${placeholder}" class="w-full bg-[#222222] border border-white/[0.07] rounded-lg px-4 py-3 text-[#F0F0F0] text-sm outline-none focus:border-[#FFD15C] transition-all">
+        </div>
+        `;
+    };
 
-                                container.innerHTML = html;
-                            }       
+    FIELDS[currentSourceType].forEach(field => {
+        html += createInput(field.id, field.label, field.placeholder);
+    });
+
+    container.innerHTML = html;
+}
+// --- FUNGSI KLIK TAMBAH AUTHOR ---
+function addAuthorField() {
+    const container = document.getElementById('author-container');
+    const rows = container.querySelectorAll('.author-row');
+    
+    // Cegah kalau udah 5 author
+    if (rows.length >= 5) {
+        alert('Maksimal 5 author ya!');
+        return;
+    }
+
+    // Buat kotak baru + tombol hapus
+    const div = document.createElement('div');
+    div.className = 'flex gap-2 author-row';
+    div.innerHTML = `
+        <input type="text" class="daf-author-input w-full bg-[#222222] border border-white/[0.07] rounded-lg px-4 py-3 text-[#F0F0F0] text-sm outline-none focus:border-[#FFD15C] transition-all" placeholder="Author ${rows.length + 1} (e.g. Mary Brown)">
+        <button type="button" onclick="removeAuthorField(this)" class="bg-red-500/10 text-red-500 border border-red-500/20 px-4 rounded-lg hover:bg-red-500 hover:text-white transition cursor-pointer flex-shrink-0">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    `;
+    container.appendChild(div);
+}
+
+// --- FUNGSI HAPUS AUTHOR ---
+function removeAuthorField(btn) {
+    // Hapus baris kotak tempat tombol ini berada
+    btn.closest('.author-row').remove();
+}    
                             // --- HELPER FUNGSI APA (Karena di kodemu dipanggil formatAuthorAPA) ---
-                                function formatAuthorAPA(authorStr) {
-                                    if (!authorStr) return '';
-                                    // Kalau kamu mau bikin logika pemotongan nama jadi inisial (misal: "Doe, J."), bisa ditaruh di sini.
-                                    // Tapi untuk amannya sementara, kita kembalikan string aslinya.
-                                    return authorStr; 
-                                }
-                    // --- 4. FUNGSI GENERATE SITASI ---
-                    // --- 4. FUNGSI GENERATE SITASI ---
-                        function generate() {
-                            const getVal = (id) => document.getElementById('daf-' + id)?.value.trim() || '';
-                            
-                            // Looping otomatis untuk mengambil value dari input yang ada di layar
-                            const v = {};
-                            FIELDS[currentSourceType].forEach(f => v[f.id] = getVal(f.id));
+                                
+                   //fungsi bat nama 
+                   // Fungsi dasar untuk memecah nama (First, Middle, Last)
+                    function parseAuthorName(fullName) {
+                        const parts = fullName.trim().split(/\s+/);
+                        if (parts.length === 1) return { last: parts[0], first: '', middle: '' }; // Kalau namanya cuma 1 kata
+                        
+                        const last = parts.pop(); // Ambil kata paling belakang
+                        const first = parts.shift(); // Ambil kata paling depan
+                        const middle = parts.join(' '); // Sisa kata di tengah (kalau ada)
+                        
+                        return { last, first, middle };
+                    }
 
-                            if (!v.author || !v.title) { 
-                                alert('⚠️ Author and Title are required'); 
-                                return; 
-                            }
-
-                            let result = '';
-                            const format = currentFormat;
-                            const sourceType = currentSourceType;
-
-                            // Logika penyusunan sitasi (Sama persis dengan buatanmu yang rapi tadi)
-                            if (format === 'APA') {
-                                const auth = formatAuthorAPA(v.author);
-                                if (sourceType === 'book') {
-                                    result = `${auth} (${v.year||'n.d.'}). *${v.title}*${v.edition ? ` (${v.edition} ed.)` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}.`;
-                                } else if (sourceType === 'journal') {
-                                    result = `${auth} (${v.year||'n.d.'}). ${v.title}. *${v.journal}*, *${v.volume}*(${v.issue}), ${v.pages}.`;
-                                } else {
-                                    result = `${auth} (${v.year||'n.d.'}). *${v.title}*. ${v.site}. Retrieved ${v.accessed} from ${v.url}`;
-                                }
-                            } else if (format === 'IEEE') {
-                                const auth = v.author;
-                                if (sourceType === 'book') {
-                                    result = `${auth}, *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
-                                } else if (sourceType === 'journal') {
-                                    result = `${auth}, "${v.title}," *${v.journal}*, vol. ${v.volume}, no. ${v.issue}, pp. ${v.pages}, ${v.year||'n.d.'}.`;
-                                } else {
-                                    result = `${auth}, "${v.title}," *${v.site}*. [Online]. Available: ${v.url}. [Accessed: ${v.accessed}].`;
-                                }
-                            } else { // Chicago
-                                if (sourceType === 'book') {
-                                    result = `${v.author}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
-                                } else if (sourceType === 'journal') {
-                                    result = `${v.author}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year||'n.d.'}): ${v.pages}.`;
-                                } else {
-                                    result = `${v.author}. "${v.title}." *${v.site}*. Last modified ${v.year||'n.d.'}. Accessed ${v.accessed}. ${v.url}.`;
-                                }
-                            }
-
-                            // Ubah markdown bintang (*teks*) menjadi miring
-                            const finalHTML = result.replace(/\*(.*?)\*/g, '<i>$1</i>');
-                            document.getElementById('dafpusResult').innerHTML = finalHTML;
+                    // Format APA: Fachri, R. N.
+                    function formatAuthorAPA(authorStr) {
+                        const { last, first, middle } = parseAuthorName(authorStr);
+                        if (!first) return last;
+                        
+                        // Singkat nama depan
+                        let initials = first.charAt(0).toUpperCase() + '.';
+                        
+                        // Singkat nama tengah (kalau namanya panjang banget kayak John Fitzgerald Kennedy)
+                        if (middle) {
+                            const middleInitials = middle.split(' ').map(n => n.charAt(0).toUpperCase() + '.').join(' ');
+                            initials += ' ' + middleInitials;
                         }
+                        return `${last}, ${initials}`;
+                    }
 
-                        // Helper kosong jika kamu belum membuat fungsi formatAuthorAPA
-                        function formatAuthorAPA(authorStr) {
-                            return authorStr;
-                        }
+                    // Format IEEE & Chicago: Fachri, Reza N.
+                   function formatAuthorChicago(authorStr) {
+                    const { last, first, middle } = parseAuthorName(authorStr);
+                    if (!first) return last;
+                    
+                    let result = `${last}, ${first}`;
+                    if (middle) {
+                        const middleInitials = middle.split(' ').map(n => n.charAt(0).toUpperCase() + '.').join(' ');
+                        result += ' ' + middleInitials;
+                    }
+                    return result;
+                }
+
+                // --- Format IEEE: A. S. Tanenbaum ---
+                function formatAuthorIEEE(authorStr) {
+                    const { last, first, middle } = parseAuthorName(authorStr);
+                    if (!first) return last; // Kalau cuma 1 kata
+                    
+                    let initials = first.charAt(0).toUpperCase() + '.';
+                    if (middle) {
+                        const middleInitials = middle.split(' ').map(n => n.charAt(0).toUpperCase() + '.').join(' ');
+                        initials += ' ' + middleInitials;
+                    }
+                    
+                    // Gabungkan inisial di depan, lalu spasi, lalu nama belakang
+                    return `${initials} ${last}`;
+                }
+                // ==========================================
+// FUNGSI PENGGABUNG BANYAK AUTHOR (MAX 5)
+// ==========================================
+function processMultipleAuthors(rawAuthors, formatType) {
+    // 1. Pisahkan nama berdasarkan tanda titik koma (;) atau koma (,)
+    const delimiter = rawAuthors.includes(';') ? ';' : ',';
+    let authorsArray = rawAuthors.split(delimiter).map(a => a.trim()).filter(a => a);
+    
+    // 2. Batasi maksimal 5 author
+    if (authorsArray.length > 5) {
+        authorsArray = authorsArray.slice(0, 5);
+    }
+    if (authorsArray.length === 0) return '';
+    
+    // 3. Format masing-masing nama pakai mesin pemotong yang sudah kita buat
+    let formattedAuthors = authorsArray.map(author => {
+        if (formatType === 'APA') return formatAuthorAPA(author);
+        if (formatType === 'IEEE') return formatAuthorIEEE(author);
+        return formatAuthorChicago(author);
+    });
+
+    // 4. Gabungkan kembali sesuai aturan jumlah orang dan gaya sitasi
+    if (formattedAuthors.length === 1) return formattedAuthors[0];
+
+    if (formattedAuthors.length === 2) {
+        if (formatType === 'APA') {
+            return `${formattedAuthors[0]}, & ${formattedAuthors[1]}`;
+        } else {
+            // IEEE dan Chicago pakai 'and' untuk 2 orang (tanpa koma sebelum and)
+            return `${formattedAuthors[0]} and ${formattedAuthors[1]}`;
+        }
+    }
+
+    // Untuk 3 sampai 5 orang
+    const lastAuthor = formattedAuthors.pop(); // Ambil orang terakhir
+    const joinedFirst = formattedAuthors.join(', '); // Gabungkan sisanya pakai koma
+    
+    if (formatType === 'APA') {
+        return `${joinedFirst}, & ${lastAuthor}`;
+    } else {
+        return `${joinedFirst}, and ${lastAuthor}`;
+    }
+}
+                    
+                    // 2. FUNGSI GENERATE SITASI (UPDATE WEBSITE)
+                    // ==========================================
+                    function generate() {
+                      const getVal = (id) => document.getElementById('daf-' + id)?.value.trim() || '';
+    
+    // --- KHUSUS AUTHOR: Kumpulkan isi semua kotak jadi satu ---
+    const getAuthorsValue = () => {
+        const inputs = document.querySelectorAll('.daf-author-input');
+        let vals = [];
+        inputs.forEach(inp => {
+            if (inp.value.trim() !== '') vals.push(inp.value.trim());
+        });
+        // Gabungkan dengan titik koma, biar gampang dipecah sama mesin kita
+        return vals.join('; '); 
+    };
+    
+    const v = {};
+    FIELDS[currentSourceType].forEach(f => {
+        if (f.id === 'author') {
+            v[f.id] = getAuthorsValue(); // Pakai fungsi khusus author
+        } else {
+            v[f.id] = getVal(f.id); // Pakai value biasa
+        }
+    });
+
+    if (!v.author || !v.title) { 
+        alert('⚠️ Author and Title are required'); 
+        return; 
+    }
+
+    let result = '';
+    const format = currentFormat;
+    const sourceType = currentSourceType;
+
+                        // ... (kode bagian atas generate() tetap sama) ...
+
+    if (format === 'APA') {
+        // PANGGIL MESIN MULTI-AUTHOR UNTUK APA
+        const auth = processMultipleAuthors(v.author, 'APA');
+        
+        if (sourceType === 'book') {
+            result = `${auth} (${v.year||'n.d.'}). *${v.title}*${v.edition ? ` (${v.edition} ed.)` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}.`;
+        } else if (sourceType === 'journal') {
+            result = `${auth} (${v.year||'n.d.'}). ${v.title}. *${v.journal}*, *${v.volume}*(${v.issue}), ${v.pages}.`;
+        } else {
+            result = `${auth} (${v.year||'n.d.'}). ${v.title}. ${v.site}. Retrieved from ${v.url}`;
+        }
+        
+    } else if (format === 'IEEE') {
+        // PANGGIL MESIN MULTI-AUTHOR UNTUK IEEE
+        const auth = processMultipleAuthors(v.author, 'IEEE');
+        
+        if (sourceType === 'book') {
+            result = `[1] ${auth}, *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+        } else if (sourceType === 'journal') {
+            result = `[1] ${auth}, "${v.title}," *${v.journal}*, vol. ${v.volume}, no. ${v.issue}, pp. ${v.pages}, ${v.year||'n.d.'}.`;
+        } else {
+            result = `[1] ${auth}, "${v.title}," ${v.site}, ${v.year||'n.d.'}. [Online]. Available: ${v.url}`;
+        }
+        
+    } else { // Chicago
+        // PANGGIL MESIN MULTI-AUTHOR UNTUK CHICAGO
+        const auth = processMultipleAuthors(v.author, 'Chicago');
+        
+        if (sourceType === 'book') {
+            result = `${auth}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+        } else if (sourceType === 'journal') {
+            result = `${auth}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year||'n.d.'}): ${v.pages}.`;
+        } else {
+            result = `${auth}. "${v.title}." ${v.site}. Accessed ${v.accessed}. ${v.url}`;
+        }
+    }
+
+    // ... (kode replace bintang ke italic tetap di bawah) ...
+
+                        // Mengubah tanda bintang menjadi cetak miring
+                        const finalHTML = result.replace(/\*(.*?)\*/g, '<i>$1</i>');
+                        document.getElementById('dafpusResult').innerHTML = finalHTML;
+                    }
+
+                        
 
                     // --- 5. FUNGSI COPY, SAVE, & CLEAR ---
                     function copyResult() {
