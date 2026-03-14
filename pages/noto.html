@@ -604,60 +604,60 @@
                                 }
                     // --- 4. FUNGSI GENERATE SITASI ---
                     // --- 4. FUNGSI GENERATE SITASI ---
-function generate() {
-    const getVal = (id) => document.getElementById('daf-' + id)?.value.trim() || '';
-    
-    // Looping otomatis untuk mengambil value dari input yang ada di layar
-    const v = {};
-    FIELDS[currentSourceType].forEach(f => v[f.id] = getVal(f.id));
+                        function generate() {
+                            const getVal = (id) => document.getElementById('daf-' + id)?.value.trim() || '';
+                            
+                            // Looping otomatis untuk mengambil value dari input yang ada di layar
+                            const v = {};
+                            FIELDS[currentSourceType].forEach(f => v[f.id] = getVal(f.id));
 
-    if (!v.author || !v.title) { 
-        alert('⚠️ Author and Title are required'); 
-        return; 
-    }
+                            if (!v.author || !v.title) { 
+                                alert('⚠️ Author and Title are required'); 
+                                return; 
+                            }
 
-    let result = '';
-    const format = currentFormat;
-    const sourceType = currentSourceType;
+                            let result = '';
+                            const format = currentFormat;
+                            const sourceType = currentSourceType;
 
-    // Logika penyusunan sitasi (Sama persis dengan buatanmu yang rapi tadi)
-    if (format === 'APA') {
-        const auth = formatAuthorAPA(v.author);
-        if (sourceType === 'book') {
-            result = `${auth} (${v.year||'n.d.'}). *${v.title}*${v.edition ? ` (${v.edition} ed.)` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}.`;
-        } else if (sourceType === 'journal') {
-            result = `${auth} (${v.year||'n.d.'}). ${v.title}. *${v.journal}*, *${v.volume}*(${v.issue}), ${v.pages}.`;
-        } else {
-            result = `${auth} (${v.year||'n.d.'}). *${v.title}*. ${v.site}. Retrieved ${v.accessed} from ${v.url}`;
-        }
-    } else if (format === 'IEEE') {
-        const auth = v.author;
-        if (sourceType === 'book') {
-            result = `${auth}, *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
-        } else if (sourceType === 'journal') {
-            result = `${auth}, "${v.title}," *${v.journal}*, vol. ${v.volume}, no. ${v.issue}, pp. ${v.pages}, ${v.year||'n.d.'}.`;
-        } else {
-            result = `${auth}, "${v.title}," *${v.site}*. [Online]. Available: ${v.url}. [Accessed: ${v.accessed}].`;
-        }
-    } else { // Chicago
-        if (sourceType === 'book') {
-            result = `${v.author}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
-        } else if (sourceType === 'journal') {
-            result = `${v.author}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year||'n.d.'}): ${v.pages}.`;
-        } else {
-            result = `${v.author}. "${v.title}." *${v.site}*. Last modified ${v.year||'n.d.'}. Accessed ${v.accessed}. ${v.url}.`;
-        }
-    }
+                            // Logika penyusunan sitasi (Sama persis dengan buatanmu yang rapi tadi)
+                            if (format === 'APA') {
+                                const auth = formatAuthorAPA(v.author);
+                                if (sourceType === 'book') {
+                                    result = `${auth} (${v.year||'n.d.'}). *${v.title}*${v.edition ? ` (${v.edition} ed.)` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}.`;
+                                } else if (sourceType === 'journal') {
+                                    result = `${auth} (${v.year||'n.d.'}). ${v.title}. *${v.journal}*, *${v.volume}*(${v.issue}), ${v.pages}.`;
+                                } else {
+                                    result = `${auth} (${v.year||'n.d.'}). *${v.title}*. ${v.site}. Retrieved ${v.accessed} from ${v.url}`;
+                                }
+                            } else if (format === 'IEEE') {
+                                const auth = v.author;
+                                if (sourceType === 'book') {
+                                    result = `${auth}, *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+                                } else if (sourceType === 'journal') {
+                                    result = `${auth}, "${v.title}," *${v.journal}*, vol. ${v.volume}, no. ${v.issue}, pp. ${v.pages}, ${v.year||'n.d.'}.`;
+                                } else {
+                                    result = `${auth}, "${v.title}," *${v.site}*. [Online]. Available: ${v.url}. [Accessed: ${v.accessed}].`;
+                                }
+                            } else { // Chicago
+                                if (sourceType === 'book') {
+                                    result = `${v.author}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+                                } else if (sourceType === 'journal') {
+                                    result = `${v.author}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year||'n.d.'}): ${v.pages}.`;
+                                } else {
+                                    result = `${v.author}. "${v.title}." *${v.site}*. Last modified ${v.year||'n.d.'}. Accessed ${v.accessed}. ${v.url}.`;
+                                }
+                            }
 
-    // Ubah markdown bintang (*teks*) menjadi miring
-    const finalHTML = result.replace(/\*(.*?)\*/g, '<i>$1</i>');
-    document.getElementById('dafpusResult').innerHTML = finalHTML;
-}
+                            // Ubah markdown bintang (*teks*) menjadi miring
+                            const finalHTML = result.replace(/\*(.*?)\*/g, '<i>$1</i>');
+                            document.getElementById('dafpusResult').innerHTML = finalHTML;
+                        }
 
-// Helper kosong jika kamu belum membuat fungsi formatAuthorAPA
-function formatAuthorAPA(authorStr) {
-    return authorStr;
-}
+                        // Helper kosong jika kamu belum membuat fungsi formatAuthorAPA
+                        function formatAuthorAPA(authorStr) {
+                            return authorStr;
+                        }
 
                     // --- 5. FUNGSI COPY, SAVE, & CLEAR ---
                     function copyResult() {
