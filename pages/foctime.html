@@ -8,40 +8,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-
-
     body { 
       font-family: 'Plus Jakarta Sans', sans-serif;
-      overflow: hidden; /* no scroll sama sekali */
+      overflow: hidden;
     }
+    @media (max-width: 767px) { body { overflow-y: auto; } }
     .font-bebas { 
       font-family: 'Bebas Neue', sans-serif; 
     }
     .nav-blur { backdrop-filter: blur(20px); }
-
-    .ring-progress {
-        fill: none;
-        stroke: #FFD04E;
-        stroke-width: 6;
-        stroke-linecap: round;
-        stroke-dasharray: 1068;
-        stroke-dashoffset: 0;
-        transition: stroke-dashoffset 0.5s linear;
-        filter: drop-shadow(0 0 8px rgba(255,214,10,0.5));
-    }
-    .ring-track { fill: none; stroke: #2a2a2a; stroke-width: 6; }
-    .ring-progress.done {
-        stroke: #4ade80;
-        filter: drop-shadow(0 0 10px rgba(74,222,128,0.5));
-    }
-
-    @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.4; }
-      100% { transform: scale(1.08); opacity: 0; }
-    }
-    .pulse-anim { animation: pulse-ring 2s ease-out infinite; }
-
-
 
     @keyframes slideIn {
       from { opacity: 0; transform: translateX(-8px); }
@@ -54,30 +29,66 @@
   </style>
 </head>
 
+<body class="bg-[#111111] text-[#F0F0F0] h-screen flex flex-col">
 
+  <!-- Navbar -->
+  <!-- Hamburger Drawer (mobile only) -->
+  <div id="hamburger-drawer" onclick="if(event.target===this)closeHamburger()" class="fixed inset-0 bg-black/75 z-[400] opacity-0 pointer-events-none transition-opacity duration-200 md:hidden" style="backdrop-filter:blur(8px)">
+    <div id="hamburger-box" class="absolute top-0 left-0 h-full w-64 bg-[#1a1a1a] border-r border-white/[0.07] p-6 flex flex-col gap-2 -translate-x-full transition-transform duration-300">
+      <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider mb-4">STUTime</div>
+      <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="noto.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Noto
+      </a>
+      <a href="task.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Task
+      </a>
+      <a href="foctime.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+        FocTime!
+      </a>
+      <a href="calendar.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+    </div>
+  </div>
 
-
-
-<body class="bg-[#111111] text-[#F0F0F0] h-screen flex flex-col overflow-x-hidden"></body>
-
-
-  <nav class="nav-blur sticky top-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
-    <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
-    <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
-      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
+  <nav class="nav-blur flex-shrink-0 z-50 flex items-center px-4 md:px-10 py-3 md:py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+    <!-- Mobile: hamburger -->
+    <button onclick="openHamburger()" class="md:hidden w-9 h-9 border border-white/[0.07] rounded-xl flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all flex-shrink-0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <!-- Desktop: logo -->
+    <div class="hidden md:flex font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] items-center justify-center text-lg flex-shrink-0">D</div>
+    <!-- Mobile: judul tengah -->
+    <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">FocTime!</div>
+    <!-- Desktop: nav pill -->
+    <div class="hidden md:flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
+      <a href="dashboard.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
       <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
       <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
       <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">FocTime!</a>
-      <a href="#" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
+      <a href="calendar.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
     </div>
-    <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
+    <!-- Mobile: motivate saja -->
+    <div class="md:hidden flex items-center">
+      <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-3 py-2 rounded-full text-xs font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motive</button>
+    </div>
+    <!-- Desktop: motivate -->
+    <button onclick="openMotivate()" class="hidden md:block border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
   </nav>
 
   <!-- Content area: fixed height = sisa setelah navbar -->
-  <div class="flex-1 grid grid-cols-[400px_1fr] overflow-hidden">
+  <div class="flex-1 flex flex-col md:grid md:grid-cols-[400px_1fr] overflow-hidden md:overflow-hidden">
 
     <!-- Sidebar -->
-    <aside class="border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex flex-col gap-6 overflow-hidden">
+    <aside class="hidden md:flex border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex-col gap-6 overflow-hidden">
       <!-- Custom settings -->
       <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
         <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-5">Custom</div>
@@ -125,45 +136,51 @@
     </aside>
 
     <!-- Main timer area -->
-    <main class="flex flex-col items-center justify-center px-6 pb-6 relative overflow-hidden">
+    <main class="flex flex-col items-center justify-start px-4 md:px-6 pt-10 md:pt-10 pb-4 md:pb-6 relative overflow-auto md:overflow-hidden">
 
-      <!-- Mode tabs  -->
-      <div class="flex gap-2 mb-12">
+      <!-- Settings button mobile only -->
+      <button onclick="openSettings()" class="md:hidden mb-20 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.07] text-xs text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all self-end">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+
+      <!-- Mode tabs — style berbeda dari navbar: kotak dengan border, bukan pill -->
+      <div class="flex gap-2 mb-8 md:mb-10">
         <button onclick="setMode('focus',this)" id="tab-focus"
-          class="mode-tab px-6 py-2 rounded-xl text-sm font-bold bg-[#FFD04E] text-[#111111] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
+          class="mode-tab px-4 py-2 rounded-xl text-sm font-bold bg-[#FFD04E] text-[#111111] border border-[#FFD04E] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
           Focus
         </button>
         <button onclick="setMode('short',this)" id="tab-short"
-          class="mode-tab px-6 py-2 rounded-xl text-sm font-semibold text-[#555] border border-white/[0.07] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          class="mode-tab px-4 py-2 rounded-xl text-xs font-semibold text-white border border-white/[0.07] hover:border-[#FFD04E] hover:text-[#FFD04E] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)] active:translate-y-0 transition-all">
           Short Break
         </button>
         <button onclick="setMode('long',this)" id="tab-long"
-          class="mode-tab px-6 py-2 rounded-xl text-sm font-semibold text-[#555] border border-white/[0.07] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 active:translate-y-0 transition-all">
+          class="mode-tab px-4 py-2 rounded-xl text-xs font-semibold text-white border border-white/[0.07] hover:border-[#FFD04E] hover:text-[#FFD04E] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)] active:translate-y-0 transition-all">
           Long Break
         </button>
       </div>
 
       <!-- Timer -->
-      <div class="flex flex-col items-center mb-12">
-        <div class="font-bebas leading-none tracking-wider" style="font-size: clamp(80px, 12vw, 140px);">
-          <span id="timer-mm">25</span><span class="text-white">.</span><span id="timer-ss">00</span><span id="timer-ms" class="font-bebas text-white" style="font-size: clamp(40px, 6vw, 70px);">.00</span>
+      <div class="flex flex-col items-center mb-10 md:mb-10">
+        <div class="font-bebas leading-none tracking-wider" style="font-size: clamp(56px, 14vw, 140px);">
+          <span id="timer-mm">25</span><span class="text-white">.</span><span id="timer-ss">00</span><span id="timer-ms" class="font-bebas text-white" style="font-size: clamp(28px, 7vw, 70px);">.00</span>
         </div>
         <div class="text-[15px] font-bold text-white tracking-[3px] uppercase mt-5" id="timer-status">Time to Focus!</div>
       </div>
 
       <!-- Buttons -->
-      <div class="flex items-center gap-4">
-        <button onclick="resetTimer()" class="flex items-center gap-2 px-20 py-[14px] rounded-xl text-[15px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
+      <div class="flex flex-row items-center justify-center gap-3 w-full" style="max-width:480px">
+        <button onclick="resetTimer()" class="flex items-center justify-center gap-2 flex-1 py-3 md:py-[14px] rounded-xl text-[14px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
           </svg>
           Reset
         </button>
-        <button onclick="toggleTimer()" id="start-btn" class="flex items-center justify-center gap-2 px-20 py-[14px] rounded-xl text-[16px] font-bold min-w-[160px] bg-[#FFD04E] text-[#111111] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
-          <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" id="start-icon"><polygon points="10,8 18,12 10,16"/></svg>
+        <button onclick="toggleTimer()" id="start-btn" class="flex items-center justify-center gap-2 flex-[1.5] py-3 md:py-[14px] rounded-xl text-[15px] md:text-[16px] font-bold bg-[#FFD04E] text-[#111111] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="start-icon"><polygon points="10,8 18,12 10,16"/></svg>
           <span id="start-text">Start</span>
         </button>
-        <button onclick="skipTimer()" class="flex items-center gap-2 px-20 py-[14px] rounded-xl text-[15px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
+        <button onclick="skipTimer()" class="flex items-center justify-center gap-2 flex-1 py-3 md:py-[14px] rounded-xl text-[14px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
           Skip
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/>
@@ -171,6 +188,61 @@
         </button>
       </div>
     </main>
+  </div>
+
+  <!-- Settings Modal (mobile only) -->
+  <div id="settings-modal" onclick="if(event.target===this)closeSettings()" class="fixed inset-0 bg-black/75 z-[300] flex items-end sm:items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
+    <div id="settings-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-sm p-6 translate-y-4 transition-transform duration-200">
+      <div class="flex items-center justify-between mb-5">
+        <div class="font-bebas text-[#FFD04E] text-xl tracking-wider">Settings</div>
+        <button onclick="closeSettings()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#222] text-[#888] hover:text-white transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <!-- Custom time -->
+      <div class="bg-[#222222] border border-white/[0.07] rounded-xl p-4 mb-4">
+        <div class="font-bebas text-[#FFD04E] text-base tracking-wider mb-3">Custom Timer</div>
+        <div class="flex items-center justify-between py-2 border-b border-white/[0.07]">
+          <span class="text-sm font-medium text-[#ccc]">Focus</span>
+          <div class="flex items-center gap-3">
+            <button onclick="adjustTime('focus',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">−</button>
+            <span class="font-bebas text-[20px] min-w-[24px] text-center" id="val-focus-m">25</span>
+            <button onclick="adjustTime('focus',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
+          </div>
+        </div>
+        <div class="flex items-center justify-between py-2 border-b border-white/[0.07]">
+          <span class="text-sm font-medium text-[#ccc]">Short Break</span>
+          <div class="flex items-center gap-3">
+            <button onclick="adjustTime('short',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">−</button>
+            <span class="font-bebas text-[20px] min-w-[24px] text-center" id="val-short-m">5</span>
+            <button onclick="adjustTime('short',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
+          </div>
+        </div>
+        <div class="flex items-center justify-between py-2">
+          <span class="text-sm font-medium text-[#ccc]">Long Break</span>
+          <div class="flex items-center gap-3">
+            <button onclick="adjustTime('long',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">−</button>
+            <span class="font-bebas text-[20px] min-w-[24px] text-center" id="val-long-m">10</span>
+            <button onclick="adjustTime('long',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
+          </div>
+        </div>
+        <button onclick="applySettings();closeSettings()" class="w-full mt-3 bg-[#FFD04E] text-[#111111] rounded-xl py-2.5 text-sm font-bold">Apply Settings</button>
+      </div>
+      <!-- FocStats -->
+      <div class="bg-[#222222] border border-white/[0.07] rounded-xl p-4">
+        <div class="font-bebas text-[#FFD04E] text-base tracking-wider mb-3">FocStats</div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
+            <div class="font-bebas text-[28px] text-[#FFD04E] leading-none" id="stat-sessions-m">0</div>
+            <div class="text-[10px] text-[#888] mt-1 font-medium uppercase tracking-wide">Sessions Today</div>
+          </div>
+          <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
+            <div class="font-bebas text-[28px] text-[#FFD04E] leading-none" id="stat-minutes-m">0</div>
+            <div class="text-[10px] text-[#888] mt-1 font-medium uppercase tracking-wide">Streak</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Motivate Modal -->
@@ -184,6 +256,7 @@
   </div>
 
   <script>
+    // ─── SETTINGS ───
     const settings = { focus: 25, short: 5, long: 10 };
     let currentMode = 'focus';
     let totalSeconds = 25 * 60;
@@ -192,11 +265,140 @@
     let running = false;
     let intervalId = null;
     let startTime = null;
-    let stats = { sessions: 0, minutes: 0 };
+    let focusCount = 0; // counter sesi focus untuk trigger long break (setiap 4x)
 
+    // ─── STATS (localStorage) ───
+    function getTodayStr() {
+      const n = new Date();
+      return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0') + '-' + String(n.getDate()).padStart(2,'0');
+    }
+    function loadStats() {
+      const today = getTodayStr();
+      const raw = localStorage.getItem('stutime_focstats');
+      const data = raw ? JSON.parse(raw) : {};
+      // Sessions today
+      const sessionsToday = data.date === today ? (data.sessions || 0) : 0;
+      // Streak
+      const yesterday = (() => {
+        const d = new Date(); d.setDate(d.getDate()-1);
+        return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      })();
+      let streak = data.streak || 0;
+      // Jika data bukan hari ini dan bukan kemarin, reset streak
+      if (data.lastActive && data.lastActive !== today && data.lastActive !== yesterday) {
+        streak = 0;
+      }
+      return { sessions: sessionsToday, streak, lastActive: data.lastActive || null, allData: data };
+    }
+    function saveStats(sessions, streak) {
+      const today = getTodayStr();
+      localStorage.setItem('stutime_focstats', JSON.stringify({
+        date: today, sessions, streak, lastActive: today
+      }));
+    }
+    function addSession() {
+      const s = loadStats();
+      const newSessions = s.sessions + 1;
+      // Streak: jika lastActive bukan hari ini, berarti hari baru → +1 streak
+      const today = getTodayStr();
+      let newStreak = s.streak;
+      if (s.lastActive !== today) {
+        newStreak = s.streak + 1;
+      }
+      saveStats(newSessions, newStreak);
+      updateStats();
+    }
+    function updateStats() {
+      const s = loadStats();
+      document.getElementById('stat-sessions').textContent = s.sessions;
+      document.getElementById('stat-minutes').textContent = s.streak;
+      // Sync mobile juga
+      const sm = document.getElementById('stat-sessions-m');
+      const mm = document.getElementById('stat-minutes-m');
+      if (sm) sm.textContent = s.sessions;
+      if (mm) mm.textContent = s.streak;
+    }
+
+    // ─── SOUND (dering lonceng) ───
+    function playBell() {
+      try {
+        const audio = new Audio('../src/audio/alarm.mp3');
+        audio.volume = 0.8;
+        audio.play();
+        // Stop otomatis setelah 4 detik
+        setTimeout(() => {
+          audio.pause();
+          audio.currentTime = 0;
+        }, 4000);
+      } catch(e) {}
+    }
+
+    // ─── SWITCH MODE (auto/manual) ───
+    function switchToMode(mode) {
+      currentMode = mode;
+      // Update tab UI
+      const tabMap = { focus: 'tab-focus', short: 'tab-short', long: 'tab-long' };
+      document.querySelectorAll('.mode-tab').forEach(t => {
+        t.classList.remove('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+        t.classList.add('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
+      });
+      const activeTab = document.getElementById(tabMap[mode]);
+      activeTab.classList.remove('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
+      activeTab.classList.add('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+      // Reset timer untuk mode baru
+      totalSeconds = settings[mode] * 60;
+      remainingSeconds = totalSeconds; remainingMs = 0;
+      const statuses = { focus: 'Time to Focus!', short: 'Short Break 🌿', long: 'Long Break ☕' };
+      document.getElementById('timer-status').textContent = statuses[mode];
+      document.getElementById('start-text').textContent = 'Start';
+      document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
+      updateDisplay();
+    }
+
+    // ─── NEXT MODE (Pomodoro cycle) ───
+    function getNextMode() {
+      if (currentMode === 'focus') {
+        // Setiap 4 sesi focus → long break, sisanya short break
+        return focusCount % 4 === 0 ? 'long' : 'short';
+      } else {
+        // Setelah break → balik focus
+        return 'focus';
+      }
+    }
+
+    // ─── CONTROLS ───
     function adjustTime(key, delta) {
       settings[key] = Math.max(1, Math.min(90, settings[key] + delta));
-      document.getElementById('val-' + key).textContent = settings[key];
+      // Sync semua display (sidebar desktop + modal mobile)
+      const v = settings[key];
+      const el1 = document.getElementById('val-' + key);
+      const el2 = document.getElementById('val-' + key + '-m');
+      if (el1) el1.textContent = v;
+      if (el2) el2.textContent = v;
+    }
+    function openSettings() {
+      updateStatsMobile();
+      const m = document.getElementById('settings-modal');
+      const b = document.getElementById('settings-box');
+      m.classList.remove('opacity-0','pointer-events-none');
+      m.classList.add('opacity-100');
+      b.classList.remove('translate-y-4');
+      b.classList.add('translate-y-0');
+    }
+    function closeSettings() {
+      const m = document.getElementById('settings-modal');
+      const b = document.getElementById('settings-box');
+      m.classList.add('opacity-0','pointer-events-none');
+      m.classList.remove('opacity-100');
+      b.classList.add('translate-y-4');
+      b.classList.remove('translate-y-0');
+    }
+    function updateStatsMobile() {
+      const s = loadStats();
+      const sm = document.getElementById('stat-sessions-m');
+      const mm = document.getElementById('stat-minutes-m');
+      if (sm) sm.textContent = s.sessions;
+      if (mm) mm.textContent = s.streak;
     }
     function applySettings() {
       if (running) return;
@@ -208,11 +410,11 @@
       if (running) return;
       currentMode = mode;
       document.querySelectorAll('.mode-tab').forEach(t => {
-        t.classList.remove('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
-        t.classList.add('text-[#555]', 'font-semibold', 'border', 'border-white/[0.07]');
+        t.classList.remove('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+        t.classList.add('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
       });
-      btn.classList.remove('text-[#555]', 'font-semibold', 'border', 'border-white/[0.07]');
-      btn.classList.add('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+      btn.classList.remove('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
+      btn.classList.add('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
       totalSeconds = settings[mode] * 60;
       remainingSeconds = totalSeconds; remainingMs = 0;
       const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
@@ -249,36 +451,58 @@
       document.getElementById('timer-status').textContent = statuses[currentMode];
       updateDisplay();
     }
-    function skipTimer() { resetTimer(); }
+
+    // Skip = pindah ke mode berikutnya tanpa hitung sesi
+    function skipTimer() {
+      running = false; clearInterval(intervalId);
+      const next = getNextMode();
+      if (currentMode === 'focus') focusCount++; // tetap nambah counter tapi tidak nambah stats
+      switchToMode(next);
+    }
+
+    // Complete = timer habis sendiri, hitung sesi + bunyi + auto-switch
     function completeTimer() {
       running = false; clearInterval(intervalId);
-      document.getElementById('start-text').textContent = 'Start';
-      document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
-      document.getElementById('timer-status').textContent = currentMode === 'focus' ? '✅ Session Complete!' : '✅ Break Done!';
+      playBell();
       if (currentMode === 'focus') {
-        stats.sessions++; stats.minutes += settings.focus;
-        updateStats();
+        focusCount++;
+        addSession(); // tambah stats
+        document.getElementById('timer-status').textContent = '✅ Session Complete!';
+      } else {
+        document.getElementById('timer-status').textContent = '✅ Break Done!';
       }
-      try {
-        const ctx = new AudioContext(), osc = ctx.createOscillator(), gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.frequency.setValueAtTime(880, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.5);
-        gain.gain.setValueAtTime(0.3, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1);
-        osc.start(); osc.stop(ctx.currentTime + 1);
-      } catch(e) {}
+      // Auto-switch ke mode berikutnya setelah 1.5 detik, tunggu user klik Start
+      setTimeout(() => {
+        const next = getNextMode();
+        switchToMode(next);
+        // TIDAK auto-start, user harus klik Start sendiri
+      }, 1500);
     }
+
+    function openHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.remove('opacity-0','pointer-events-none');
+      d.classList.add('opacity-100');
+      b.classList.remove('-translate-x-full');
+      b.classList.add('translate-x-0');
+    }
+    function closeHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.add('opacity-0','pointer-events-none');
+      d.classList.remove('opacity-100');
+      b.classList.add('-translate-x-full');
+      b.classList.remove('translate-x-0');
+    }
+
     function updateDisplay() {
       document.getElementById('timer-mm').textContent = String(Math.floor(remainingSeconds/60)).padStart(2,'0');
       document.getElementById('timer-ss').textContent = String(remainingSeconds%60).padStart(2,'0');
       document.getElementById('timer-ms').textContent = '.' + String(remainingMs).padStart(2,'0');
     }
-    function updateStats() {
-      document.getElementById('stat-sessions').textContent = stats.sessions;
-      document.getElementById('stat-minutes').textContent = stats.minutes;
-    }
 
+    // ─── MOTIVATE ───
     const quotes = [
       { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
       { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
@@ -307,178 +531,10 @@
         document.getElementById('modal-box').classList.remove('scale-100');
       }
     }
+
+    // ─── INIT ───
     updateDisplay();
-     // --- STATE MANAGEMENT DAFPUS ---
-    let currentSourceType = 'book';
-    let currentFormat = 'APA';
-    let savedDafpus = [];
-
-    // --- 1. FUNGSI GANTI SUMBER (Book/Journal/Website) ---
-    function setSourceType(type, btn) {
-        currentSourceType = type;
-        
-        // Pindah warna tombol aktif
-        document.querySelectorAll('.source-type-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        // Tampilkan kolom input yang sesuai
-        renderInputFields();
-    }
-
-    // --- 2. FUNGSI GANTI FORMAT (APA/IEEE/Chicago) ---
-    function setFormat(format, btn) {
-        currentFormat = format;
-        
-        document.querySelectorAll('.fmt-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    // --- 3. FUNGSI MENGGAMBAR KOLOM INPUT (Dinamis) ---
-    function renderInputFields() {
-        const container = document.getElementById('inputFields');
-        let html = '';
-
-        // Class Tailwind bawaan untuk input biar senada dengan dark mode Noto
-        const inputClass = "w-full bg-[#2A2A2D] border border-gray-600 rounded-md p-2 text-white mb-3 text-sm outline-none focus:border-[#FFD15C]";
-
-        if (currentSourceType === 'book') {
-            html = `
-                <input type="text" id="daf-author" placeholder="Nama Penulis (contoh: Doe, J.)" class="${inputClass}">
-                <input type="text" id="daf-year" placeholder="Tahun Terbit (contoh: 2023)" class="${inputClass}">
-                <input type="text" id="daf-title" placeholder="Judul Buku" class="${inputClass}">
-                <input type="text" id="daf-publisher" placeholder="Penerbit" class="${inputClass}">
-                <input type="text" id="daf-city" placeholder="Kota Terbit" class="${inputClass}">
-            `;
-        } else if (currentSourceType === 'journal') {
-            html = `
-                <input type="text" id="daf-author" placeholder="Nama Penulis" class="${inputClass}">
-                <input type="text" id="daf-year" placeholder="Tahun" class="${inputClass}">
-                <input type="text" id="daf-title" placeholder="Judul Artikel Jurnal" class="${inputClass}">
-                <input type="text" id="daf-journal" placeholder="Nama Jurnal" class="${inputClass}">
-                <div style="display:flex; gap:8px;">
-                    <input type="text" id="daf-vol" placeholder="Volume" class="${inputClass}">
-                    <input type="text" id="daf-issue" placeholder="Issue" class="${inputClass}">
-                    <input type="text" id="daf-pages" placeholder="Halaman (ex: 12-20)" class="${inputClass}">
-                </div>
-            `;
-        } else if (currentSourceType === 'website') {
-            html = `
-                <input type="text" id="daf-author" placeholder="Nama Penulis / Web" class="${inputClass}">
-                <input type="text" id="daf-year" placeholder="Tahun (atau ND jika tidak ada)" class="${inputClass}">
-                <input type="text" id="daf-title" placeholder="Judul Halaman" class="${inputClass}">
-                <input type="text" id="daf-url" placeholder="URL Lengkap (https://...)" class="${inputClass}">
-            `;
-        }
-        
-        container.innerHTML = html;
-    }
-
-    // --- 4. FUNGSI GENERATE SITASI ---
-    function generate() {
-        // Ambil data (pakai opsional chaining biar gak error kalau kolomnya gak ada)
-        const author = document.getElementById('daf-author')?.value || 'Penulis';
-        const year = document.getElementById('daf-year')?.value || 'Tahun';
-        const title = document.getElementById('daf-title')?.value || 'Judul';
-        
-        let resultText = '';
-
-        // Logika penyusunan teks (Contoh Sederhana untuk APA Format)
-        if (currentFormat === 'APA') {
-            if (currentSourceType === 'book') {
-                const pub = document.getElementById('daf-publisher')?.value || 'Penerbit';
-                resultText = `${author}. (${year}). <i>${title}</i>. ${pub}.`;
-            } else if (currentSourceType === 'journal') {
-                const journal = document.getElementById('daf-journal')?.value || 'Jurnal';
-                const vol = document.getElementById('daf-vol')?.value || 'Vol';
-                const pages = document.getElementById('daf-pages')?.value || 'Hal';
-                resultText = `${author}. (${year}). ${title}. <i>${journal}</i>, ${vol}, ${pages}.`;
-            } else if (currentSourceType === 'website') {
-                const url = document.getElementById('daf-url')?.value || 'URL';
-                resultText = `${author}. (${year}). <i>${title}</i>. Diakses dari ${url}`;
-            }
-        } 
-        // Logika penyusunan teks (Contoh Sederhana untuk IEEE)
-        else if (currentFormat === 'IEEE') {
-            if (currentSourceType === 'book') {
-                const pub = document.getElementById('daf-publisher')?.value || 'Penerbit';
-                const city = document.getElementById('daf-city')?.value || 'Kota';
-                resultText = `${author}, <i>${title}</i>. ${city}: ${pub}, ${year}.`;
-            }
-            // ... (Bisa dikembangkan lagi sesuai standar persis IEEE/Chicago)
-            else {
-                resultText = `${author}, "${title}," ${year}.`;
-            }
-        }
-        // Chicago (Standar Dasar)
-        else {
-            resultText = `${author}. <i>${title}</i>. (${year}).`;
-        }
-
-        document.getElementById('dafpusResult').innerHTML = resultText;
-    }
-
-    // --- 5. FUNGSI COPY, SAVE, & CLEAR ---
-    function copyResult() {
-        const text = document.getElementById('dafpusResult').innerText;
-        if(text.includes('Fill in the form')) return;
-        
-        navigator.clipboard.writeText(text);
-        alert('Sitasi disalin ke clipboard!');
-    }
-
-    function clearResult() {
-        document.getElementById('dafpusResult').innerHTML = 'Fill in the form and click Generate to see your bibliography entry here.';
-        renderInputFields(); // Kosongkan form juga
-    }
-
-    function saveResult() {
-        const text = document.getElementById('dafpusResult').innerHTML;
-        if(text.includes('Fill in the form')) return;
-        
-        savedDafpus.push(text);
-        renderSavedEntries();
-    }
-
-    function renderSavedEntries() {
-        const container = document.getElementById('savedEntries');
-        if(savedDafpus.length === 0) return;
-
-        container.innerHTML = savedDafpus.map((entry, index) => `
-            <div class="saved-entry">
-                <div class="saved-entry-text">${entry}</div>
-                <button class="del-btn" onclick="deleteSavedEntry(${index})"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-        `).join('');
-    }
-
-    function deleteSavedEntry(index) {
-        savedDafpus.splice(index, 1);
-        if(savedDafpus.length === 0) {
-            document.getElementById('savedEntries').innerHTML = '<div class="empty-state" style="padding:20px 0;"><p>No saved entries yet</p></div>';
-        } else {
-            renderSavedEntries();
-        }
-    }
-
-    function exportAll() {
-        if(savedDafpus.length === 0) {
-            alert("Belum ada daftar pustaka yang disimpan!"); return;
-        }
-        
-        // Ubah format HTML (<i>) ke teks biasa untuk file .txt
-        const plainTextContent = savedDafpus.map(entry => entry.replace(/<\/?i>/g, '')).join('\n\n');
-        
-        const blob = new Blob([plainTextContent], { type: "text/plain;charset=utf-8" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "Daftar_Pustaka.txt";
-        link.click();
-    }
-
-    // Panggil fungsi render pertama kali saat website dibuka
-    window.addEventListener('DOMContentLoaded', () => {
-        renderInputFields();
-    });
+    updateStats();
   </script>
 </body>
 </html>
