@@ -1,4 +1,3 @@
-// ─── HELPERS ───
 function getTodayStr() {
   return formatDate(new Date());
 }
@@ -15,6 +14,7 @@ function getDateStr(daysFromNow) {
 function formatDate(d) {
   return d.toISOString().split('T')[0];
 }
+
 function formatDateLabel(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
   const today = new Date(); today.setHours(0,0,0,0);
@@ -25,7 +25,6 @@ function formatDateLabel(dateStr) {
   return `${label}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-// ─── INIT DUMMY DATA ───
 function initDummyTasks() {
   return [
     { id:1, title:"Belajar Tailwind CSS", desc:"Pelajari utility class Tailwind v4 untuk styling halaman STUTime secara konsisten.", date:getTodayStr(), time:"08.00", pinned:true, done:false },
