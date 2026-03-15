@@ -85,7 +85,7 @@
   </nav>
 
   <!-- Content area: fixed height = sisa setelah navbar -->
-  <div class="flex-1 flex flex-col md:grid md:grid-cols-[400px_1fr] overflow-hidden md:overflow-hidden">
+  <div class="flex-1 flex flex-col md:grid md:grid-cols-[380px_1fr] overflow-hidden md:overflow-hidden">
 
     <!-- Sidebar -->
     <aside class="hidden md:flex border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex-col gap-6 overflow-hidden">
@@ -100,29 +100,22 @@
             <button onclick="adjustTime('focus',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
           </div>
         </div>
-        <div class="flex items-center justify-between py-[10px] border-b border-white/[0.07]">
-          <span class="text-sm font-medium text-[#ccc]">Short break</span>
+        <div class="flex items-center justify-between py-[10px]">
+          <span class="text-sm font-medium text-[#ccc]">Break</span>
           <div class="flex items-center gap-3">
             <button onclick="adjustTime('short',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">−</button>
             <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-short">5</span>
             <button onclick="adjustTime('short',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
           </div>
         </div>
-        <div class="flex items-center justify-between py-[10px]">
-          <span class="text-sm font-medium text-[#ccc]">Long break</span>
-          <div class="flex items-center gap-3">
-            <button onclick="adjustTime('long',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">−</button>
-            <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-long">10</span>
-            <button onclick="adjustTime('long',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
-          </div>
-        </div>
+
         <button onclick="applySettings()" class="w-full mt-[18px] bg-[#FFD04E] text-[#111111] rounded-xl py-3 text-sm font-bold hover:bg-[#ffe033] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">Apply Settings</button>
       </div>
 
       <!-- FocStats -->
       <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
         <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-4">FocStats</div>
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-4">
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
             <div class="font-bebas text-[32px] text-[#FFD04E] leading-none" id="stat-sessions">0</div>
             <div class="text-[11px] text-[#888] mt-1 font-medium uppercase tracking-wide">Sessions Today</div>
@@ -139,7 +132,7 @@
     <main class="flex flex-col items-center justify-start px-4 md:px-6 pt-10 md:pt-10 pb-4 md:pb-6 relative overflow-auto md:overflow-hidden">
 
       <!-- Settings button mobile only -->
-      <button onclick="openSettings()" class="md:hidden mb-20 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.07] text-xs text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all self-end">
+      <button onclick="openSettings()" class="md:hidden mb-4 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.07] text-xs text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all self-end">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Settings
       </button>
@@ -151,12 +144,8 @@
           Focus
         </button>
         <button onclick="setMode('short',this)" id="tab-short"
-          class="mode-tab px-4 py-2 rounded-xl text-xs font-semibold text-white border border-white/[0.07] hover:border-[#FFD04E] hover:text-[#FFD04E] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)] active:translate-y-0 transition-all">
-          Short Break
-        </button>
-        <button onclick="setMode('long',this)" id="tab-long"
-          class="mode-tab px-4 py-2 rounded-xl text-xs font-semibold text-white border border-white/[0.07] hover:border-[#FFD04E] hover:text-[#FFD04E] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)] active:translate-y-0 transition-all">
-          Long Break
+          class="mode-tab px-4 py-2 rounded-xl text-sm font-semibold text-white border border-white/[0.07] hover:border-[#FFD04E] hover:text-[#FFD04E] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)] active:translate-y-0 transition-all">
+          Break
         </button>
       </div>
 
@@ -210,22 +199,15 @@
             <button onclick="adjustTime('focus',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
           </div>
         </div>
-        <div class="flex items-center justify-between py-2 border-b border-white/[0.07]">
-          <span class="text-sm font-medium text-[#ccc]">Short Break</span>
+        <div class="flex items-center justify-between py-2">
+          <span class="text-sm font-medium text-[#ccc]">Break</span>
           <div class="flex items-center gap-3">
             <button onclick="adjustTime('short',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">−</button>
             <span class="font-bebas text-[20px] min-w-[24px] text-center" id="val-short-m">5</span>
             <button onclick="adjustTime('short',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
           </div>
         </div>
-        <div class="flex items-center justify-between py-2">
-          <span class="text-sm font-medium text-[#ccc]">Long Break</span>
-          <div class="flex items-center gap-3">
-            <button onclick="adjustTime('long',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">−</button>
-            <span class="font-bebas text-[20px] min-w-[24px] text-center" id="val-long-m">10</span>
-            <button onclick="adjustTime('long',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
-          </div>
-        </div>
+
         <button onclick="applySettings();closeSettings()" class="w-full mt-3 bg-[#FFD04E] text-[#111111] rounded-xl py-2.5 text-sm font-bold">Apply Settings</button>
       </div>
       <!-- FocStats -->
@@ -348,7 +330,7 @@
       // Reset timer untuk mode baru
       totalSeconds = settings[mode] * 60;
       remainingSeconds = totalSeconds; remainingMs = 0;
-      const statuses = { focus: 'Time to Focus!', short: 'Short Break 🌿', long: 'Long Break ☕' };
+      const statuses = { focus: 'Time to Focus!', short: 'Break 🌿', long: 'Break ☕' };
       document.getElementById('timer-status').textContent = statuses[mode];
       document.getElementById('start-text').textContent = 'Start';
       document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
@@ -417,7 +399,7 @@
       btn.classList.add('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
       totalSeconds = settings[mode] * 60;
       remainingSeconds = totalSeconds; remainingMs = 0;
-      const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
+      const statuses = { focus:'Time to Focus!', short:'Break 🌿', long:'Break ☕' };
       document.getElementById('timer-status').textContent = statuses[mode];
       updateDisplay();
     }
@@ -447,7 +429,7 @@
       remainingSeconds = totalSeconds; remainingMs = 0;
       document.getElementById('start-text').textContent = 'Start';
       document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
-      const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
+      const statuses = { focus:'Time to Focus!', short:'Break 🌿', long:'Break ☕' };
       document.getElementById('timer-status').textContent = statuses[currentMode];
       updateDisplay();
     }

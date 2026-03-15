@@ -8,7 +8,7 @@ function getTomorrowStr() {
   return formatDate(d);
 }
 function getDateStr(daysFromNow) {
-  const d = new Date(); 
+  const d = new Date();
   d.setDate(d.getDate() + daysFromNow);
   return formatDate(d);
 }
@@ -236,6 +236,8 @@ function renderDetail() {
 function selectTask(id) {
   selectedId = id;
   render();
+  // Mobile: pindah ke detail view
+  if (typeof showDetail === 'function') showDetail();
 }
 
 function togglePin(id) {
