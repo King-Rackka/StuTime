@@ -1,381 +1,1462 @@
-// ─── HELPERS ───
-function getTodayStr() {
-  return formatDate(new Date());
-}
-function getTomorrowStr() {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  return formatDate(d);
-}
-function getDateStr(daysFromNow) {
-  const d = new Date(); 
-  d.setDate(d.getDate() + daysFromNow);
-  return formatDate(d);
-}
-function formatDate(d) {
-  return d.toISOString().split('T')[0];
-}
-function formatDateLabel(dateStr) {
-  const d = new Date(dateStr + 'T00:00:00');
-  const today = new Date(); today.setHours(0,0,0,0);
-  const diff = Math.round((d - today) / 86400000);
-  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-  const label = diff === 0 ? 'Hari ini' : diff === 1 ? 'Besok' : diff === -1 ? 'Kemarin' : days[d.getDay()];
-  return `${label}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-}
-
-// ─── INIT DUMMY DATA ───
-function initDummyTasks() {
-  return [
-    { id:1, title:"Belajar Tailwind CSS", desc:"Pelajari utility class Tailwind v4 untuk styling halaman STUTime secara konsisten.", date:getTodayStr(), time:"08.00", pinned:true, done:false },
-    { id:2, title:"Mengerjakan tugas Basis Data", desc:"Buat ERD dan implementasi SQL untuk tugas akhir semester mata kuliah Basis Data.", date:getTodayStr(), time:"13.00", pinned:true, done:false },
-    { id:3, title:"Review materi Algoritma", desc:"Review bab sorting dan searching untuk persiapan UTS minggu depan.", date:getTodayStr(), time:"15.00", pinned:false, done:false },
-    { id:4, title:"Meeting kelompok WDC", desc:"Diskusi pembagian tugas coding untuk lomba WDC 2026 IFest #14.", date:getTodayStr(), time:"19.00", pinned:false, done:false },
-    { id:5, title:"Kerjakan laporan PKL", desc:"Tulis bab 3 laporan PKL tentang implementasi sistem informasi.", date:getTomorrowStr(), time:"09.00", pinned:false, done:false },
-    { id:6, title:"Presentasi Jaringan Komputer", desc:"Persiapkan slide presentasi topik subnetting dan CIDR.", date:getTomorrowStr(), time:"10.30", pinned:false, done:false },
-    { id:7, title:"Kumpulkan tugas Statistika", desc:"Selesaikan soal regresi linear dan upload ke e-learning.", date:getDateStr(2), time:"23.59", pinned:false, done:false }
-  ];
-}
-
-// ─── STATE ───
-let tasks = [];
-let selectedId = null;
-let editingId = null;
-
-// ─── LOCALSTORAGE ───
-function loadTasks() {
-  const saved = localStorage.getItem('stutime_tasks');
-  if (saved) {
-    tasks = JSON.parse(saved);
-  } else {
-    tasks = initDummyTasks();
-    saveTasks();
-  }
-}
-function saveTasks() {
-  localStorage.setItem('stutime_tasks', JSON.stringify(tasks));
-}
-
-// ─── RENDER ───
-function render() {
-  renderPinned();
-  renderTaskList();
-  renderDetail();
-}
-
-function renderPinned() {
-  const pinned = tasks.filter(t => t.pinned);
-  const bar = document.getElementById('pinned-bar');
-  const list = document.getElementById('pinned-list');
-
-  if (pinned.length === 0) {
-    bar.classList.add('hidden');
-    return;
-  }
-  bar.classList.remove('hidden');
-
-  list.innerHTML = pinned.map(t => `
-    <div onclick="selectTask(${t.id})" class="flex items-center gap-2 px-3 py-1.5 bg-[#222222] border border-[#FFD04E]/30 rounded-lg cursor-pointer hover:border-[#FFD04E] transition-all flex-shrink-0">
-      <div class="w-1.5 h-1.5 rounded-full bg-[#FFD04E] flex-shrink-0"></div>
-      <span class="text-xs font-semibold text-[#FFD04E] whitespace-nowrap">${t.time}</span>
-      <span class="text-xs text-white whitespace-nowrap max-w-[160px] truncate">${t.title}</span>
-    </div>
-  `).join('');
-}
-
-function renderTaskList() {
-  const container = document.getElementById('task-list-container');
-  const today = getTodayStr();
-
-  const grouped = {};
-  tasks.forEach(t => {
-    if (!grouped[t.date]) grouped[t.date] = [];
-    grouped[t.date].push(t);
-  });
-
-  const sortedDates = Object.keys(grouped).sort();
-  const reordered = [
-    ...sortedDates.filter(d => d === today),
-    ...sortedDates.filter(d => d > today),
-    ...sortedDates.filter(d => d < today),
-  ];
-
-  const countEl = document.getElementById('task-count');
-  if (countEl) countEl.textContent = tasks.length + ' jadwal';
-
-  if (tasks.length === 0) {
-    container.innerHTML = `
-      <div class="flex flex-col items-center justify-center h-48 text-center">
-        <div class="text-3xl mb-3">📋</div>
-        <div class="text-[#555] text-sm">Belum ada jadwal.<br>Tambah jadwal pertamamu!</div>
-      </div>`;
-    return;
-  }
-
-  container.innerHTML = reordered.map(date => `
-    <div class="mb-6 slide-in">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="w-2.5 h-2.5 rounded-full bg-[#FFD04E] flex-shrink-0"></div>
-        <span class="text-sm font-bold text-white">${formatDateLabel(date)}</span>
-      </div>
-      <div class="ml-[5px] border-l-2 border-[#FFD04E] pl-4 flex flex-col gap-2">
-        ${grouped[date].sort((a,b) => a.time.localeCompare(b.time)).map(t => `
-          <div onclick="selectTask(${t.id})"
-            class="task-card flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all
-              ${selectedId === t.id ? 'bg-[#FFD04E]/10 border-[#FFD04E]/50' : 'bg-[#222222] border-white/[0.07] hover:border-white/20'}
-              ${t.done ? 'opacity-50' : ''}">
-            <div class="flex flex-col items-center gap-1 flex-shrink-0 w-10">
-              <span class="text-[11px] font-bold text-[#FFD04E]">${t.time}</span>
-              ${t.pinned ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="#FFD04E"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>' : ''}
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="text-sm font-semibold text-white truncate ${t.done ? 'line-through' : ''}">${t.title}</div>
-              <div class="text-xs text-[#666] truncate mt-0.5">${t.desc}</div>
-            </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0">
-              <polyline points="9,18 15,12 9,6"/>
-            </svg>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderDetail() {
-  const panel = document.getElementById('detail-content');
-  if (!selectedId) {
-    panel.innerHTML = `
-      <div class="flex flex-col items-center justify-center h-full text-center py-20">
-        <div class="text-5xl mb-4">👈</div>
-        <div class="text-[#444] text-sm font-medium">Pilih jadwal untuk melihat detail</div>
-      </div>`;
-    return;
-  }
-
-  const t = tasks.find(t => t.id === selectedId);
-  if (!t) return;
-
-  panel.innerHTML = `
-    <div class="fade-in flex flex-col h-full">
-      <div class="flex items-start justify-between gap-4 mb-6">
-        <div class="flex-1">
-          ${t.done ? '<div class="mb-2"><span class="text-xs font-bold px-2 py-1 rounded-lg border text-green-400 border-green-400/30 bg-green-400/10">Selesai ✓</span></div>' : ''}
-          <h2 class="text-2xl font-bold text-white leading-tight">${t.title}</h2>
-        </div>
-        <button onclick="togglePin(${t.id})" title="${t.pinned ? 'Unpin' : 'Pin task'}"
-          class="flex-shrink-0 w-9 h-9 rounded-xl border flex items-center justify-center transition-all
-            ${t.pinned ? 'bg-[#FFD04E]/15 border-[#FFD04E]/50 text-[#FFD04E]' : 'bg-[#1a1a1a] border-white/[0.07] text-[#555] hover:border-[#FFD04E] hover:text-[#FFD04E]'}">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="${t.pinned ? '#FFD04E' : 'none'}" stroke="${t.pinned ? '#FFD04E' : 'currentColor'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="flex items-center gap-4 mb-6 p-4 bg-[#1a1a1a] border border-white/[0.07] rounded-xl">
-        <div class="flex items-center gap-2 text-sm text-[#aaa]">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFD04E" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <span>${formatDateLabel(t.date)}</span>
-        </div>
-        <div class="w-px h-4 bg-white/10"></div>
-        <div class="flex items-center gap-2 text-sm text-[#aaa]">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFD04E" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-          <span>${t.time} WIB</span>
-        </div>
-      </div>
-
-      <div class="mb-6 flex-1">
-        <div class="text-xs font-bold text-[#555] uppercase tracking-widest mb-2">Deskripsi</div>
-        <p class="text-sm text-[#bbb] leading-relaxed">${t.desc || '<span class="text-[#444] italic">Tidak ada deskripsi</span>'}</p>
-      </div>
-
-      <div class="grid grid-cols-2 gap-3 mb-4">
-        <button onclick="openYoutube('${encodeURIComponent(t.title)}')"
-          class="flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-white/[0.07] rounded-xl hover:border-red-500/50 hover:bg-red-500/5 transition-all group">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#ff0000"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02" fill="white"/></svg>
-          <div class="text-left">
-            <div class="text-xs text-[#555] group-hover:text-[#888]">Tutorial</div>
-            <div class="text-sm font-semibold text-white truncate max-w-[120px]">${t.title}</div>
-          </div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" class="ml-auto"><polyline points="9,18 15,12 9,6"/></svg>
-        </button>
-        <button onclick="openGoogle('${encodeURIComponent(t.title)}')"
-          class="flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-white/[0.07] rounded-xl hover:border-blue-500/50 hover:bg-blue-500/5 transition-all group">
-          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          <div class="text-left">
-            <div class="text-xs text-[#555] group-hover:text-[#888]">Tutorial</div>
-            <div class="text-sm font-semibold text-white truncate max-w-[120px]">${t.title}</div>
-          </div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2" stroke-linecap="round" class="ml-auto"><polyline points="9,18 15,12 9,6"/></svg>
-        </button>
-      </div>
-
-      <div class="grid grid-cols-3 gap-3">
-        <button onclick="openEditModal(${t.id})"
-          class="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#FFD04E]/40 text-[#FFD04E] text-sm font-bold hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          Edit
-        </button>
-        <button onclick="startFocus(${t.id})"
-          class="flex items-center justify-center gap-2 py-3 rounded-xl bg-[#FFD04E] text-[#111111] text-sm font-bold hover:bg-[#ffe066] transition-all">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="10,8 18,12 10,16"/></svg>
-          Start Focus
-        </button>
-        <button onclick="deleteTask(${t.id})"
-          class="flex items-center justify-center gap-2 py-3 rounded-xl border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500/10 hover:border-red-500 transition-all">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V6"/></svg>
-          Hapus
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-// ─── ACTIONS ───
-function selectTask(id) {
-  selectedId = id;
-  render();
-}
-
-function togglePin(id) {
-  const t = tasks.find(t => t.id === id);
-  if (!t) return;
-  t.pinned = !t.pinned;
-  saveTasks();
-  render();
-}
-
-function deleteTask(id) {
-  if (!confirm('Yakin mau hapus jadwal ini?')) return;
-  tasks = tasks.filter(t => t.id !== id);
-  selectedId = null;
-  saveTasks();
-  render();
-}
-
-function startFocus(id) {
-  window.location.href = 'foctime.html';
-}
-
-function openYoutube(query) {
-  window.open('https://www.youtube.com/results?search_query=' + query + '+tutorial', '_blank');
-}
-
-function openGoogle(query) {
-  window.open('https://www.google.com/search?q=' + query + '+tutorial', '_blank');
-}
-
-// ─── ADD / EDIT MODAL ───
-function openAddModal() {
-  editingId = null;
-  document.getElementById('modal-title').textContent = 'Tambah Jadwal';
-  document.getElementById('form-title').value = '';
-  document.getElementById('form-desc').value = '';
-  document.getElementById('form-date').value = getTodayStr();
-  document.getElementById('form-time').value = '';
-  document.getElementById('task-modal').classList.add('open');
-}
-
-function openEditModal(id) {
-  const t = tasks.find(t => t.id === id);
-  if (!t) return;
-  editingId = id;
-  document.getElementById('modal-title').textContent = 'Edit Jadwal';
-  document.getElementById('form-title').value = t.title;
-  document.getElementById('form-desc').value = t.desc;
-  document.getElementById('form-date').value = t.date;
-  document.getElementById('form-time').value = t.time;
-  document.getElementById('task-modal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('task-modal').classList.remove('open');
-  editingId = null;
-}
-
-function submitTask() {
-  const title = document.getElementById('form-title').value.trim();
-  const desc = document.getElementById('form-desc').value.trim();
-  const date = document.getElementById('form-date').value;
-  const time = document.getElementById('form-time').value;
-
-  if (!title || !date || !time) {
-    alert('Judul, tanggal, dan waktu wajib diisi!');
-    return;
-  }
-
-  const formattedTime = time.replace(':', '.');
-
-  if (editingId) {
-    const t = tasks.find(t => t.id === editingId);
-    t.title = title; t.desc = desc; t.date = date; t.time = formattedTime;
-  } else {
-    const newId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
-    tasks.push({ id: newId, title, desc, date, time: formattedTime, pinned: false, done: false });
-    selectedId = newId;
-  }
-
-  saveTasks();
-  closeModal();
-  render();
-}
-
-// ─── MOTIVATE ───
-const quotes = [
-  { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
-  { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
-  { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
-  { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
-  { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
-  { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
+// 1. Siapkan Data Dummy (Array of Objects)
+let dummyNotes = [
+    {
+        id: 1,
+        title: "Pergi ke pasar membeli ikan",
+        body: "Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan...",
+        isFavorite: false
+    },
+    {
+        id: 2,
+        title: "Belajar UI/UX Design Gestalt",
+        body: "Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...",
+        isFavorite: true // Contoh yang udah jadi favorit
+    },
+      {
+        id: 3,
+        title: "Belajar UI/UX Design Gestalt",
+        body: "Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...",
+        isFavorite: true // Contoh yang udah jadi favorit
+    },
+      {
+        id: 4,
+        title: "Belajar UI/UX Design Gestalt",
+        body: "Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...",
+        isFavorite: true // Contoh yang udah jadi favorit
+    }
 ];
 
-function openMotivate() {
-  const q = quotes[Math.floor(Math.random() * quotes.length)];
-  document.getElementById('motivate-emoji').textContent = q.emoji;
-  document.getElementById('motivate-quote').textContent = q.quote;
-  document.getElementById('motivate-author').textContent = q.author;
-  const m = document.getElementById('motivate-modal');
-  m.classList.remove('opacity-0','pointer-events-none');
-  m.classList.add('opacity-100');
-  document.getElementById('motivate-box').classList.remove('scale-95');
-  document.getElementById('motivate-box').classList.add('scale-100');
-}
 
-function closeMotivate(e) {
-  if (!e || e.target === document.getElementById('motivate-modal')) {
-    const m = document.getElementById('motivate-modal');
-    m.classList.add('opacity-0','pointer-events-none');
-    m.classList.remove('opacity-100');
-    document.getElementById('motivate-box').classList.add('scale-95');
-    document.getElementById('motivate-box').classList.remove('scale-100');
-  }
-}
+         function setMode(mode, btn) {
 
-// ─── INIT ───
-document.addEventListener('DOMContentLoaded', () => {
-  loadTasks();
-  // Auto-select task dari query param ?id= (dari calendar)
-  const params = new URLSearchParams(window.location.search);
-  const idParam = params.get('id');
-  if (idParam) {
-    selectedId = parseInt(idParam);
-  }
-  render();
-  // Scroll ke task yang dipilih di sidebar setelah render
-  if (idParam) {
-    setTimeout(() => {
-      const selected = document.querySelector('.task-card.bg-\\[\\#FFD04E\\]');
-      const container = document.getElementById('task-list-container');
-      if (container) {
-        const cards = container.querySelectorAll('.task-card');
-        cards.forEach(card => {
-          if (card.classList.contains('border-[#FFD04E]') || card.style.borderColor) {
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
+            if (running) return;
+
+            currentMode = mode;
+
+            document.querySelectorAll('.mode-tab').forEach(t => {
+
+                t.classList.remove('bg-[#FFD04E]','text-[#111111]','font-bold');
+
+                t.classList.add('text-[#888]','font-semibold');
+
+            });
+
+            btn.classList.remove('text-[#888]','font-semibold');
+
+            btn.classList.add('bg-[#FFD04E]','text-[#111111]','font-bold');
+
+            totalSeconds = settings[mode] * 60;
+
+            remainingSeconds = totalSeconds; remainingMs = 0;
+
+            const statuses = { focus:'Time to Focus!', short:'Short Break 🌿', long:'Long Break ☕' };
+
+            document.getElementById('timer-status').textContent = statuses[mode];
+
+            updateDisplay();
+
+            }
+
+        function formatText(command) {
+
+            // 1. Panggil kursor masuk ke area teks DULUAN
+
+            document.querySelector('.note-body').focus();
+
+           
+
+            // 2. Baru eksekusi perintah format teksnya (Rata Tengah, Bold, dll)
+
+            document.execCommand(command, false, null);
+
+           
+
+            // 3. Cek perubahan ikon
+
+            checkActiveButtons();
+
+        }
+
+
+
+        // Fungsi untuk memunculkan/menyembunyikan menu dropdown
+
+        function toggleDropdown(menuId) {
+
+            const menu = document.getElementById(menuId);
+
+            menu.classList.toggle('hidden');
+
+        }
+
+
+
+        // Menutup dropdown secara otomatis jika user klik area kosong di luar menu
+
+        window.addEventListener('click', function(e) {
+
+            const alignBtn = document.getElementById('align-dropdown-btn');
+
+            const alignMenu = document.getElementById('align-menu');
+
+           
+
+            // Cek apakah yang diklik BUKAN tombol utama atau isi menu
+
+            if (alignBtn && alignMenu) {
+
+                if (!alignBtn.contains(e.target) && !alignMenu.contains(e.target)) {
+
+                    alignMenu.classList.add('hidden'); // Sembunyikan menu
+
+                }
+
+            }
+
         });
-      }
-    }, 100);
-  }
-});
+
+       function checkActiveButtons() {
+
+        // 1. Cek tombol-tombol toggle (Bold, Italic, dll)
+
+        const buttons = document.querySelectorAll('button[data-command]');
+
+       
+
+        buttons.forEach(button => {
+
+            const command = button.getAttribute('data-command');
+
+            if (document.queryCommandState(command)) {
+
+                button.classList.add('active-btn');
+
+            } else {
+
+                button.classList.remove('active-btn');
+
+            }
+
+        });
+
+
+
+        // 2. BARU: Cek status perataan teks (Alignment) untuk mengubah ikon utama
+
+        const alignIcon = document.getElementById('current-align-icon');
+
+       
+
+        if (alignIcon) {
+
+            if (document.queryCommandState('justifyCenter')) {
+
+                alignIcon.className = 'fa-solid fa-align-center';
+
+            } else if (document.queryCommandState('justifyRight')) {
+
+                alignIcon.className = 'fa-solid fa-align-right';
+
+            } else if (document.queryCommandState('justifyFull')) {
+
+                alignIcon.className = 'fa-solid fa-align-justify';
+
+            } else {
+
+                // Default kembali ke rata kiri
+
+                alignIcon.className = 'fa-solid fa-align-left';
+
+                }
+
+            }
+
+        }
+
+
+
+
+
+        const editor = document.querySelector('.note-body');
+
+        editor.addEventListener('keyup', checkActiveButtons);
+
+        editor.addEventListener('mouseup', checkActiveButtons);
+
+
+
+        function toggleFavorite() {
+
+            if (!activeNoteId) return;
+
+
+
+            const noteIndex = dummyNotes.findIndex(n => n.id === activeNoteId);
+
+            if (noteIndex !== -1) {
+
+                // Balikkan statusnya (kalau true jadi false, kalau false jadi true)
+
+                dummyNotes[noteIndex].isFavorite = !dummyNotes[noteIndex].isFavorite;
+
+               
+
+                // Render ulang panel kiri (Siapa tahu mau nambahin icon bintang di card-nya nanti)
+
+                renderNotesList();
+
+               
+
+                // Panggil fungsi untuk mengubah UI bintang di toolbar
+
+                updateFavoriteIcon(dummyNotes[noteIndex].isFavorite);
+
+            }
+
+        }
+
+
+
+        function customAction(action) {
+
+            if(action === 'columns') {
+
+                alert('Fitur kolom belum diaktifkan.');
+
+            }
+
+        }
+
+        // Mencegah tombol toolbar dan dropdown merebut fokus dari area teks
+
+            document.addEventListener('mousedown', function(e) {
+
+                // Jika yang diklik adalah tombol yang ada di dalam toolbar atau dropdown
+
+                const clickedButton = e.target.closest('button');
+
+               
+
+                if (clickedButton && (clickedButton.hasAttribute('data-command') || clickedButton.id === 'align-dropdown-btn')) {
+
+                    e.preventDefault(); // Cegah browser memindahkan kursor dari teks ke tombol
+
+                }
+
+            });
+
+        // Jalankan fungsi ini otomatis saat halaman pertama kali dibuka
+
+            window.addEventListener('DOMContentLoaded', function() {
+
+                const editor = document.querySelector('.note-body');
+
+               
+
+                // 1. Kursor otomatis fokus ke area note supaya siap diketik
+
+                editor.focus();
+
+               
+
+                // 2. Langsung cek tombol mana yang harus nyala
+
+                checkActiveButtons();
+
+               
+
+                // 3. (Opsional/Pencegahan) Karena beberapa browser kadang tidak membaca 'rata kiri'
+
+                // sebagai format aktif di awal, kita paksa tombol rata kiri nyala secara default
+
+                if (!document.queryCommandState('justifyCenter') &&
+
+                    !document.queryCommandState('justifyRight') &&
+
+                    !document.queryCommandState('justifyFull')) {
+
+                   
+
+                    const leftAlignBtn = document.querySelector('button[data-command="justifyLeft"]');
+
+                    if (leftAlignBtn) {
+
+                        leftAlignBtn.classList.add('active-btn');
+
+                    }
+
+                }
+
+                renderNotesList();
+
+            });
+
+            // 2. Tentukan ID catatan mana yang sedang aktif/dipilih (Default kita pilih ID 1)
+
+            let activeNoteId = 1;
+
+
+
+            // 3. Fungsi untuk menggambar (me-render) kartu ke dalam HTML
+
+            function renderNotesList() {
+
+                const listContainer = document.getElementById('notes-list');
+
+                listContainer.innerHTML = ''; // Bersihkan wadah sebelum diisi ulang
+
+
+
+                // Ulangi pembuatan kartu sebanyak jumlah data di dummyNotes
+
+                dummyNotes.forEach(note => {
+
+                    // Cek apakah kartu ini sedang aktif
+
+                    const isActive = note.id === activeNoteId;
+
+                   
+
+                    // Logika Tailwind: Kalau aktif, kasih border kiri kuning & bg agak terang. Kalau nggak, bg gelap biasa.
+
+                    const cardClasses = isActive
+
+                        ? 'border-l-4 border-[#FFD15C] bg-[#3A3A3F]'
+
+                        : 'border-l-4 border-transparent bg-[#2A2A2D] hover:bg-[#3A3A3F]';
+
+
+
+                    // Menyiapkan ikon bintang jika catatan ini adalah favorit
+
+                    const favoriteIcon = note.isFavorite
+
+                        ? '<i class="fa-solid fa-star text-[#FFD15C] text-sm shrink-0 mt-1"></i>'
+
+                        : '';
+
+
+
+                    // Buat struktur HTML per kartu
+
+                    const noteHTML = `
+
+                        <div onclick="selectNote(${note.id})" class="cursor-pointer p-4 rounded-lg transition duration-200 flex-shrink-0 ${cardClasses}">
+
+                           
+
+                            <div class="flex justify-between items-start mb-2 gap-2">
+
+                                <h3 class="text-white font-bold text-lg truncate">${note.title}</h3>
+
+                                ${favoriteIcon}
+
+                            </div>
+
+                           
+
+                            <p class="text-[#B0B0B0] text-sm leading-relaxed line-clamp-3">${note.body}</p>
+
+                        </div>
+
+                    `;
+
+                   
+
+                    // Masukkan HTML tadi ke dalam list container
+
+                    listContainer.innerHTML += noteHTML;
+
+                   
+
+                });
+
+            }          
+
+
+
+            // 4. Fungsi saat salah satu kartu diklik
+
+            function selectNote(id) {
+
+                activeNoteId = id;
+
+                renderNotesList();
+
+               
+
+                const selectedNote = dummyNotes.find(n => n.id === id);
+
+                if(selectedNote) {
+
+                    document.querySelector('.note-title').value = selectedNote.title;
+
+                    document.querySelector('.note-body').innerHTML = selectedNote.body;
+
+                   
+
+                    // Update bintang di toolbar sesuai status catatan yang baru diklik
+
+                    updateFavoriteIcon(selectedNote.isFavorite);
+
+                }
+
+            }  
+
+            // --- FUNGSI SIMPAN ---
+
+                function saveNote() {
+
+                    if (!activeNoteId) return; // Kalau gak ada catatan yang dipilih, diam saja
+
+
+
+                    // Ambil isi teks dari layar
+
+                    const currentTitle = document.querySelector('.note-title').value;
+
+                    const currentBody = document.querySelector('.note-body').innerHTML;
+
+
+
+                    // Cari catatan yang sedang aktif di database dummy kita, lalu update isinya
+
+                    const noteIndex = dummyNotes.findIndex(n => n.id === activeNoteId);
+
+                    if (noteIndex !== -1) {
+
+                        dummyNotes[noteIndex].title = currentTitle;
+
+                        dummyNotes[noteIndex].body = currentBody;
+
+                       
+
+                        renderNotesList(); // Render ulang panel kiri biar judul barunya muncul
+
+                       
+
+                        // Kasih efek visual sedikit ke tombol simpan biar user tahu udah tersimpan
+
+                        const saveBtn = document.querySelector('button[onclick="saveNote()"]');
+
+                        const originalText = saveBtn.innerHTML;
+
+                        saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> Tersimpan!';
+
+                        setTimeout(() => saveBtn.innerHTML = originalText, 1500); // Balik normal setelah 1.5 detik
+
+                    }
+
+                }
+
+
+
+                // --- FUNGSI HAPUS ---
+
+                function deleteNote() {
+
+                    if (!activeNoteId) return;
+
+
+
+                    // Munculkan pop-up konfirmasi
+
+                    const isConfirmed = confirm(" Ingin menghapus catatan ini?");
+
+                    if (!isConfirmed) return;
+
+
+
+                    // Hapus dari array database
+
+                    dummyNotes = dummyNotes.filter(n => n.id !== activeNoteId);
+
+
+
+                    // Kalau masih ada catatan sisa, buka catatan pertama. Kalau habis, kosongkan layar.
+
+                    if (dummyNotes.length > 0) {
+
+                        selectNote(dummyNotes[0].id);
+
+                    } else {
+
+                        activeNoteId = null;
+
+                        document.querySelector('.note-title').value = '';
+
+                        document.querySelector('.note-body').innerHTML = '';
+
+                        renderNotesList();
+
+                    }
+
+                }            
+
+                function updateFavoriteIcon(isFav) {
+
+                const icon = document.getElementById('fav-icon');
+
+                if (isFav) {
+
+                    icon.className = 'fa-solid fa-star';
+
+                    icon.style.color = '#FFD15C';
+
+                } else {
+
+                    icon.className = 'fa-regular fa-star';
+
+                    icon.style.color = '';
+
+                }
+
+            }
+
+            // buat tambah catatan baru
+
+            // --- FUNGSI TAMBAH CATATAN BARU ---
+
+            function createNewNote() {
+
+                // 1. Buat ID unik menggunakan waktu saat ini (timestamp)
+
+                const newId = Date.now();
+
+               
+
+                // 2. Buat struktur data catatan kosong
+
+                const newNote = {
+
+                    id: newId,
+
+                    title: "Catatan Baru",
+
+                    body: "",
+
+                    isFavorite: false
+
+                };
+
+               
+
+                // 3. Masukkan catatan baru ini ke urutan PALING ATAS di array dummyNotes
+
+                dummyNotes.unshift(newNote);
+
+               
+
+                // 4. Jadikan catatan baru ini sebagai catatan yang sedang aktif
+
+                activeNoteId = newId;
+
+               
+
+                // 5. Render ulang panel kiri biar kartu barunya muncul
+
+                renderNotesList();
+
+               
+
+                // 6. Siapkan editor di panel kanan
+
+                const titleInput = document.querySelector('.note-title');
+
+                const bodyInput = document.querySelector('.note-body');
+
+               
+
+                titleInput.value = newNote.title;
+
+                bodyInput.innerHTML = newNote.body;
+
+                updateFavoriteIcon(newNote.isFavorite); // Reset icon bintang
+
+               
+
+                // 7. UX Magic: Langsung fokuskan kursor ke judul dan blok teksnya
+
+                // Jadi saat user ngetik, teks "Catatan Baru" langsung tertimpa otomatis
+
+                titleInput.focus();
+
+                titleInput.select();
+
+            }
+
+
+
+                    // --- FUNGSI PINDAH TAB (Notes <-> Journal) ---
+
+               // --- FUNGSI PINDAH TAB (Versi Aman untuk Ukuran) ---
+
+                function switchMainTab(tabName) {
+
+    const tabNotes = document.getElementById('tab-notes');
+
+    const tabDafpus = document.getElementById('tab-dafpus');
+
+    const btnNotes = document.getElementById('btn-tab-notes');
+
+    const btnDafpus = document.getElementById('btn-tab-dafpus');
+
+
+
+    // HANYA GANTI WARNA, JANGAN SENTUH UKURAN (w-[500px])
+
+    const activeStyle = ['bg-[#FFD04E]', 'text-[#1E1E20]', 'font-semibold'];
+
+    const inactiveStyle = ['bg-transparent', 'text-[#FFD04E]', 'font-normal', 'hover:bg-[#FFD15C]/10'];
+
+
+
+    if (tabName === 'notes') {
+
+        tabNotes.classList.remove('hidden'); tabNotes.classList.add('flex');
+
+        tabDafpus.classList.add('hidden'); tabDafpus.classList.remove('flex');
+
+
+
+        btnNotes.classList.remove(...inactiveStyle); btnNotes.classList.add(...activeStyle);
+
+        btnDafpus.classList.remove(...activeStyle); btnDafpus.classList.add(...inactiveStyle);
+
+    } else if (tabName === 'dafpus') {
+
+        tabNotes.classList.add('hidden'); tabNotes.classList.remove('flex');
+
+        tabDafpus.classList.remove('hidden'); tabDafpus.classList.add('flex');
+
+
+
+        btnDafpus.classList.remove(...inactiveStyle); btnDafpus.classList.add(...activeStyle);
+
+        btnNotes.classList.remove(...activeStyle); btnNotes.classList.add(...inactiveStyle);
+
+    }
+
+}
+
+            // --- STATE MANAGEMENT DAFPUS ---
+
+                    let currentSourceType = 'book';
+
+                    let currentFormat = 'APA';
+
+                    let savedDafpus = JSON.parse(localStorage.getItem('dataDafpusReza')) || [];
+
+                    // --- KONFIGURASI FORM INPUT DAFPUS ---
+
+                const FIELDS = {
+
+                    book: [
+
+                    { id:'author', label:'Author(s)', placeholder:'e.g. John Doe' },
+
+                    { id:'title', label:'Book Title', placeholder:'e.g. Introduction to Algorithms' },
+
+                    { id:'year', label:'Year', placeholder:'e.g. 2023' },
+
+                    { id:'city', label:'City', placeholder:'e.g. Jakarta' },
+
+                    { id:'publisher', label:'Publisher', placeholder:'e.g. Gramedia' },
+
+                    { id:'edition', label:'Edition (optional)', placeholder:'e.g. 3rd' },
+
+                    ],
+
+                    journal: [
+
+                    { id:'author', label:'Author(s)', placeholder:'e.g. Jane Smith' },
+
+                    { id:'title', label:'Article Title', placeholder:'e.g. Study on Productivity' },
+
+                    { id:'journal', label:'Journal Name', placeholder:'e.g. Jurnal Pendidikan' },
+
+                    { id:'year', label:'Year', placeholder:'e.g. 2023' },
+
+                    { id:'volume', label:'Volume', placeholder:'e.g. 5' },
+
+                    { id:'issue', label:'Issue/Number', placeholder:'e.g. 2' },
+
+                    { id:'pages', label:'Pages', placeholder:'e.g. 100-115' },
+
+                    ],
+
+                    website: [
+
+                    { id:'author', label:'Author(s)', placeholder:'e.g. Admin Kompas' },
+
+                    { id:'title', label:'Page Title', placeholder:'e.g. Cara Belajar Efektif' },
+
+                    { id:'site', label:'Website Name', placeholder:'e.g. Kompas.com' },
+
+                    { id:'year', label:'Year Published', placeholder:'e.g. 2023' },
+
+                    { id:'url', label:'URL', placeholder:'https://...' },
+
+                    { id:'accessed', label:'Date Accessed', placeholder:'e.g. 13 March 2026' }, // Aku update dikit ke hari ini ya!
+
+                    ]
+
+                };      
+
+
+
+                    // --- 1. FUNGSI GANTI SUMBER (Book/Journal/Website) ---
+
+                    function setSourceType(type, btn) {
+
+                        currentSourceType = type;
+
+                       
+
+                        // Siapkan daftar warna untuk status Aktif dan Tidak Aktif
+
+                        const activeStyles = ['border-[#FFD15C]', 'bg-[#FFD15C]', 'text-[#1E1E20]'];
+
+                        const inactiveStyles = ['border-gray-600', 'bg-transparent', 'text-gray-400', 'hover:text-white'];
+
+
+
+                        // Reset semua tombol source-type jadi abu-abu (Tidak Aktif)
+
+                        document.querySelectorAll('.source-type-btn').forEach(b => {
+
+                            b.classList.remove(...activeStyles);
+
+                            b.classList.add(...inactiveStyles);
+
+                        });
+
+                       
+
+                        // Ubah tombol yang sedang diklik jadi kuning (Aktif)
+
+                        btn.classList.remove(...inactiveStyles);
+
+                        btn.classList.add(...activeStyles);
+
+                       
+
+                        // Tampilkan kolom input yang sesuai
+
+                        renderInputFields();
+
+                    }      
+
+
+
+                    // --- 2. FUNGSI GANTI FORMAT (APA/IEEE/Chicago) ---
+
+                    function setFormat(format, btn) {
+
+                    currentFormat = format;
+
+                   
+
+                    // Format punya style aktif yang sedikit beda (bg gelap, teks kuning)
+
+                    const activeStyles = ['border-[#FFD15C]', 'bg-[#2A2A2D]', 'text-[#FFD15C]'];
+
+                    const inactiveStyles = ['border-gray-600', 'bg-transparent', 'text-gray-400', 'hover:text-white'];
+
+
+
+                    // Reset semua tombol format jadi abu-abu (Tidak Aktif)
+
+                    document.querySelectorAll('.fmt-btn').forEach(b => {
+
+                        b.classList.remove(...activeStyles);
+
+                        b.classList.add(...inactiveStyles);
+
+                    });
+
+                   
+
+                    // Ubah tombol yang sedang diklik jadi kuning (Aktif)
+
+                    btn.classList.remove(...inactiveStyles);
+
+                    btn.classList.add(...activeStyles);
+
+                }
+
+
+
+                    // --- 3. FUNGSI MENGGAMBAR KOLOM INPUT (Pakai Data FIELDS) ---
+
+                            // --- 3. FUNGSI MENGGAMBAR KOLOM INPUT (UPDATE MULTI-AUTHOR) ---
+
+function renderInputFields() {
+
+    const container = document.getElementById('inputFields');
+
+    let html = '';
+
+
+
+    const createInput = (id, label, placeholder) => {
+
+        // KHUSUS UNTUK AUTHOR: Kita bikin dinamis ada tombol '+' nya
+
+        if (id === 'author') {
+
+            return `
+
+            <div class="mb-4">
+
+                <div class="flex justify-between items-center mb-2">
+
+                    <label class="block text-[#888888] text-[11px] font-bold tracking-widest uppercase">${label}</label>
+
+                    <button type="button" onclick="addAuthorField()" class="text-[#FFD15C] text-[10px] font-bold tracking-wider hover:text-[#1E1E20] hover:bg-[#FFD15C] transition bg-[#FFD15C]/10 px-3 py-1 rounded-md border border-[#FFD15C]/30 cursor-pointer">
+
+                        <i class="fa-solid fa-plus"></i> ADD AUTHOR
+
+                    </button>
+
+                </div>
+
+                <div id="author-container" class="flex flex-col gap-2">
+
+                    <div class="flex gap-2 author-row">
+
+                        <input type="text" class="daf-author-input w-full bg-[#222222] border border-white/[0.07] rounded-lg px-4 py-3 text-[#F0F0F0] text-sm outline-none focus:border-[#FFD15C] transition-all" placeholder="${placeholder}">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            `;
+
+        }
+
+
+
+        // UNTUK KOLOM BIASA (Title, Year, dll)
+
+        return `
+
+        <div class="mb-4">
+
+            <label class="block text-[#888888] text-[11px] font-bold tracking-widest mb-2 uppercase">${label}</label>
+
+            <input type="text" id="daf-${id}" placeholder="${placeholder}" class="w-full bg-[#222222] border border-white/[0.07] rounded-lg px-4 py-3 text-[#F0F0F0] text-sm outline-none focus:border-[#FFD15C] transition-all">
+
+        </div>
+
+        `;
+
+    };
+
+
+
+    FIELDS[currentSourceType].forEach(field => {
+
+        html += createInput(field.id, field.label, field.placeholder);
+
+    });
+
+
+
+    container.innerHTML = html;
+
+}
+
+// --- FUNGSI KLIK TAMBAH AUTHOR ---
+
+function addAuthorField() {
+
+    const container = document.getElementById('author-container');
+
+    const rows = container.querySelectorAll('.author-row');
+
+   
+
+    // Cegah kalau udah 5 author
+
+    if (rows.length >= 5) {
+
+        alert('Maksimal 5 author ya!');
+
+        return;
+
+    }
+
+
+
+    // Buat kotak baru + tombol hapus
+
+    const div = document.createElement('div');
+
+    div.className = 'flex gap-2 author-row';
+
+    div.innerHTML = `
+
+        <input type="text" class="daf-author-input w-full bg-[#222222] border border-white/[0.07] rounded-lg px-4 py-3 text-[#F0F0F0] text-sm outline-none focus:border-[#FFD15C] transition-all" placeholder="Author ${rows.length + 1} (e.g. Mary Brown)">
+
+        <button type="button" onclick="removeAuthorField(this)" class="bg-red-500/10 text-red-500 border border-red-500/20 px-4 rounded-lg hover:bg-red-500 hover:text-white transition cursor-pointer flex-shrink-0">
+
+            <i class="fa-solid fa-trash"></i>
+
+        </button>
+
+    `;
+
+    container.appendChild(div);
+
+}
+
+
+
+// --- FUNGSI HAPUS AUTHOR ---
+
+function removeAuthorField(btn) {
+
+    // Hapus baris kotak tempat tombol ini berada
+
+    btn.closest('.author-row').remove();
+
+}    
+
+                            // --- HELPER FUNGSI APA (Karena di kodemu dipanggil formatAuthorAPA) ---
+
+                               
+
+                   //fungsi bat nama
+
+                   // Fungsi dasar untuk memecah nama (First, Middle, Last)
+
+                    function parseAuthorName(fullName) {
+
+                        const parts = fullName.trim().split(/\s+/);
+
+                        if (parts.length === 1) return { last: parts[0], first: '', middle: '' }; // Kalau namanya cuma 1 kata
+
+                       
+
+                        const last = parts.pop(); // Ambil kata paling belakang
+
+                        const first = parts.shift(); // Ambil kata paling depan
+
+                        const middle = parts.join(' '); // Sisa kata di tengah (kalau ada)
+
+                       
+
+                        return { last, first, middle };
+
+                    }
+
+
+
+                    // Format APA: Fachri, R. N.
+
+                    function formatAuthorAPA(authorStr) {
+
+                        const { last, first, middle } = parseAuthorName(authorStr);
+
+                        if (!first) return last;
+
+                       
+
+                        // Singkat nama depan
+
+                        let initials = first.charAt(0).toUpperCase() + '.';
+
+                       
+
+                        // Singkat nama tengah (kalau namanya panjang banget kayak John Fitzgerald Kennedy)
+
+                        if (middle) {
+
+                            const middleInitials = middle.split(' ').map(n => n.charAt(0).toUpperCase() + '.').join(' ');
+
+                            initials += ' ' + middleInitials;
+
+                        }
+
+                        return `${last}, ${initials}`;
+
+                    }
+
+
+
+                    // Format IEEE & Chicago: Fachri, Reza N.
+
+                   function formatAuthorChicago(authorStr) {
+
+                    const { last, first, middle } = parseAuthorName(authorStr);
+
+                    if (!first) return last;
+
+                   
+
+                    let result = `${last}, ${first}`;
+
+                    if (middle) {
+
+                        const middleInitials = middle.split(' ').map(n => n.charAt(0).toUpperCase() + '.').join(' ');
+
+                        result += ' ' + middleInitials;
+
+                    }
+
+                    return result;
+
+                }
+
+
+
+                // --- Format IEEE: A. S. Tanenbaum ---
+
+                function formatAuthorIEEE(authorStr) {
+
+                    const { last, first, middle } = parseAuthorName(authorStr);
+
+                    if (!first) return last; // Kalau cuma 1 kata
+
+                   
+
+                    let initials = first.charAt(0).toUpperCase() + '.';
+
+                    if (middle) {
+
+                        const middleInitials = middle.split(' ').map(n => n.charAt(0).toUpperCase() + '.').join(' ');
+
+                        initials += ' ' + middleInitials;
+
+                    }
+
+                   
+
+                    // Gabungkan inisial di depan, lalu spasi, lalu nama belakang
+
+                    return `${initials} ${last}`;
+
+                }
+
+                // ==========================================
+
+// FUNGSI PENGGABUNG BANYAK AUTHOR (MAX 5)
+
+// ==========================================
+
+function processMultipleAuthors(rawAuthors, formatType) {
+
+    // 1. Pisahkan nama berdasarkan tanda titik koma (;) atau koma (,)
+
+    const delimiter = rawAuthors.includes(';') ? ';' : ',';
+
+    let authorsArray = rawAuthors.split(delimiter).map(a => a.trim()).filter(a => a);
+
+   
+
+    // 2. Batasi maksimal 5 author
+
+    if (authorsArray.length > 5) {
+
+        authorsArray = authorsArray.slice(0, 5);
+
+    }
+
+    if (authorsArray.length === 0) return '';
+
+   
+
+    // 3. Format masing-masing nama pakai mesin pemotong yang sudah kita buat
+
+    let formattedAuthors = authorsArray.map(author => {
+
+        if (formatType === 'APA') return formatAuthorAPA(author);
+
+        if (formatType === 'IEEE') return formatAuthorIEEE(author);
+
+        return formatAuthorChicago(author);
+
+    });
+
+
+
+    // 4. Gabungkan kembali sesuai aturan jumlah orang dan gaya sitasi
+
+    if (formattedAuthors.length === 1) return formattedAuthors[0];
+
+
+
+    if (formattedAuthors.length === 2) {
+
+        if (formatType === 'APA') {
+
+            return `${formattedAuthors[0]}, & ${formattedAuthors[1]}`;
+
+        } else {
+
+            // IEEE dan Chicago pakai 'and' untuk 2 orang (tanpa koma sebelum and)
+
+            return `${formattedAuthors[0]} and ${formattedAuthors[1]}`;
+
+        }
+
+    }
+
+
+
+    // Untuk 3 sampai 5 orang
+
+    const lastAuthor = formattedAuthors.pop(); // Ambil orang terakhir
+
+    const joinedFirst = formattedAuthors.join(', '); // Gabungkan sisanya pakai koma
+
+   
+
+    if (formatType === 'APA') {
+
+        return `${joinedFirst}, & ${lastAuthor}`;
+
+    } else {
+
+        return `${joinedFirst}, and ${lastAuthor}`;
+
+    }
+
+}
+
+                   
+
+                    // 2. FUNGSI GENERATE SITASI (UPDATE WEBSITE)
+
+                    // ==========================================
+
+                    function generate() {
+
+                      const getVal = (id) => document.getElementById('daf-' + id)?.value.trim() || '';
+
+   
+
+    // --- KHUSUS AUTHOR: Kumpulkan isi semua kotak jadi satu ---
+
+    const getAuthorsValue = () => {
+
+        const inputs = document.querySelectorAll('.daf-author-input');
+
+        let vals = [];
+
+        inputs.forEach(inp => {
+
+            if (inp.value.trim() !== '') vals.push(inp.value.trim());
+
+        });
+
+        // Gabungkan dengan titik koma, biar gampang dipecah sama mesin kita
+
+        return vals.join('; ');
+
+    };
+
+   
+
+    const v = {};
+
+    FIELDS[currentSourceType].forEach(f => {
+
+        if (f.id === 'author') {
+
+            v[f.id] = getAuthorsValue(); // Pakai fungsi khusus author
+
+        } else {
+
+            v[f.id] = getVal(f.id); // Pakai value biasa
+
+        }
+
+    });
+
+
+
+    if (!v.author || !v.title) {
+
+        alert('⚠️ Author and Title are required');
+
+        return;
+
+    }
+
+
+
+    let result = '';
+
+    const format = currentFormat;
+
+    const sourceType = currentSourceType;
+
+
+
+                        // ... (kode bagian atas generate() tetap sama) ...
+
+
+
+    if (format === 'APA') {
+
+        // PANGGIL MESIN MULTI-AUTHOR UNTUK APA
+
+        const auth = processMultipleAuthors(v.author, 'APA');
+
+       
+
+        if (sourceType === 'book') {
+
+            result = `${auth} (${v.year||'n.d.'}). *${v.title}*${v.edition ? ` (${v.edition} ed.)` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}.`;
+
+        } else if (sourceType === 'journal') {
+
+            result = `${auth} (${v.year||'n.d.'}). ${v.title}. *${v.journal}*, *${v.volume}*(${v.issue}), ${v.pages}.`;
+
+        } else {
+
+            result = `${auth} (${v.year||'n.d.'}). ${v.title}. ${v.site}. Retrieved from ${v.url}`;
+
+        }
+
+       
+
+    } else if (format === 'IEEE') {
+
+        // PANGGIL MESIN MULTI-AUTHOR UNTUK IEEE
+
+        const auth = processMultipleAuthors(v.author, 'IEEE');
+
+       
+
+        if (sourceType === 'book') {
+
+            result = `[1] ${auth}, *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+
+        } else if (sourceType === 'journal') {
+
+            result = `[1] ${auth}, "${v.title}," *${v.journal}*, vol. ${v.volume}, no. ${v.issue}, pp. ${v.pages}, ${v.year||'n.d.'}.`;
+
+        } else {
+
+            result = `[1] ${auth}, "${v.title}," ${v.site}, ${v.year||'n.d.'}. [Online]. Available: ${v.url}`;
+
+        }
+
+       
+
+    } else { // Chicago
+
+        // PANGGIL MESIN MULTI-AUTHOR UNTUK CHICAGO
+
+        const auth = processMultipleAuthors(v.author, 'Chicago');
+
+       
+
+        if (sourceType === 'book') {
+
+            result = `${auth}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+
+        } else if (sourceType === 'journal') {
+
+            result = `${auth}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year||'n.d.'}): ${v.pages}.`;
+
+        } else {
+
+            result = `${auth}. "${v.title}." ${v.site}. Accessed ${v.accessed}. ${v.url}`;
+
+        }
+
+    }
+
+
+
+    // ... (kode replace bintang ke italic tetap di bawah) ...
+
+
+
+                        // Mengubah tanda bintang menjadi cetak miring
+
+                        const finalHTML = result.replace(/\*(.*?)\*/g, '<i>$1</i>');
+
+                        document.getElementById('dafpusResult').innerHTML = finalHTML;
+
+                    }
+
+
+
+                       
+
+
+
+                    // --- 5. FUNGSI COPY, SAVE, & CLEAR ---
+
+                    function copyResult() {
+
+                        const text = document.getElementById('dafpusResult').innerText;
+
+                        if(text.includes('Fill in the form')) return;
+
+                       
+
+                        navigator.clipboard.writeText(text);
+
+                        alert('Sitasi disalin ke clipboard!');
+
+                    }
+
+
+
+                    function clearResult() {
+
+                        document.getElementById('dafpusResult').innerHTML = 'Fill in the form and click Generate to see your bibliography entry here.';
+
+                        renderInputFields(); // Kosongkan form juga
+
+                    }
+
+
+
+                 function saveResult() {
+
+                    const resultBox = document.getElementById('dafpusResult');
+
+                    const text = resultBox.innerHTML;
+
+                   
+
+                    // Cegah nyimpen teks kosong atau teks default
+
+                    if (text.includes('Fill in the form') || text.trim() === '') {
+
+                        alert('Belum ada sitasi yang digenerate untuk disimpan!');
+
+                        return;
+
+                    }
+
+
+
+                    // Masukkan ke array dan simpan ke Local Storage
+
+                    savedDafpus.push(text);
+
+                    localStorage.setItem('dataDafpusReza', JSON.stringify(savedDafpus));
+
+                   
+
+                    // Langsung render ulang biar muncul di bawah
+
+                    renderSavedEntries();
+
+                }
+
+
+
+                    function renderSavedEntries() {
+
+                        const container = document.getElementById('savedEntries');
+
+                       // Kalau kosong, tampilkan teks default
+
+                        if (!savedDafpus || savedDafpus.length === 0) {
+
+                            container.innerHTML = '<div class="text-center text-gray-500 py-5"><p>No saved entries yet</p></div>';
+
+                            return;
+
+                        }
+
+
+
+                        container.innerHTML = savedDafpus.map((entry, index) => `
+
+                            <div class="saved-entry">
+
+                                <div class="saved-entry-text">${entry}</div>
+
+                                <button class="del-btn" onclick="deleteSavedEntry(${index})"><i class="fa-solid fa-xmark"></i></button>
+
+                            </div>
+
+                        `).join('');
+
+                    }
+
+
+
+                   function deleteSavedEntry(index) {
+
+                    // Hapus 1 item pada posisi index tersebut
+
+                    savedDafpus.splice(index, 1);
+
+                   
+
+                    // Update Local Storage dengan data terbaru
+
+                    localStorage.setItem('dataDafpusReza', JSON.stringify(savedDafpus));
+
+                   
+
+                    // Render ulang layarnya
+
+                    renderSavedEntries();
+
+                   }
+
+
+
+                    function exportAll() {
+
+                        if(savedDafpus.length === 0) {
+
+                            alert("Belum ada daftar pustaka yang disimpan!"); return;
+
+                        }
+
+                       
+
+                        // Ubah format HTML (<i>) ke teks biasa untuk file .txt
+
+                        const plainTextContent = savedDafpus.map(entry => entry.replace(/<\/?i>/g, '')).join('\n\n');
+
+                       
+
+                        const blob = new Blob([plainTextContent], { type: "text/plain;charset=utf-8" });
+
+                        const link = document.createElement("a");
+
+                        link.href = URL.createObjectURL(blob);
+
+                        link.download = "Daftar_Pustaka.txt";
+
+                        link.click();
+
+                    }
+
+
+
+                    // Panggil fungsi render pertama kali saat website dibuka
+
+                    window.addEventListener('DOMContentLoaded', () => {
+
+                        renderInputFields();
+
+                           
+
+                        switchMainTab('notes');
+
+                        if (savedDafpus.length > 0) {
+
+                        renderSavedEntries();
+
+                    }
+
+                    });
+
+    
