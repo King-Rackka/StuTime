@@ -643,7 +643,7 @@ function processMultipleAuthors(rawAuthors, formatType) {
         const auth = processMultipleAuthors(v.author, 'Chicago');
         
         if (sourceType === 'book') {
-            result = `${auth}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+            result = `${auth} *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
         } else if (sourceType === 'journal') {
             result = `${auth}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year||'n.d.'}): ${v.pages}.`;
         } else {
@@ -652,7 +652,6 @@ function processMultipleAuthors(rawAuthors, formatType) {
     }
 
     // ... (kode replace bintang ke italic tetap di bawah) ...
-
                         // Mengubah tanda bintang menjadi cetak miring
                         const finalHTML = result.replace(/\*(.*?)\*/g, '<i>$1</i>');
                         document.getElementById('dafpusResult').innerHTML = finalHTML;
@@ -747,6 +746,52 @@ function processMultipleAuthors(rawAuthors, formatType) {
                         renderSavedEntries();
                     }
                     });
+
+                     const quotes = [
+      { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
+      { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
+      { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
+      { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
+      { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
+      { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
+    ];
+                    function openMotivate() {
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('motivate-emoji').textContent = q.emoji;
+      document.getElementById('motivate-quote').textContent = q.quote;
+      document.getElementById('motivate-author').textContent = q.author;
+      const m = document.getElementById('motivate-modal');
+      m.classList.remove('opacity-0','pointer-events-none');
+      m.classList.add('opacity-100');
+      document.getElementById('motivate-box').classList.remove('scale-95');
+      document.getElementById('motivate-box').classList.add('scale-100');
+    }
+    function closeMotivate(e) {
+      if (!e || e.target === document.getElementById('motivate-modal')) {
+        const m = document.getElementById('motivate-modal');
+        m.classList.add('opacity-0','pointer-events-none');
+        m.classList.remove('opacity-100');
+        document.getElementById('motivate-box').classList.add('scale-95');
+        document.getElementById('motivate-box').classList.remove('scale-100');
+      }
+    }
+
+    function openHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.remove('opacity-0','pointer-events-none');
+      d.classList.add('opacity-100');
+      b.classList.remove('-translate-x-full');
+      b.classList.add('translate-x-0');
+    }
+    function closeHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.add('opacity-0','pointer-events-none');
+      d.classList.remove('opacity-100');
+      b.classList.add('-translate-x-full');
+      b.classList.remove('translate-x-0');
+    }
     
 
  
