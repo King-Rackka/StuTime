@@ -8,11 +8,38 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
+    @media (max-width: 767px) { body { overflow-y: auto; } }
     .font-bebas { font-family: 'Bebas Neue', sans-serif; }
     .nav-blur { backdrop-filter: blur(20px); }
     .cal-scroll::-webkit-scrollbar { width: 4px; }
     .cal-scroll::-webkit-scrollbar-track { background: transparent; }
     .cal-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+
+    /* ── KEY FIX: wrapper biar nggak melebar tak terbatas saat zoom out ── */
+    #app-wrapper {
+      max-width: 1440px;
+      min-width: 320px;
+      margin: 0 auto;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    @media (max-width: 767px) {
+      #app-wrapper { height: auto; overflow: visible; }
+    }
+
+    /* Sidebar width pakai clamp biar responsif */
+    .sidebar-col {
+      width: clamp(380px, 26%,260px);
+      flex-shrink: 0;
+    }
+
+    /* Calendar cell height responsif */
+    .cal-cell {
+      min-height: clamp(58px, 7.5vw, 96px);
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
@@ -43,55 +70,115 @@
     }
   </style>
 </head>
-<body class="bg-[#111111] text-white h-screen flex flex-col">
+<body class="bg-[#111111] text-white">
 
-  <!-- Navbar -->
-  <nav class="nav-blur flex-shrink-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
-    <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
-    <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
-      <a href="dashboard.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
-      <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
-      <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
-      <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">FocTime!</a>
-      <a href="calendar.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Calendar</a>
+  <!-- APP WRAPPER: membatasi lebar max & center saat zoom out -->
+  <div id="app-wrapper">
+
+    <!-- Hamburger Drawer (mobile) -->
+    <div id="hamburger-drawer" onclick="if(event.target===this)closeHamburger()" class="fixed inset-0 bg-black/75 z-[400] opacity-0 pointer-events-none transition-opacity duration-200 md:hidden" style="backdrop-filter:blur(8px)">
+      <div id="hamburger-box" class="absolute top-0 left-0 h-full w-64 bg-[#1a1a1a] border-r border-white/[0.07] p-6 flex flex-col gap-2 -translate-x-full transition-transform duration-300">
+        <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider mb-4">STUTime</div>
+        <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="noto.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+          Noto
+        </a>
+        <a href="task.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Task
+        </a>
+        <a href="foctime.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+          FocTime!
+        </a>
+        <a href="calendar.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Calendar
+        </a>
+      </div>
     </div>
-    <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
-  </nav>
 
-  <!-- Layout -->
-  <div class="flex-1 grid grid-cols-[380px_1fr] overflow-hidden">
-
-    <!-- Sidebar: upcoming schedule -->
-    <aside class="border-r border-white/[0.07] bg-[#1a1a1a] flex flex-col overflow-hidden">
-      <div class="p-6 border-b border-white/[0.07] flex-shrink-0">
-        <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider">Schedule</div>
-        <div class="w-16 h-0.5 bg-[#FFD04E]/30 mt-1"></div>
+    <!-- Navbar -->
+    <nav class="nav-blur flex-shrink-0 z-50 flex items-center px-4 md:px-10 py-3 md:py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
+      <button onclick="openHamburger()" class="md:hidden w-9 h-9 border border-white/[0.07] rounded-xl flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all flex-shrink-0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="hidden md:flex font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] items-center justify-center text-lg flex-shrink-0">D</div>
+      <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">Calendar</div>
+      <div class="hidden md:flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
+        <a href="dashboard.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
+        <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
+        <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
+        <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">FocTime!</a>
+        <a href="calendar.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Calendar</a>
       </div>
-      <div class="cal-scroll overflow-y-auto flex-1 p-4 flex flex-col gap-2" id="schedule-list"></div>
-    </aside>
+      <div class="md:hidden flex items-center">
+        <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-3 py-2 rounded-full text-xs font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motive</button>
+      </div>
+      <button onclick="openMotivate()" class="hidden md:block border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
+    </nav>
 
-    <!-- Calendar -->
-    <main class="flex flex-col overflow-hidden bg-[#111111]">
-      <!-- Month nav -->
-      <div class="flex items-center justify-between px-8 pt-5 pb-3 flex-shrink-0">
-        <button onclick="prevMonth()" class="w-9 h-9 rounded-xl border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 transition-all">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15,18 9,12 15,6"/></svg>
-        </button>
-        <div class="text-center">
-          <div class="font-bebas text-3xl tracking-wider" id="month-label">Maret</div>
-          <div class="text-xs text-[#555]" id="year-label">2026</div>
+    <!-- Layout: sidebar + calendar -->
+    <div class="flex-1 flex overflow-hidden">
+
+      <!-- Sidebar -->
+      <aside id="cal-sidebar" class="hidden md:flex sidebar-col border-r border-white/[0.07] bg-[#1a1a1a] flex-col overflow-hidden">
+        <div class="p-6 border-b border-white/[0.07] flex-shrink-0">
+          <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider">Schedule</div>
+          <div class="w-16 h-0.5 bg-[#FFD04E]/30 mt-1"></div>
         </div>
-        <button onclick="nextMonth()" class="w-9 h-9 rounded-xl border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 transition-all">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+        <div class="cal-scroll overflow-y-auto flex-1 p-4 flex flex-col gap-2" id="schedule-list"></div>
+      </aside>
+
+      <!-- Calendar -->
+      <main class="flex flex-col overflow-hidden bg-[#111111] flex-1 min-w-0">
+        <!-- Schedule button (mobile) -->
+        <div class="md:hidden flex justify-end px-4 pt-3 flex-shrink-0">
+          <button onclick="openScheduleSheet()" class="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#FFD04E]/40 text-[#FFD04E] text-xs font-bold hover:bg-[#FFD04E]/10 transition-all">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Schedule
+          </button>
+        </div>
+
+        <!-- Month nav -->
+        <div class="flex items-center justify-between px-8 pt-5 pb-3 flex-shrink-0">
+          <button onclick="prevMonth()" class="w-9 h-9 rounded-xl border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 transition-all">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15,18 9,12 15,6"/></svg>
+          </button>
+          <div class="text-center">
+            <div class="font-bebas text-3xl tracking-wider" id="month-label">Maret</div>
+            <div class="text-xs text-[#555]" id="year-label">2026</div>
+          </div>
+          <button onclick="nextMonth()" class="w-9 h-9 rounded-xl border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/50 hover:-translate-y-0.5 transition-all">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+          </button>
+        </div>
+
+        <!-- Day headers -->
+        <div class="grid grid-cols-7 px-6 pb-2 flex-shrink-0" id="day-headers"></div>
+
+        <!-- Grid -->
+        <div class="flex-1 overflow-y-auto cal-scroll px-3 md:px-6 pb-4" id="cal-grid"></div>
+      </main>
+    </div>
+
+  </div>
+
+  <!-- Schedule Bottom Sheet (mobile) -->
+  <div id="schedule-sheet" onclick="if(event.target===this)closeScheduleSheet()" class="fixed inset-0 bg-black/75 z-[300] opacity-0 pointer-events-none transition-opacity duration-200 md:hidden" style="backdrop-filter:blur(8px)">
+    <div id="schedule-sheet-box" class="absolute bottom-0 left-0 right-0 bg-[#1a1a1a] border-t border-white/[0.07] rounded-t-2xl translate-y-full transition-transform duration-300" style="max-height:70vh">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-white/[0.07] flex-shrink-0">
+        <div class="font-bebas text-[#FFD04E] text-xl tracking-wider">Schedule</div>
+        <button onclick="closeScheduleSheet()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#222] text-[#888] hover:text-white transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-
-      <!-- Day headers -->
-      <div class="grid grid-cols-7 px-6 pb-2 flex-shrink-0" id="day-headers"></div>
-
-      <!-- Grid -->
-      <div class="flex-1 overflow-y-auto cal-scroll px-6 pb-4" id="cal-grid"></div>
-    </main>
+      <div class="cal-scroll overflow-y-auto p-4 flex flex-col gap-2" style="max-height:calc(70vh - 64px)" id="schedule-list-mobile"></div>
+    </div>
   </div>
 
   <!-- Day detail modal -->
@@ -103,7 +190,7 @@
         </button>
         <div class="text-center">
           <div class="font-bebas text-xl tracking-wider" id="modal-day-label"></div>
-          <div id="holiday-label" class="text-xs text-green-400 mt-0.5 hidden"></div>
+          <div id="holiday-label" class="text-xs text-red-400 mt-0.5 hidden"></div>
         </div>
         <button onclick="nextDay()" class="w-8 h-8 rounded-lg border border-white/[0.07] flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
@@ -168,7 +255,6 @@
   </div>
 
   <script>
-    // ─── HARI BESAR 2026–2030 ───
     const holidays = {
       '2026-01-01':'Tahun Baru Masehi','2026-01-27':'Isra Miraj','2026-01-29':'Tahun Baru Imlek',
       '2026-03-20':'Hari Raya Nyepi','2026-03-22':'Idul Fitri 1447 H','2026-03-23':'Idul Fitri 1447 H (Hari Kedua)',
@@ -224,7 +310,6 @@
       const dt = new Date(y, m-1, d+delta);
       return dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0') + '-' + String(dt.getDate()).padStart(2,'0');
     }
-    function formatDate(d) { return d.toISOString().split('T')[0]; }
 
     function loadTasks() {
       const s = localStorage.getItem('stutime_tasks');
@@ -245,12 +330,10 @@
       return label + ', ' + dt.getDate() + ' ' + MONTHS[dt.getMonth()] + ' ' + dt.getFullYear();
     }
 
-    // ─── RENDER CALENDAR ───
     function renderCalendar() {
       document.getElementById('month-label').textContent = MONTHS[viewMonth];
       document.getElementById('year-label').textContent = viewYear;
 
-      // Day headers
       const headersEl = document.getElementById('day-headers');
       headersEl.innerHTML = DAYS_SHORT.map((d, i) =>
         `<div class="text-center text-xs font-bold uppercase tracking-wider py-1 ${i===0||i===6 ? 'text-[#FFD04E]/60' : 'text-[#444]'}">${d}</div>`
@@ -287,7 +370,7 @@
 
           const el = document.createElement('div');
           el.className = [
-            'relative min-h-[80px] rounded-xl p-1.5 transition-all select-none',
+            'cal-cell relative rounded-xl p-1.5 transition-all select-none',
             cell.current ? 'cursor-pointer' : 'opacity-20 pointer-events-none',
             isToday ? 'bg-[#FFD04E]/10 border border-[#FFD04E]/40' : 'border border-transparent',
             cell.current && !isToday ? 'hover:bg-[#1c1c1c] hover:border-white/[0.06]' : '',
@@ -295,7 +378,6 @@
 
           if (cell.current) el.onclick = () => openDayModal(dateStr);
 
-          // Nomor tanggal
           const numEl = document.createElement('div');
           numEl.className = [
             'text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full mb-1',
@@ -307,7 +389,6 @@
           numEl.textContent = cell.day;
           el.appendChild(numEl);
 
-          // Holiday chip
           if (isHoliday) {
             const chip = document.createElement('div');
             chip.className = 'text-[9px] font-semibold px-1.5 py-0.5 rounded truncate leading-tight bg-green-500/20 text-green-400 mt-0.5';
@@ -316,7 +397,6 @@
             el.appendChild(chip);
           }
 
-          // Task chips
           if (cellTasks.length > 0) {
             const wrap = document.createElement('div');
             wrap.className = 'flex flex-col gap-0.5';
@@ -355,7 +435,7 @@
         return;
       }
       list.innerHTML = upcoming.map(t => `
-        <div onclick="goToTask(${t.id})""
+        <div onclick="goToTask(${t.id})"
           class="slide-in flex items-center gap-3 p-4 bg-[#222222] border-l-[3px] border-[#FFD04E] rounded-xl cursor-pointer hover:bg-[#2a2a2a] transition-all">
           <div class="flex-1 min-w-0">
             <div class="text-[11px] text-[#666] mb-0.5">${formatDateLabel(t.date)}</div>
@@ -366,7 +446,6 @@
       `).join('');
     }
 
-    // ─── DAY MODAL ───
     function openDayModal(dateStr) {
       selectedDate = dateStr;
       renderDayModal();
@@ -405,35 +484,24 @@
         `).join('');
       }
 
-      // Sembunyikan tombol add kalau sudah lewat
       document.getElementById('modal-add-btn-wrap').classList.toggle('hidden', past);
     }
 
-    function closeDayModal() {
-      document.getElementById('day-modal').classList.remove('open');
-    }
+    function closeDayModal() { document.getElementById('day-modal').classList.remove('open'); }
 
     function prevDay() {
       selectedDate = shiftDate(selectedDate, -1);
       const [y, m] = selectedDate.split('-').map(Number);
-      if (m-1 !== viewMonth || y !== viewYear) {
-        viewMonth = m-1; viewYear = y;
-        renderCalendar();
-      }
+      if (m-1 !== viewMonth || y !== viewYear) { viewMonth = m-1; viewYear = y; renderCalendar(); }
       renderDayModal();
     }
-
     function nextDay() {
       selectedDate = shiftDate(selectedDate, 1);
       const [y, m] = selectedDate.split('-').map(Number);
-      if (m-1 !== viewMonth || y !== viewYear) {
-        viewMonth = m-1; viewYear = y;
-        renderCalendar();
-      }
+      if (m-1 !== viewMonth || y !== viewYear) { viewMonth = m-1; viewYear = y; renderCalendar(); }
       renderDayModal();
     }
 
-    // ─── ADD TASK ───
     function openAddFromCalendar() {
       document.getElementById('add-title').value = '';
       document.getElementById('add-desc').value = '';
@@ -441,11 +509,7 @@
       document.getElementById('add-time').value = '';
       document.getElementById('add-modal').classList.add('open');
     }
-
-    function closeAddModal() {
-      document.getElementById('add-modal').classList.remove('open');
-    }
-
+    function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); }
     function submitAddTask() {
       const title = document.getElementById('add-title').value.trim();
       const desc = document.getElementById('add-desc').value.trim();
@@ -461,17 +525,9 @@
       renderDayModal();
     }
 
-    // ─── MONTH NAV ───
-    function prevMonth() {
-      viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; }
-      renderCalendar();
-    }
-    function nextMonth() {
-      viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; }
-      renderCalendar();
-    }
+    function prevMonth() { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } renderCalendar(); }
+    function nextMonth() { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } renderCalendar(); }
 
-    // ─── MOTIVATE ───
     const quotes = [
       { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
       { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
@@ -497,8 +553,35 @@
       }
     }
 
-    function goToTask(id) {
-      window.location.href = 'task.html?id=' + id;
+    function goToTask(id) { window.location.href = 'task.html?id=' + id; }
+
+    function openScheduleSheet() {
+      const mobileList = document.getElementById('schedule-list-mobile');
+      const desktopList = document.getElementById('schedule-list');
+      if (mobileList && desktopList) mobileList.innerHTML = desktopList.innerHTML;
+      const sheet = document.getElementById('schedule-sheet');
+      const box = document.getElementById('schedule-sheet-box');
+      sheet.classList.remove('opacity-0','pointer-events-none'); sheet.classList.add('opacity-100');
+      box.classList.remove('translate-y-full'); box.classList.add('translate-y-0');
+    }
+    function closeScheduleSheet() {
+      const sheet = document.getElementById('schedule-sheet');
+      const box = document.getElementById('schedule-sheet-box');
+      sheet.classList.add('opacity-0','pointer-events-none'); sheet.classList.remove('opacity-100');
+      box.classList.add('translate-y-full'); box.classList.remove('translate-y-0');
+    }
+
+    function openHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.remove('opacity-0','pointer-events-none'); d.classList.add('opacity-100');
+      b.classList.remove('-translate-x-full'); b.classList.add('translate-x-0');
+    }
+    function closeHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.add('opacity-0','pointer-events-none'); d.classList.remove('opacity-100');
+      b.classList.add('-translate-x-full'); b.classList.remove('translate-x-0');
     }
 
     renderCalendar();

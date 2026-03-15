@@ -97,8 +97,8 @@ function renderTaskList() {
   const sortedDates = Object.keys(grouped).sort();
   const reordered = [
     ...sortedDates.filter(d => d === today),
-    ...sortedDates.filter(d => d > today),
-    ...sortedDates.filter(d => d < today),
+    ...sortedDates.filter(d => d > today).sort(),
+    ...sortedDates.filter(d => d < today).sort().reverse(),
   ];
 
   const countEl = document.getElementById('task-count');
@@ -161,16 +161,22 @@ function renderDetail() {
     <div class="fade-in flex flex-col h-full">
       <div class="flex items-start justify-between gap-4 mb-6">
         <div class="flex-1">
-          ${t.done ? '<div class="mb-2"><span class="text-xs font-bold px-2 py-1 rounded-lg border text-green-400 border-green-400/30 bg-green-400/10">Selesai ✓</span></div>' : ''}
           <h2 class="text-2xl font-bold text-white leading-tight">${t.title}</h2>
         </div>
-        <button onclick="togglePin(${t.id})" title="${t.pinned ? 'Unpin' : 'Pin task'}"
-          class="flex-shrink-0 w-9 h-9 rounded-xl border flex items-center justify-center transition-all
-            ${t.pinned ? 'bg-[#FFD04E]/15 border-[#FFD04E]/50 text-[#FFD04E]' : 'bg-[#1a1a1a] border-white/[0.07] text-[#555] hover:border-[#FFD04E] hover:text-[#FFD04E]'}">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="${t.pinned ? '#FFD04E' : 'none'}" stroke="${t.pinned ? '#FFD04E' : 'currentColor'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/>
-          </svg>
-        </button>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button onclick="toggleDone(${t.id})"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${t.done ? 'bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E]' : 'bg-white/[0.05] border border-white/[0.07] text-[#888] hover:border-green-500/30 hover:text-green-400'}">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20,6 9,17 4,12"/></svg>
+            ${t.done ? 'Pulihkan' : 'Done'}
+          </button>
+          <button onclick="togglePin(${t.id})" title="${t.pinned ? 'Unpin' : 'Pin task'}"
+            class="w-9 h-9 rounded-xl border flex items-center justify-center transition-all
+              ${t.pinned ? 'bg-[#FFD04E]/15 border-[#FFD04E]/50 text-[#FFD04E]' : 'bg-[#1a1a1a] border-white/[0.07] text-[#555] hover:border-[#FFD04E] hover:text-[#FFD04E]'}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="${t.pinned ? '#FFD04E' : 'none'}" stroke="${t.pinned ? '#FFD04E' : 'currentColor'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div class="flex items-center gap-4 mb-6 p-4 bg-[#1a1a1a] border border-white/[0.07] rounded-xl">
@@ -211,7 +217,7 @@ function renderDetail() {
         </button>
       </div>
 
-      <div class="grid grid-cols-3 gap-3">
+      <div class="grid grid-cols-2 gap-3 mb-3">
         <button onclick="openEditModal(${t.id})"
           class="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#FFD04E]/40 text-[#FFD04E] text-sm font-bold hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -222,6 +228,8 @@ function renderDetail() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="10,8 18,12 10,16"/></svg>
           Start Focus
         </button>
+      </div>
+      <div class="grid grid-cols-1 gap-3">
         <button onclick="deleteTask(${t.id})"
           class="flex items-center justify-center gap-2 py-3 rounded-xl border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500/10 hover:border-red-500 transition-all">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V6"/></svg>
@@ -244,6 +252,14 @@ function togglePin(id) {
   const t = tasks.find(t => t.id === id);
   if (!t) return;
   t.pinned = !t.pinned;
+  saveTasks();
+  render();
+}
+
+function toggleDone(id) {
+  const t = tasks.find(t => t.id === id);
+  if (!t) return;
+  t.done = !t.done;
   saveTasks();
   render();
 }
@@ -365,19 +381,10 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedId = parseInt(idParam);
   }
   render();
-  // Scroll ke task yang dipilih di sidebar setelah render
+  // Auto-show detail di mobile kalau dari query param ?id=
   if (idParam) {
     setTimeout(() => {
-      const selected = document.querySelector('.task-card.bg-\\[\\#FFD04E\\]');
-      const container = document.getElementById('task-list-container');
-      if (container) {
-        const cards = container.querySelectorAll('.task-card');
-        cards.forEach(card => {
-          if (card.classList.contains('border-[#FFD04E]') || card.style.borderColor) {
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-        });
-      }
-    }, 100);
+      if (typeof showDetail === 'function') showDetail();
+    }, 50);
   }
 });

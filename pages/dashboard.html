@@ -1,61 +1,564 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STUTime - Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STUTime — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-bebas { font-family: 'Bebas Neue', sans-serif; }
     .nav-blur { backdrop-filter: blur(20px); }
-    .cal-scroll::-webkit-scrollbar { width: 4px; }
-    .cal-scroll::-webkit-scrollbar-track { background: transparent; }
-    .cal-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .fade-in { animation: fadeIn 0.2s ease; }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-8px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    .slide-in { animation: slideIn 0.2s ease; }
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 200; align-items: center; justify-content: center; }
-    .modal-overlay.open { display: flex; }
-    input, textarea { outline: none; }
-    input:focus, textarea:focus { border-color: #FFD04E !important; }
-    @keyframes pulse-ring {
-      0% { transform: scale(0.9); opacity: 0.6; }
-      100% { transform: scale(1.6); opacity: 0; }
-    }
-    .today-num { position: relative; }
-    .today-num::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: #FFD04E;
-      animation: pulse-ring 2s ease-out infinite;
-      z-index: -1;
-    }
-</style>
+    .fade-up { animation: fadeUp 0.5s ease forwards; }
+    .d1{animation-delay:.05s;opacity:0} .d2{animation-delay:.1s;opacity:0}
+    .d3{animation-delay:.15s;opacity:0} .d4{animation-delay:.2s;opacity:0}
+    .d5{animation-delay:.25s;opacity:0} .d6{animation-delay:.3s;opacity:0}
+    .stat-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(255,208,78,0.12); }
+    .task-dash-card { transition: border-color 0.2s; }
+    .task-dash-card:hover { border-color: rgba(255,208,78,0.35); }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); z-index:200; align-items:center; justify-content:center; }
+    .modal-overlay.open { display:flex; }
 
-<body class="bg-[#111111] text-white h-screen flex flex-col">
-    <nav class="nav-blur flex-shrink-0 z-50 flex items-center px-10 py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
-        <div class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0">D</div>
-            <div class="flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
-                <a href="dashboard.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Dashboard</a>
-                <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
-                <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
-                <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">FocTime!</a>
-                <a href="calendar.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
-            </div>
-        <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
+    /* ── Hero intro animation ── */
+    #hero-section {
+      transition: min-height 1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  padding 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #hero-section.intro {
+      min-height: 100vh;
+      margin-top: -64px;
+      padding: 0 1rem;
+    }
+    #hero-section.shrink {
+      min-height: 220px;
+      margin-top: 0;
+      padding: 2rem 1rem;
+    }
+    #hero-inner {
+      transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  opacity 0.3s ease;
+      text-align: center;
+      will-change: transform;
+    }
+    #hero-section.intro #hero-inner {
+      transform: translateX(0) scale(1);
+    }
+    #hero-section.shrink #hero-inner {
+      transform: translateX(-45%) scale(0.78);
+    }
+    #hero-title {
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      transition: font-size 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      white-space: nowrap;
+    }
+    #hero-section.shrink #hero-title {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+    }
+    #greeting-sub {
+      transition: opacity 0.5s ease, font-size 1s ease;
+    }
+    #hero-section.shrink #greeting-sub {
+      font-size: 0.8rem;
+    }
+    #main-content {
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    #main-content.hidden-content {
+      opacity: 0;
+      transform: translateY(30px);
+      pointer-events: none;
+    }
+    #main-content.visible-content {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Scroll indicator */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.5; }
+      50% { transform: translateY(6px); opacity: 1; }
+    }
+    .bounce { animation: bounce 1.5s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-[#111111] text-white overflow-x-hidden">
+
+  <!-- Hamburger Drawer (mobile) -->
+  <div id="hamburger-drawer" onclick="if(event.target===this)closeHamburger()" class="fixed inset-0 bg-black/75 z-[400] opacity-0 pointer-events-none transition-opacity duration-200 md:hidden" style="backdrop-filter:blur(8px)">
+    <div id="hamburger-box" class="absolute top-0 left-0 h-full w-64 bg-[#1a1a1a] border-r border-white/[0.07] p-6 flex flex-col gap-2 -translate-x-full transition-transform duration-300">
+      <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider mb-4">STUTime</div>
+      <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E]">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="noto.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        Noto
+      </a>
+      <a href="task.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Task
+      </a>
+      <a href="foctime.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+        FocTime!
+      </a>
+      <a href="calendar.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Calendar
+      </a>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="nav-blur sticky top-0 z-50 border-b border-white/[0.07] bg-[#111111]/90">
+    <div class="max-w-[1440px] mx-auto flex items-center px-4 md:px-10 py-3 md:py-[18px]">
+      <button onclick="openHamburger()" class="md:hidden w-9 h-9 border border-white/[0.07] rounded-xl flex items-center justify-center text-[#888] hover:text-[#FFD04E] transition-all flex-shrink-0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="hidden md:flex font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] items-center justify-center text-lg flex-shrink-0">D</div>
+      <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">Dashboard</div>
+      <div class="hidden md:flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
+        <a href="dashboard.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Dashboard</a>
+        <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
+        <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
+        <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">FocTime!</a>
+        <a href="calendar.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
+      </div>
+      <div class="md:hidden flex items-center">
+        <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-3 py-2 rounded-full text-xs font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motive</button>
+      </div>
+      <button onclick="openMotivate()" class="hidden md:block border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
+    </div>
   </nav>
+
+  <div class="max-w-[1440px] mx-auto">
+
+    <!-- Hero -->
+    <section id="hero-section" class="relative intro px-4 overflow-hidden">
+      <!-- Gradient radial background -->
+      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(255,208,78,0.12) 0%, rgba(255,208,78,0.04) 50%, transparent 100%);"></div>
+      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 30% 40% at 50% 50%, rgba(255,208,78,0.07) 0%, transparent 100%);"></div>
+      <div id="hero-inner" class="relative text-center fade-up d1">
+        <h1 id="hero-title" class="font-bebas tracking-wider text-white mb-3">Selamat Pagi, Daffa!</h1>
+        <p class="text-[#888] text-sm md:text-base transition-all duration-700" id="greeting-sub">Kami sudah menyusun jadwal dan statistik harianmu</p>
+        <!-- Scroll indicator -->
+        <div id="scroll-indicator" class="mt-12 flex flex-col items-center gap-2 opacity-60 transition-opacity duration-500">
+          <span class="text-xs text-[#555] tracking-widest uppercase">Scroll</span>
+          <div class="bounce">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD04E" stroke-width="2.5" stroke-linecap="round"><polyline points="6,9 12,15 18,9"/></svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main content -->
+    <div id="main-content" class="hidden-content px-4 md:px-10 pb-16 flex flex-col gap-12">
+
+      <!-- Schedule History -->
+      <section class="fade-up d2">
+        <div class="flex items-center gap-4 mb-6">
+          <span class="font-bebas text-xl md:text-2xl tracking-wider text-white">Schedule History</span>
+          <div class="flex-1 h-px bg-white/[0.07]"></div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4" id="stats-grid">
+          <!-- diisi JS -->
+        </div>
+      </section>
+
+      <!-- Deadlines -->
+      <section class="fade-up d3">
+        <div class="flex items-center justify-between gap-4 mb-6">
+          <div class="flex items-center gap-4">
+            <span class="font-bebas text-xl md:text-2xl tracking-wider text-white">Deadlines</span>
+            <div class="h-px bg-white/[0.07] w-16 md:w-32"></div>
+          </div>
+          <span class="text-xs text-[#555] font-medium">7 hari ke depan</span>
+        </div>
+        <div class="flex flex-col gap-4" id="deadlines-container">
+          <!-- diisi JS -->
+        </div>
+      </section>
+
+      <!-- Others: FocStats + Schedule -->
+      <section class="fade-up d4">
+        <div class="flex items-center gap-4 mb-6">
+          <span class="font-bebas text-xl md:text-2xl tracking-wider text-white">Others</span>
+          <div class="flex-1 h-px bg-white/[0.07]"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- FocStats -->
+          <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div class="font-bebas text-[#FFD04E] text-xl tracking-wider">FocTime! Stats</div>
+              <span class="text-xs text-[#555] border border-white/[0.07] px-2 py-1 rounded-lg">Hari ini</span>
+            </div>
+            <div class="flex items-end gap-3 mb-6">
+              <div class="font-bebas text-[#FFD04E] leading-none" id="dash-sessions" style="font-size: clamp(48px, 8vw, 80px);">0</div>
+              <div class="text-sm text-[#666] mb-2">sesi fokus hari ini</div>
+            </div>
+            <div class="flex items-center gap-3 mb-6 p-3 bg-[#222] rounded-xl border border-white/[0.05]">
+              <div class="text-center flex-1">
+                <div class="font-bebas text-2xl text-white" id="dash-streak">0</div>
+                <div class="text-[10px] text-[#555] uppercase tracking-wider mt-0.5">Streak</div>
+              </div>
+              <div class="w-px h-8 bg-white/10"></div>
+              <div class="text-center flex-1">
+                <div class="font-bebas text-2xl text-white" id="dash-today-tasks">0</div>
+                <div class="text-[10px] text-[#555] uppercase tracking-wider mt-0.5">Jadwal Hari Ini</div>
+              </div>
+            </div>
+            <a href="foctime.html" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#FFD04E] text-[#111111] text-sm font-bold hover:bg-[#ffe066] transition-all">
+              Start Session →
+            </a>
+          </div>
+
+          <!-- Your Schedule -->
+          <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-6 flex flex-col">
+            <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-4">Your Schedule</div>
+            <div class="flex flex-col gap-2 flex-1 overflow-hidden" id="schedule-preview">
+              <!-- diisi JS -->
+            </div>
+            <a href="task.html" class="mt-4 flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-[#FFD04E] text-[#FFD04E] text-sm font-bold hover:bg-[#FFD04E]/10 transition-all">
+              + Add new schedule
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Noto Preview -->
+      <section class="fade-up d5">
+        <div class="flex items-center gap-4 mb-6">
+          <span class="font-bebas text-xl md:text-2xl tracking-wider text-white">Noto</span>
+          <div class="flex-1 h-px bg-white/[0.07]"></div>
+          <a href="noto.html" class="text-xs text-[#FFD04E] hover:underline">Lihat semua →</a>
+        </div>
+        <div class="flex flex-col gap-3" id="noto-preview">
+          <!-- diisi JS -->
+        </div>
+        <a href="noto.html" class="mt-4 flex items-center justify-center gap-2 w-full py-3.5 rounded-xl border border-white/[0.07] text-[#888] text-sm font-semibold hover:border-white/20 hover:text-white transition-all">
+          + Add new notes
+        </a>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Motivate Modal -->
+  <div id="motivate-modal" onclick="closeMotivate(event)" class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
+    <div id="motivate-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-10 max-w-[440px] w-[90%] text-center scale-95 transition-transform duration-200">
+      <div class="text-5xl mb-4" id="motivate-emoji">💪</div>
+      <div class="text-lg leading-relaxed text-[#ddd] font-medium mb-2" id="motivate-quote"></div>
+      <div class="text-sm text-[#888] mb-7" id="motivate-author"></div>
+      <button onclick="closeMotivate()" class="bg-[#FFD04E] text-[#111111] px-8 py-3 rounded-xl font-bold text-sm">Let's Go! 🚀</button>
+    </div>
+  </div>
+
+  <script>
+    // ─── HELPERS ───
+    const NAMA = 'Daffa';
+    const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+
+    function todayStr() {
+      const n = new Date();
+      return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
+    }
+    function shiftDate(dateStr, delta) {
+      const [y,m,d] = dateStr.split('-').map(Number);
+      const dt = new Date(y, m-1, d+delta);
+      return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+    }
+    function formatDateLabel(dateStr) {
+      const today = todayStr();
+      const tomorrow = shiftDate(today, 1);
+      const [y,m,d] = dateStr.split('-').map(Number);
+      const dt = new Date(y, m-1, d);
+      if (dateStr === today) return 'Hari ini';
+      if (dateStr === tomorrow) return 'Besok';
+      const diff = Math.round((dt - new Date(...today.split('-').map((v,i)=>i===1?v-1:+v))) / 86400000);
+      if (diff > 1 && diff <= 7) return diff + ' hari lagi';
+      return DAYS[dt.getDay()] + ', ' + d + ' ' + MONTHS[m-1];
+    }
+    function getGreeting() {
+      const h = new Date().getHours();
+      if (h < 11) return 'Selamat Pagi';
+      if (h < 15) return 'Selamat Siang';
+      if (h < 18) return 'Selamat Sore';
+      return 'Selamat Malam';
+    }
+
+    // ─── LOAD DATA ───
+    function loadTasks() {
+      const s = localStorage.getItem('stutime_tasks');
+      return s ? JSON.parse(s) : getDummyTasks();
+    }
+    function loadStats() {
+      const raw = localStorage.getItem('stutime_focstats');
+      return raw ? JSON.parse(raw) : { sessions: 0, streak: 0, date: '' };
+    }
+    function loadNotes() {
+      const s = localStorage.getItem('stutime_notes');
+      return s ? JSON.parse(s) : getDummyNotes();
+    }
+
+    // ─── DUMMY DATA ───
+    function getDummyTasks() {
+      const t = todayStr();
+      const s1 = shiftDate(t,1), s2 = shiftDate(t,2), s3 = shiftDate(t,3);
+      return [
+        { id:1, title:'Belajar Tailwind CSS', desc:'Pelajari utility class Tailwind v4', date:t, time:'08.00', pinned:true, done:false },
+        { id:2, title:'Mengerjakan tugas Basis Data', desc:'Buat ERD dan implementasi SQL', date:t, time:'13.00', pinned:false, done:true },
+        { id:3, title:'Meeting kelompok WDC', desc:'Diskusi pembagian tugas coding lomba', date:t, time:'19.00', pinned:false, done:false },
+        { id:4, title:'Kerjakan laporan PKL', desc:'Tulis bab 3 laporan PKL', date:s1, time:'09.00', pinned:false, done:false },
+        { id:5, title:'Presentasi Jaringan', desc:'Persiapkan slide subnetting', date:s1, time:'10.30', pinned:false, done:false },
+        { id:6, title:'Kumpulkan tugas Statistika', desc:'Selesaikan soal regresi linear', date:s2, time:'23.59', pinned:false, done:false },
+        { id:7, title:'Review materi Algoritma', desc:'Review bab sorting dan searching', date:s3, time:'15.00', pinned:false, done:false },
+      ];
+    }
+    function getDummyNotes() {
+      return [
+        { id:1, title:'Catatan PPOK D1', body:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pelajari materi hari ini dengan fokus dan disiplin.' },
+        { id:2, title:'PKM 2026', body:'Rangkuman proposal PKM bidang teknologi. Deadline pengumpulan minggu depan.' },
+        { id:3, title:'List belanja bulanan', body:'Kebutuhan bulanan: alat tulis, buku catatan, dan perlengkapan belajar lainnya.' },
+      ];
+    }
+
+    // ─── GREETING ───
+    document.getElementById('hero-title').textContent = getGreeting() + ', ' + NAMA + '!';
+
+    // ─── STATS ───
+    function renderStats() {
+      const tasks = loadTasks();
+      const today = todayStr();
+      const todayTasks = tasks.filter(t => t.date === today);
+      const doneTasks = tasks.filter(t => t.done);
+      const stats = loadStats();
+      const sessions = stats.date === today ? (stats.sessions || 0) : 0;
+
+      // Hitung total menit fokus (sessions * 25 menit default)
+      const totalMin = sessions * 25;
+
+      const data = [
+        { num: todayTasks.length, label: 'Jadwal hari ini' },
+        { num: doneTasks.length, label: 'Jadwal selesai' },
+        { num: sessions, label: 'Sesi fokus' },
+        { num: totalMin, label: 'Menit belajar' },
+      ];
+
+      document.getElementById('stats-grid').innerHTML = data.map(d => `
+        <div class="stat-card bg-[#1a1a1a] border border-[#FFD04E]/30 rounded-2xl p-5 md:p-6 text-center">
+          <div class="font-bebas text-[#FFD04E] leading-none mb-2" style="font-size:clamp(36px,5vw,56px);">${d.num}</div>
+          <div class="text-xs md:text-sm text-[#888] font-medium">${d.label}</div>
+        </div>
+      `).join('');
+
+      // Update others section
+      document.getElementById('dash-sessions').textContent = sessions;
+      document.getElementById('dash-streak').textContent = stats.streak || 0;
+      document.getElementById('dash-today-tasks').textContent = todayTasks.length;
+
+      // Greeting subtitle
+      const sub = todayTasks.length > 0
+        ? `Kamu punya ${todayTasks.length} jadwal hari ini. Semangat!`
+        : 'Belum ada jadwal hari ini. Tambah jadwal baru!';
+      document.getElementById('greeting-sub').textContent = sub;
+    }
+
+    // ─── DEADLINES ───
+    function renderDeadlines() {
+      const tasks = loadTasks();
+      const today = todayStr();
+      const container = document.getElementById('deadlines-container');
+
+      // Ambil task 7 hari ke depan (termasuk hari ini)
+      const upcoming = [];
+      for (let i = 0; i <= 6; i++) {
+        const dateStr = shiftDate(today, i);
+        const dayTasks = tasks.filter(t => t.date === dateStr);
+        if (dayTasks.length > 0) upcoming.push({ dateStr, tasks: dayTasks });
+      }
+
+      if (upcoming.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-[#444]"><div class="text-4xl mb-3">📭</div><div class="text-sm">Tidak ada jadwal 7 hari ke depan</div></div>`;
+        return;
+      }
+
+      container.innerHTML = upcoming.map(({ dateStr, tasks: dayTasks }) => `
+        <div class="flex gap-4 md:gap-6">
+          <div class="flex-shrink-0 w-20 md:w-28 pt-1">
+            <div class="text-sm font-bold text-white">${formatDateLabel(dateStr)}</div>
+            <div class="text-xs text-[#555] mt-0.5">${(() => { const [y,m,d] = dateStr.split('-').map(Number); return d+' '+MONTHS[m-1]; })()}</div>
+          </div>
+          <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
+            ${dayTasks.map(t => `
+              <div class="task-dash-card bg-[#1a1a1a] border ${t.done ? 'border-white/[0.04] opacity-60' : 'border-white/[0.07]'} rounded-xl p-4">
+                <div class="flex items-start justify-between gap-2 mb-3">
+                  <div class="text-sm font-bold text-white truncate flex-1 ${t.done ? 'line-through text-[#555]' : ''}">${t.title}</div>
+                  ${t.pinned ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="#FFD04E" class="flex-shrink-0 mt-0.5"><line x1="12" y1="17" x2="12" y2="22" stroke="#FFD04E" stroke-width="2"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>' : ''}
+                </div>
+                <div class="flex items-center gap-2">
+                  <button onclick="toggleDone(${t.id})" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${t.done ? 'bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E]' : 'bg-white/[0.05] border border-white/[0.07] text-[#888] hover:border-[#FFD04E]/30 hover:text-[#FFD04E]'}">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20,6 9,17 4,12"/></svg>
+                    ${t.done ? 'Pulihkan' : 'Done'}
+                  </button>
+                  <button onclick="window.location.href='task.html?id=${t.id}'" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/[0.05] border border-white/[0.07] text-[#888] hover:border-white/20 hover:text-white transition-all">
+                    Detail
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('<div class="h-px bg-white/[0.04] my-1"></div>');
+    }
+
+    // ─── TOGGLE DONE ───
+    function toggleDone(id) {
+      let tasks = loadTasks();
+      const t = tasks.find(t => t.id === id);
+      if (!t) return;
+      t.done = !t.done;
+      // Simpan ke localStorage
+      const saved = localStorage.getItem('stutime_tasks');
+      if (saved) {
+        localStorage.setItem('stutime_tasks', JSON.stringify(tasks));
+      }
+      renderStats();
+      renderDeadlines();
+    }
+
+    // ─── SCHEDULE PREVIEW ───
+    function renderSchedulePreview() {
+      const tasks = loadTasks();
+      const today = todayStr();
+      const upcoming = tasks
+        .filter(t => t.date >= today && !t.done)
+        .sort((a,b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time))
+        .slice(0, 4);
+
+      const el = document.getElementById('schedule-preview');
+      if (upcoming.length === 0) {
+        el.innerHTML = `<div class="flex flex-col items-center justify-center flex-1 py-6 text-center"><div class="text-3xl mb-2">📅</div><div class="text-sm text-[#555]">Belum ada jadwal mendatang</div></div>`;
+        return;
+      }
+      el.innerHTML = upcoming.map(t => `
+        <div onclick="window.location.href='task.html?id=${t.id}'" class="flex items-center gap-3 p-3 rounded-xl bg-[#222] border border-white/[0.05] hover:border-[#FFD04E]/30 cursor-pointer transition-all">
+          <div class="text-center flex-shrink-0 w-10">
+            <div class="font-bebas text-[#FFD04E] text-sm leading-tight">${t.time}</div>
+          </div>
+          <div class="w-px h-6 bg-[#FFD04E]/30 flex-shrink-0"></div>
+          <div class="flex-1 min-w-0">
+            <div class="text-xs text-[#666] mb-0.5">${formatDateLabel(t.date)}</div>
+            <div class="text-sm font-semibold text-white truncate">${t.title}</div>
+          </div>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5" stroke-linecap="round"><polyline points="9,18 15,12 9,6"/></svg>
+        </div>
+      `).join('');
+    }
+
+    function renderNotoPreview() {
+      const notes = loadNotes();
+      const el = document.getElementById('noto-preview');
+      if (notes.length === 0) {
+        el.innerHTML = `<div class="text-center py-8 text-[#444]"><div class="text-3xl mb-2">📝</div><div class="text-sm">Belum ada catatan</div></div>`;
+        return;
+      }
+      el.innerHTML = notes.slice(0, 3).map(n => `
+        <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-xl p-5 hover:border-white/[0.12] transition-all cursor-pointer" onclick="window.location.href='noto.html'">
+          <div class="flex items-start justify-between gap-3 mb-2">
+            <div class="text-sm font-bold text-white">${n.title || 'Tanpa Judul'}</div>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.5" stroke-linecap="round" class="flex-shrink-0 mt-0.5"><polyline points="9,18 15,12 9,6"/></svg>
+          </div>
+          <p class="text-xs text-[#666] leading-relaxed line-clamp-2">${(n.body || '').replace(/<[^>]*>/g,'').substring(0,120)}${(n.body||'').length > 120 ? '...' : ''}</p>
+        </div>
+      `).join('');
+    }
+
+    function openHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.remove('opacity-0','pointer-events-none');
+      d.classList.add('opacity-100');
+      b.classList.remove('-translate-x-full');
+      b.classList.add('translate-x-0');
+    }
+    function closeHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.add('opacity-0','pointer-events-none');
+      d.classList.remove('opacity-100');
+      b.classList.add('-translate-x-full');
+      b.classList.remove('translate-x-0');
+    }
+
+    const quotes = [
+      { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
+      { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
+      { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
+      { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
+      { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
+      { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
+    ];
+    function openMotivate() {
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('motivate-emoji').textContent = q.emoji;
+      document.getElementById('motivate-quote').textContent = q.quote;
+      document.getElementById('motivate-author').textContent = q.author;
+      const m = document.getElementById('motivate-modal');
+      m.classList.remove('opacity-0','pointer-events-none');
+      m.classList.add('opacity-100');
+      document.getElementById('motivate-box').classList.remove('scale-95');
+      document.getElementById('motivate-box').classList.add('scale-100');
+    }
+    function closeMotivate(e) {
+      if (!e || e.target === document.getElementById('motivate-modal')) {
+        const m = document.getElementById('motivate-modal');
+        m.classList.add('opacity-0','pointer-events-none');
+        m.classList.remove('opacity-100');
+        document.getElementById('motivate-box').classList.add('scale-95');
+        document.getElementById('motivate-box').classList.remove('scale-100');
+      }
+    }
+
+    // ─── INTRO ANIMATION ───
+    function startIntroAnimation() {
+      const hero = document.getElementById('hero-section');
+      const mainContent = document.getElementById('main-content');
+      const scrollIndicator = document.getElementById('scroll-indicator');
+
+      // Setelah 1.8 detik, mulai transisi
+      setTimeout(() => {
+        // Sembunyikan scroll indicator
+        scrollIndicator.style.opacity = '0';
+
+        // Shrink hero
+        hero.classList.remove('intro');
+        hero.classList.add('shrink');
+
+        // Tampilkan main content
+        setTimeout(() => {
+          mainContent.classList.remove('hidden-content');
+          mainContent.classList.add('visible-content');
+        }, 400);
+
+      }, 1000);
+    }
+
+    // ─── INIT ───
+    renderStats();
+    renderDeadlines();
+    renderSchedulePreview();
+    renderNotoPreview();
+    startIntroAnimation();
+  </script>
 </body>
 </html>
