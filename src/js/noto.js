@@ -1,30 +1,27 @@
 // 1. Siapkan Data Dummy (Array of Objects)
-let dummyNotes = [
-    {
-        id: 1,
-        title: "Pergi ke pasar membeli ikan",
-        body: "Pergi ke pasar membeli ikan, cakep Pergi ke pasar membeli ikan...",
-        isFavorite: false
-    },
-    {
-        id: 2,
-        title: "Belajar UI/UX Design Gestalt",
-        body: "Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...",
-        isFavorite: true // Contoh yang udah jadi favorit
-    },
-      {
-        id: 3,
-        title: "Belajar UI/UX Design Gestalt",
-        body: "Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...",
-        isFavorite: true // Contoh yang udah jadi favorit
-    },
-      {
-        id: 4,
-        title: "Belajar UI/UX Design Gestalt",
-        body: "Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...",
-        isFavorite: true // Contoh yang udah jadi favorit
-    }
-];
+const STORAGE_KEY = 'stutime_notes';
+
+function loadNotes() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    return JSON.parse(saved);
+  }
+  // Dummy data pertama kali
+  const dummy = [
+    { id:1, title:'Pergi ke pasar membeli ikan', body:'Pergi ke pasar membeli ikan, cakep...', isFavorite:false },
+    { id:2, title:'Belajar UI/UX Design Gestalt', body:'Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...', isFavorite:true },
+    { id:3, title:'Belajar UI/UX Design Gestalt', body:'Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...', isFavorite:true },
+    { id:4, title:'Belajar UI/UX Design Gestalt', body:'Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...', isFavorite:true },
+  ];
+  saveNotes(dummy);
+  return dummy;
+}
+function saveNotes(notes) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+}
+// ─── STATE ───
+let dummyNotes = loadNotes();
+let activeNoteId = dummyNotes.length > 0 ? dummyNotes[0].id : null;
 
 
          function setMode(mode, btn) {
@@ -55,34 +52,32 @@ let dummyNotes = [
 
         // Fungsi untuk memunculkan/menyembunyikan menu dropdown
         function toggleDropdown(menuId) {
-            const menu = document.getElementById(menuId);
-            menu.classList.toggle('hidden');
+           document.getElementById(menuId).classList.toggle('hidden');
         }
 
         // Menutup dropdown secara otomatis jika user klik area kosong di luar menu
         window.addEventListener('click', function(e) {
-            const alignBtn = document.getElementById('align-dropdown-btn');
-            const alignMenu = document.getElementById('align-menu');
-            
-            // Cek apakah yang diklik BUKAN tombol utama atau isi menu
-            if (alignBtn && alignMenu) {
-                if (!alignBtn.contains(e.target) && !alignMenu.contains(e.target)) {
-                    alignMenu.classList.add('hidden'); // Sembunyikan menu
-                }
+        const alignBtn = document.getElementById('align-dropdown-btn');
+        const alignMenu = document.getElementById('align-menu');
+        if (alignBtn && alignMenu) {
+            if (!alignBtn.contains(e.target) && !alignMenu.contains(e.target)) {
+            alignMenu.classList.add('hidden');
             }
+        }
         });
        function checkActiveButtons() {
-        // 1. Cek tombol-tombol toggle (Bold, Italic, dll)
-        const buttons = document.querySelectorAll('button[data-command]');
-        
-        buttons.forEach(button => {
-            const command = button.getAttribute('data-command');
-            if (document.queryCommandState(command)) {
-                button.classList.add('active-btn');
-            } else {
-                button.classList.remove('active-btn');
+        document.querySelectorAll('button[data-command]').forEach(btn => {
+                const cmd = btn.getAttribute('data-command');
+                btn.classList.toggle('active-btn', document.queryCommandState(cmd));
+            });
+            const alignIcon = document.getElementById('current-align-icon');
+            if (alignIcon) {
+                if (document.queryCommandState('justifyCenter')) alignIcon.className = 'fa-solid fa-align-center';
+                else if (document.queryCommandState('justifyRight')) alignIcon.className = 'fa-solid fa-align-right';
+                else if (document.queryCommandState('justifyFull')) alignIcon.className = 'fa-solid fa-align-justify';
+                else alignIcon.className = 'fa-solid fa-align-left';
             }
-        });
+            }
 
         // 2. BARU: Cek status perataan teks (Alignment) untuk mengubah ikon utama
         const alignIcon = document.getElementById('current-align-icon');
@@ -107,19 +102,14 @@ let dummyNotes = [
         editor.addEventListener('mouseup', checkActiveButtons);
 
         function toggleFavorite() {
-            if (!activeNoteId) return;
-
-            const noteIndex = dummyNotes.findIndex(n => n.id === activeNoteId);
-            if (noteIndex !== -1) {
-                // Balikkan statusnya (kalau true jadi false, kalau false jadi true)
-                dummyNotes[noteIndex].isFavorite = !dummyNotes[noteIndex].isFavorite;
-                
-                // Render ulang panel kiri (Siapa tahu mau nambahin icon bintang di card-nya nanti)
-                renderNotesList(); 
-                
-                // Panggil fungsi untuk mengubah UI bintang di toolbar
-                updateFavoriteIcon(dummyNotes[noteIndex].isFavorite);
-            }
+        if (!activeNoteId) return;
+        const idx = dummyNotes.findIndex(n => n.id === activeNoteId);
+        if (idx !== -1) {
+            dummyNotes[idx].isFavorite = !dummyNotes[idx].isFavorite;
+            saveNotes(dummyNotes); // ← simpan ke localStorage
+            renderNotesList();
+            updateFavoriteIcon(dummyNotes[idx].isFavorite);
+        }
         }
 
         function customAction(action) {
@@ -138,174 +128,114 @@ let dummyNotes = [
             });
         // Jalankan fungsi ini otomatis saat halaman pertama kali dibuka
             window.addEventListener('DOMContentLoaded', function() {
-                const editor = document.querySelector('.note-body');
-                
-                // 1. Kursor otomatis fokus ke area note supaya siap diketik
-                editor.focus(); 
-                
-                // 2. Langsung cek tombol mana yang harus nyala
-                checkActiveButtons(); 
-                
-                // 3. (Opsional/Pencegahan) Karena beberapa browser kadang tidak membaca 'rata kiri' 
-                // sebagai format aktif di awal, kita paksa tombol rata kiri nyala secara default
-                if (!document.queryCommandState('justifyCenter') && 
-                    !document.queryCommandState('justifyRight') && 
-                    !document.queryCommandState('justifyFull')) {
-                    
-                    const leftAlignBtn = document.querySelector('button[data-command="justifyLeft"]');
-                    if (leftAlignBtn) {
-                        leftAlignBtn.classList.add('active-btn');
-                    }
-                }
-                renderNotesList();
+            const editor = document.querySelector('.note-body');
+            renderNotesList();
+            if (activeNoteId) selectNote(activeNoteId);
+            editor.focus();
+            checkActiveButtons();
+
+            editor.addEventListener('keyup', checkActiveButtons);
+            editor.addEventListener('mouseup', checkActiveButtons);
+
+            // Init tab
+            switchMainTab('notes');
+            if (savedDafpus && savedDafpus.length > 0) renderSavedEntries();
+            renderInputFields();
             });
             // 2. Tentukan ID catatan mana yang sedang aktif/dipilih (Default kita pilih ID 1)
-            let activeNoteId = 1;
+           
 
             // 3. Fungsi untuk menggambar (me-render) kartu ke dalam HTML
-            function renderNotesList() {
-                const listContainer = document.getElementById('notes-list');
-                listContainer.innerHTML = ''; // Bersihkan wadah sebelum diisi ulang
-
-                // Ulangi pembuatan kartu sebanyak jumlah data di dummyNotes
-                dummyNotes.forEach(note => {
-                    // Cek apakah kartu ini sedang aktif
-                    const isActive = note.id === activeNoteId;
-                    
-                    // Logika Tailwind: Kalau aktif, kasih border kiri kuning & bg agak terang. Kalau nggak, bg gelap biasa.
-                    const cardClasses = isActive 
-                        ? 'border-l-4 border-[#FFD15C] bg-[#3A3A3F]' 
-                        : 'border-l-4 border-transparent bg-[#2A2A2D] hover:bg-[#3A3A3F]';
-
-                    // Menyiapkan ikon bintang jika catatan ini adalah favorit
-                    const favoriteIcon = note.isFavorite 
-                        ? '<i class="fa-solid fa-star text-[#FFD15C] text-sm shrink-0 mt-1"></i>' 
-                        : '';
-
-                    // Buat struktur HTML per kartu
-                    const noteHTML = `
-                        <div onclick="selectNote(${note.id})" class="cursor-pointer p-4 rounded-lg transition duration-200 flex-shrink-0 ${cardClasses}">
-                            
-                            <div class="flex justify-between items-start mb-2 gap-2">
-                                <h3 class="text-white font-bold text-lg truncate">${note.title}</h3>
-                                ${favoriteIcon}
-                            </div>
-                            
-                            <p class="text-[#B0B0B0] text-sm leading-relaxed line-clamp-3">${note.body}</p>
-                        </div>
-                    `;
-                    
-                    // Masukkan HTML tadi ke dalam list container
-                    listContainer.innerHTML += noteHTML;
-                    
-                });
-            }           
+            // ─── RENDER NOTES LIST ───
+function renderNotesList() {
+  const listContainer = document.getElementById('notes-list');
+  listContainer.innerHTML = '';
+  dummyNotes.forEach(note => {
+    const isActive = note.id === activeNoteId;
+    const cardClasses = isActive
+      ? 'border-l-4 border-[#FFD15C] bg-[#3A3A3F]'
+      : 'border-l-4 border-transparent bg-[#2A2A2D] hover:bg-[#3A3A3F]';
+    const favoriteIcon = note.isFavorite
+      ? '<i class="fa-solid fa-star text-[#FFD15C] text-sm shrink-0 mt-1"></i>'
+      : '';
+    listContainer.innerHTML += `
+      <div onclick="selectNote(${note.id})" class="cursor-pointer p-4 rounded-lg transition duration-200 flex-shrink-0 ${cardClasses}">
+        <div class="flex justify-between items-start mb-2 gap-2">
+          <h3 class="text-white font-bold text-lg truncate">${note.title}</h3>
+          ${favoriteIcon}
+        </div>
+        <p class="text-[#B0B0B0] text-sm leading-relaxed line-clamp-3">${(note.body||'').replace(/<[^>]*>/g,'')}</p>
+      </div>`;
+  });
+}        
 
             // 4. Fungsi saat salah satu kartu diklik
-            function selectNote(id) {
-                activeNoteId = id;
-                renderNotesList();
-                
-                const selectedNote = dummyNotes.find(n => n.id === id);
-                if(selectedNote) {
-                    document.querySelector('.note-title').value = selectedNote.title;
-                    document.querySelector('.note-body').innerHTML = selectedNote.body;
-                    
-                    // Update bintang di toolbar sesuai status catatan yang baru diklik
-                    updateFavoriteIcon(selectedNote.isFavorite);
-                }
-            }  
+          function selectNote(id) {
+            activeNoteId = id;
+            renderNotesList();
+            const note = dummyNotes.find(n => n.id === id);
+            if (note) {
+                document.querySelector('.note-title').value = note.title;
+                document.querySelector('.note-body').innerHTML = note.body;
+                updateFavoriteIcon(note.isFavorite);
+            }
+            }
             // --- FUNGSI SIMPAN ---
                 function saveNote() {
-                    if (!activeNoteId) return; // Kalau gak ada catatan yang dipilih, diam saja
-
-                    // Ambil isi teks dari layar
-                    const currentTitle = document.querySelector('.note-title').value;
-                    const currentBody = document.querySelector('.note-body').innerHTML;
-
-                    // Cari catatan yang sedang aktif di database dummy kita, lalu update isinya
-                    const noteIndex = dummyNotes.findIndex(n => n.id === activeNoteId);
-                    if (noteIndex !== -1) {
-                        dummyNotes[noteIndex].title = currentTitle;
-                        dummyNotes[noteIndex].body = currentBody;
-                        
-                        renderNotesList(); // Render ulang panel kiri biar judul barunya muncul
-                        
-                        // Kasih efek visual sedikit ke tombol simpan biar user tahu udah tersimpan
-                        const saveBtn = document.querySelector('button[onclick="saveNote()"]');
-                        const originalText = saveBtn.innerHTML;
-                        saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> Tersimpan!';
-                        setTimeout(() => saveBtn.innerHTML = originalText, 1500); // Balik normal setelah 1.5 detik
-                    }
-                }
+  if (!activeNoteId) return;
+  const title = document.querySelector('.note-title').value;
+  const body = document.querySelector('.note-body').innerHTML;
+  const idx = dummyNotes.findIndex(n => n.id === activeNoteId);
+  if (idx !== -1) {
+    dummyNotes[idx].title = title;
+    dummyNotes[idx].body = body;
+    saveNotes(dummyNotes); // ← simpan ke localStorage
+    renderNotesList();
+    const btn = document.querySelector('button[onclick="saveNote()"]');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Tersimpan!';
+    setTimeout(() => btn.innerHTML = orig, 1500);
+  }
+}
 
                 // --- FUNGSI HAPUS ---
                 function deleteNote() {
-                    if (!activeNoteId) return;
-
-                    // Munculkan pop-up konfirmasi
-                    const isConfirmed = confirm(" Ingin menghapus catatan ini?");
-                    if (!isConfirmed) return;
-
-                    // Hapus dari array database
-                    dummyNotes = dummyNotes.filter(n => n.id !== activeNoteId);
-
-                    // Kalau masih ada catatan sisa, buka catatan pertama. Kalau habis, kosongkan layar.
-                    if (dummyNotes.length > 0) {
-                        selectNote(dummyNotes[0].id);
-                    } else {
-                        activeNoteId = null;
-                        document.querySelector('.note-title').value = '';
-                        document.querySelector('.note-body').innerHTML = '';
-                        renderNotesList();
-                    }
-                }            
+                if (!activeNoteId) return;
+                if (!confirm('Ingin menghapus catatan ini?')) return;
+                dummyNotes = dummyNotes.filter(n => n.id !== activeNoteId);
+                saveNotes(dummyNotes); // ← simpan ke localStorage
+                if (dummyNotes.length > 0) {
+                    selectNote(dummyNotes[0].id);
+                } else {
+                    activeNoteId = null;
+                    document.querySelector('.note-title').value = '';
+                    document.querySelector('.note-body').innerHTML = '';
+                    renderNotesList();
+                }
+                }          
                 function updateFavoriteIcon(isFav) {
                 const icon = document.getElementById('fav-icon');
-                if (isFav) {
-                    icon.className = 'fa-solid fa-star';
-                    icon.style.color = '#FFD15C';
-                } else {
-                    icon.className = 'fa-regular fa-star';
-                    icon.style.color = '';
+                if (!icon) return;
+                icon.className = isFav ? 'fa-solid fa-star' : 'fa-regular fa-star';
+                icon.style.color = isFav ? '#FFD15C' : '';
                 }
-            }
             // buat tambah catatan baru
             // --- FUNGSI TAMBAH CATATAN BARU ---
             function createNewNote() {
-                // 1. Buat ID unik menggunakan waktu saat ini (timestamp)
-                const newId = Date.now();
-                
-                // 2. Buat struktur data catatan kosong
-                const newNote = {
-                    id: newId,
-                    title: "Catatan Baru",
-                    body: "",
-                    isFavorite: false
-                };
-                
-                // 3. Masukkan catatan baru ini ke urutan PALING ATAS di array dummyNotes
-                dummyNotes.unshift(newNote);
-                
-                // 4. Jadikan catatan baru ini sebagai catatan yang sedang aktif
-                activeNoteId = newId;
-                
-                // 5. Render ulang panel kiri biar kartu barunya muncul
-                renderNotesList();
-                
-                // 6. Siapkan editor di panel kanan
-                const titleInput = document.querySelector('.note-title');
-                const bodyInput = document.querySelector('.note-body');
-                
-                titleInput.value = newNote.title;
-                bodyInput.innerHTML = newNote.body;
-                updateFavoriteIcon(newNote.isFavorite); // Reset icon bintang
-                
-                // 7. UX Magic: Langsung fokuskan kursor ke judul dan blok teksnya
-                // Jadi saat user ngetik, teks "Catatan Baru" langsung tertimpa otomatis
-                titleInput.focus();
-                titleInput.select();
-            }
+            const newId = Date.now();
+            const newNote = { id:newId, title:'Catatan Baru', body:'', isFavorite:false };
+            dummyNotes.unshift(newNote);
+            saveNotes(dummyNotes); // ← simpan ke localStorage
+            activeNoteId = newId;
+            renderNotesList();
+            const titleInput = document.querySelector('.note-title');
+            const bodyInput = document.querySelector('.note-body');
+            titleInput.value = newNote.title;
+            bodyInput.innerHTML = '';
+            updateFavoriteIcon(false);
+            titleInput.focus();
+            titleInput.select();
+            }                               
 
                     // --- FUNGSI PINDAH TAB (Notes <-> Journal) ---
                // --- FUNGSI PINDAH TAB (Versi Aman untuk Ukuran) ---
@@ -643,7 +573,7 @@ function processMultipleAuthors(rawAuthors, formatType) {
         const auth = processMultipleAuthors(v.author, 'Chicago');
         
         if (sourceType === 'book') {
-            result = `${auth} *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+            result = `${auth}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
         } else if (sourceType === 'journal') {
             result = `${auth}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year||'n.d.'}): ${v.pages}.`;
         } else {
@@ -652,6 +582,7 @@ function processMultipleAuthors(rawAuthors, formatType) {
     }
 
     // ... (kode replace bintang ke italic tetap di bawah) ...
+
                         // Mengubah tanda bintang menjadi cetak miring
                         const finalHTML = result.replace(/\*(.*?)\*/g, '<i>$1</i>');
                         document.getElementById('dafpusResult').innerHTML = finalHTML;
@@ -746,52 +677,3 @@ function processMultipleAuthors(rawAuthors, formatType) {
                         renderSavedEntries();
                     }
                     });
-
-                     const quotes = [
-      { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
-      { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
-      { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
-      { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
-      { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
-      { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
-    ];
-                    function openMotivate() {
-      const q = quotes[Math.floor(Math.random() * quotes.length)];
-      document.getElementById('motivate-emoji').textContent = q.emoji;
-      document.getElementById('motivate-quote').textContent = q.quote;
-      document.getElementById('motivate-author').textContent = q.author;
-      const m = document.getElementById('motivate-modal');
-      m.classList.remove('opacity-0','pointer-events-none');
-      m.classList.add('opacity-100');
-      document.getElementById('motivate-box').classList.remove('scale-95');
-      document.getElementById('motivate-box').classList.add('scale-100');
-    }
-    function closeMotivate(e) {
-      if (!e || e.target === document.getElementById('motivate-modal')) {
-        const m = document.getElementById('motivate-modal');
-        m.classList.add('opacity-0','pointer-events-none');
-        m.classList.remove('opacity-100');
-        document.getElementById('motivate-box').classList.add('scale-95');
-        document.getElementById('motivate-box').classList.remove('scale-100');
-      }
-    }
-
-    function openHamburger() {
-      const d = document.getElementById('hamburger-drawer');
-      const b = document.getElementById('hamburger-box');
-      d.classList.remove('opacity-0','pointer-events-none');
-      d.classList.add('opacity-100');
-      b.classList.remove('-translate-x-full');
-      b.classList.add('translate-x-0');
-    }
-    function closeHamburger() {
-      const d = document.getElementById('hamburger-drawer');
-      const b = document.getElementById('hamburger-box');
-      d.classList.add('opacity-0','pointer-events-none');
-      d.classList.remove('opacity-100');
-      b.classList.add('-translate-x-full');
-      b.classList.remove('translate-x-0');
-    }
-    
-
- 
