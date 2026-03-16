@@ -34,20 +34,17 @@
                 background-color: #FFD15C !important;
                 color: #1E1E20 !important;
             }
-            /* Custom scrollbar untuk notes list */
-            #notes-list::-webkit-scrollbar {
-                width: 4px;
-            }
-            #notes-list::-webkit-scrollbar-track {
-                background: transparent;
-            }
-            #notes-list::-webkit-scrollbar-thumb {
-                background-color: #FFD15C;
-                border-radius: 999px;
-            }
-            #notes-list::-webkit-scrollbar-thumb:hover {
-                background-color: #e6bc53;
+            ::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+* { scrollbar-width: thin; scrollbar-color: #444 transparent; }
+
+/* Mobile journal — padding bawah lebih lega */
+@media (max-width: 767px) {
+    #tab-dafpus { padding-bottom: 80px !important; }
 }
+
     </style>
     </head>
     <body class="bg-[#1E1E20] text-[#F0F0F0] h-screen flex flex-col overflow-hidden overflow-x-hidden">
@@ -62,7 +59,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         Dashboard
       </a>
-      <a href="noto.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E]">
+      <a href="noto.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E]"class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
         Noto
       </a>
@@ -119,7 +116,7 @@
     </div>
 </div>
 </div>
-      <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">Dashboard</div>
+      <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">Noto</div>
       <div class="hidden md:flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
         <a href="dashboard.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
         <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Noto</a>
@@ -143,14 +140,14 @@
                 </div>
 
 
-  <main id="tab-notes" class="px-4 md:px-10 pb-8 flex-grow flex flex-col md:flex-row gap-4 md:gap-8 overflow-hidden max-w-[1400px] w-full mx-auto relative">
+  <main id="tab-notes" class="px-4 md:px-10 pb-20 md:pb-8 flex-grow flex flex-col md:flex-row gap-4 md:gap-8 overflow-hidden max-w-[1400px] w-full mx-auto relative">
         
         <div id="notes-overlay" onclick="closeNotesSidebar()" class="fixed inset-0 bg-black/75 z-[290] hidden md:hidden transition-opacity duration-200" style="backdrop-filter:blur(4px)"></div>
 
         <div id="notes-sidebar" class="fixed md:relative inset-y-0 left-0 z-[300] md:z-auto w-[280px] md:w-[300px] lg:w-[350px] bg-[#1E1E20] md:bg-[#323236] transform -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col overflow-hidden h-full shadow-2xl md:shadow-none border-r border-white/[0.07] md:border-none md:rounded-xl shrink-0">
             <div class="p-4 border-b border-white/[0.07] md:border-gray-600 shrink-0 flex justify-between items-center">
                 <button onclick="createNewNote()" class="flex-1 bg-[#FFD15C] text-[#1E1E20] font-bold py-3 rounded-md flex justify-center items-center gap-2 hover:bg-[#e6bc53] transition duration-200 shadow-sm">
-                    <i class="fa-solid fa-plus text-lg"></i> Tambah Catatan
+                    <i class="fa-solid fa-plus text-lg"></i> New Notes
                 </button>
                 <button onclick="closeNotesSidebar()" class="md:hidden ml-3 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white rounded-lg bg-white/5 border border-white/10">
                     <i class="fa-solid fa-xmark text-xl"></i>
@@ -160,7 +157,7 @@
         </div>
 
         <div class="flex-1 w-full flex flex-col gap-3 md:gap-0 overflow-hidden h-[75vh] md:h-full">
-            
+
             <button onclick="openNotesSidebar()" class="md:hidden w-full bg-[#323236] border border-white/[0.07] text-[#FFD15C] text-sm font-bold px-4 py-3.5 rounded-xl flex justify-between items-center hover:bg-[#3A3A3F] transition shrink-0 shadow-sm">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-bars-staggered"></i>
@@ -169,7 +166,7 @@
                 <i class="fa-solid fa-chevron-right text-xs text-gray-500"></i>
             </button>
 
-            <div class="w-full bg-[#323236] rounded-xl p-4 md:p-6 flex flex-col gap-3 overflow-hidden min-h-[500px]">
+            <div class="w-full bg-[#323236] rounded-xl p-4 md:p-6 flex flex-col gap-3 overflow-hidden h-full">
                 
                 <div class="flex gap-2 md:gap-6 pb-3 md:pb-5 border-b border-gray-600 flex-wrap shrink-0 items-center">
                     <button onclick="formatText('undo')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-rotate-left"></i></button>
@@ -205,10 +202,10 @@
 
                 <div class="flex gap-2 md:gap-4 mt-auto pt-2 shrink-0">
                     <button onclick="saveNote()" class="flex-1 py-3 rounded-md font-semibold cursor-pointer text-sm md:text-base flex justify-center items-center gap-2 bg-[#FFD15C] border-none text-black hover:bg-[#e6bc53] transition duration-200">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan
+                        <i class="fa-solid fa-floppy-disk"></i> Save
                     </button>
                     <button onclick="deleteNote()" class="flex-1 py-3 rounded-md font-semibold cursor-pointer text-sm md:text-base flex justify-center items-center gap-2 bg-transparent border border-[#EF4444] text-[#EF4444] hover:bg-[#EF4444]/10 transition duration-200">
-                        <i class="fa-solid fa-trash"></i> Hapus
+                        <i class="fa-solid fa-trash"></i> Delete
                     </button>
                 </div>
 
@@ -217,58 +214,58 @@
     </main>
 
 
-    <main id="tab-dafpus" class="hidden px-4 md:px-10 pb-8 flex-grow overflow-y-auto max-w-[1400px] w-full mx-auto">
-        <div class="flex flex-col lg:flex-row gap-6 md:gap-8 w-full min-h-full">
-
-            <div class="w-full lg:w-[450px] xl:w-[500px] bg-[#323236] rounded-xl p-6 md:p-8 flex flex-col gap-5 shrink-0">
-                <div class="font-bebas text-lg tracking-wider text-[#FFD15C] mb-2">SOURCE TYPE</div>
-                <div class="flex gap-2 mb-2 flex-wrap">
-                    <button class="source-type-btn active px-4 py-2 rounded-lg border border-[#FFD15C] bg-[#FFD15C] text-[#1E1E20] font-semibold text-sm transition" onclick="setSourceType('book',this)">📚 Book</button>
-                    <button class="source-type-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-semibold text-sm transition hover:text-white" onclick="setSourceType('journal',this)">📄 Journal</button>
-                    <button class="source-type-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-semibold text-sm transition hover:text-white" onclick="setSourceType('website',this)">🌐 Website</button>
+    <main id="tab-dafpus" class="hidden flex-1 px-4 md:px-10 py-4 pb-20 overflow-y-auto max-w-[1400px] w-full mx-auto" style="min-height:0;">
+        <div class="flex flex-col lg:flex-row gap-6 w-full" style="min-width:0; align-items:flex-start;">
+ 
+            <!-- Left: source + format + fields — lebar fixed, tinggi menyesuaikan konten -->
+            <div id="dafpus-left" class="w-full bg-[#2a2a2a] border border-white/[0.07] rounded-2xl p-6 flex flex-col gap-4">
+                <div>
+                    <div class="font-bebas text-base tracking-wider text-[#FFD15C] mb-3">SOURCE TYPE</div>
+                    <div class="flex gap-2 flex-wrap">
+                        <button class="source-type-btn active px-4 py-2 rounded-xl border border-[#FFD15C] bg-[#FFD15C] text-[#1E1E20] font-semibold text-sm transition" onclick="setSourceType('book',this)">📚 Book</button>
+                        <button class="source-type-btn px-4 py-2 rounded-xl border border-white/[0.07] bg-transparent text-[#888] font-semibold text-sm transition hover:text-white hover:border-white/20" onclick="setSourceType('journal',this)">📄 Journal</button>
+                        <button class="source-type-btn px-4 py-2 rounded-xl border border-white/[0.07] bg-transparent text-[#888] font-semibold text-sm transition hover:text-white hover:border-white/20" onclick="setSourceType('website',this)">🌐 Website</button>
+                    </div>
                 </div>
-
-                <div class="font-bebas text-lg tracking-wider text-[#FFD15C] mb-2 mt-2 md:mt-4">FORMAT</div>
-                <div class="flex gap-2 mb-2 flex-wrap">
-                    <button class="fmt-btn active px-4 py-2 rounded-lg border border-[#FFD15C] bg-[#2A2A2D] text-[#FFD15C] font-bold text-sm transition" onclick="setFormat('APA',this)">APA</button>
-                    <button class="fmt-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-bold text-sm transition hover:text-white" onclick="setFormat('IEEE',this)">IEEE</button>
-                    <button class="fmt-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-bold text-sm transition hover:text-white" onclick="setFormat('Chicago',this)">Chicago</button>
+                <div>
+                    <div class="font-bebas text-base tracking-wider text-[#FFD15C] mb-3">FORMAT</div>
+                    <div class="flex gap-2 flex-wrap">
+                        <button class="fmt-btn active px-4 py-2 rounded-xl border border-[#FFD15C] bg-[#FFD04E]/10 text-[#FFD15C] font-bold text-sm transition" onclick="setFormat('APA',this)">APA</button>
+                        <button class="fmt-btn px-4 py-2 rounded-xl border border-white/[0.07] bg-transparent text-[#888] font-bold text-sm transition hover:text-white hover:border-white/20" onclick="setFormat('IEEE',this)">IEEE</button>
+                        <button class="fmt-btn px-4 py-2 rounded-xl border border-white/[0.07] bg-transparent text-[#888] font-bold text-sm transition hover:text-white hover:border-white/20" onclick="setFormat('Chicago',this)">Chicago</button>
+                    </div>
                 </div>
-
-                <div id="inputFields" class="flex flex-col gap-3 mt-2"></div>
-
-                <button class="w-full mt-auto py-3 rounded-md font-bold cursor-pointer text-base bg-[#FFD15C] border-none text-black hover:bg-[#e6bc53] transition duration-200" onclick="generate()">
+                <!-- Input fields tumbuh ke bawah sesuai konten -->
+                <div id="inputFields" class="flex flex-col gap-3"></div>
+                <button class="w-full py-3 rounded-xl font-bold cursor-pointer text-sm bg-[#FFD15C] border-none text-[#1E1E20] hover:bg-[#e6bc53] transition duration-200 mt-2" onclick="generate()">
                     Generate →
                 </button>
             </div>
-
-            <div class="w-full lg:flex-1 flex flex-col gap-6 shrink-0">
-                
-                <div class="bg-[#323236] rounded-xl p-6 md:p-8 flex flex-col gap-4 shrink-0">
-                    <div class="font-bebas text-lg tracking-wider text-[#FFD15C]">RESULT</div>
-                    <div class="bg-[#2A2A2D] border border-gray-600 rounded-xl p-4 md:p-5 min-h-[100px] md:min-h-[120px] text-sm text-white leading-relaxed whitespace-pre-wrap" id="dafpusResult">Fill in the form and click Generate to see your bibliography entry here.</div>
-                    
-                    <div class="flex flex-wrap md:flex-nowrap gap-2 mt-2">
-                        <button class="flex-1 py-2 rounded-md font-semibold bg-[#FFD15C] text-black hover:bg-[#e6bc53] transition" onclick="copyResult()">📋 Copy</button>
-                        <button class="flex-1 py-2 rounded-md font-semibold bg-transparent border border-[#FFD15C] text-[#FFD15C] hover:bg-[#FFD15C]/10 transition" onclick="saveResult()">💾 Save</button>
-                        <button class="flex-1 py-2 rounded-md font-semibold bg-transparent border border-red-500 text-red-500 hover:bg-red-500/10 transition" onclick="clearResult()">🗑 Clear</button>
+ 
+            <!-- Right: result + saved -->
+            <div id="dafpus-right" class="w-full flex flex-col gap-4">
+                <!-- Result -->
+                <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-2xl p-6 flex flex-col gap-4">
+                    <div class="font-bebas text-base tracking-wider text-[#FFD15C]">RESULT</div>
+                    <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-xl p-4 min-h-[100px] text-sm text-white leading-relaxed whitespace-pre-wrap" id="dafpusResult">Fill in the form and click Generate to see your bibliography entry here.</div>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-[#FFD15C] text-[#1E1E20] hover:bg-[#e6bc53] transition" onclick="copyResult()">📋 Copy</button>
+                        <button class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-transparent border border-[#FFD15C] text-[#FFD15C] hover:bg-[#FFD15C]/10 transition" onclick="saveResult()">💾 Save</button>
+                        <button class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-transparent border border-red-500/50 text-red-400 hover:bg-red-500/10 transition" onclick="clearResult()">🗑 Clear</button>
                     </div>
                 </div>
-
-                <div class="bg-[#323236] rounded-xl p-6 md:p-8 flex flex-col flex-grow overflow-hidden min-h-[250px] lg:min-h-0">
-                    <div class="font-bebas text-lg tracking-wider text-[#FFD15C] mb-2">SAVED ENTRIES</div>
-                    
-                    <div class="flex flex-col gap-2 overflow-y-auto h-full pr-2" id="savedEntries">
-                        <div class="text-center text-gray-500 py-5"><p>No saved entries yet</p></div>
+ 
+                <!-- Saved entries -->
+                <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-2xl p-6 flex flex-col gap-3">
+                    <div class="font-bebas text-base tracking-wider text-[#FFD15C]">SAVED ENTRIES</div>
+                    <div class="saved-scroll flex flex-col gap-2 overflow-y-auto max-h-64 pr-1" id="savedEntries">
+                        <div class="text-center text-[#555] py-5 text-sm">No saved entries yet</div>
                     </div>
-                    
-                    <button class="w-full mt-4 py-2 rounded-md font-semibold bg-transparent border border-gray-500 text-gray-400 hover:text-white hover:border-white transition shrink-0" onclick="exportAll()">
+                    <button class="w-full py-2.5 rounded-xl text-sm font-semibold bg-transparent border border-white/[0.07] text-[#888] hover:text-white hover:border-white/20 transition" onclick="exportAll()">
                         ⬇ Export All as .txt
                     </button>
                 </div>
-
             </div>
-
         </div>
     </main>
         <div id="motivate-modal" onclick="closeMotivate(event)" class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
