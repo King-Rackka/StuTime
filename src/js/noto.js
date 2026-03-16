@@ -1,4 +1,3 @@
-// 1. Siapkan Data Dummy (Array of Objects)
 // ─── LOCALSTORAGE ───
 const STORAGE_KEY = 'stutime_notes';
 
