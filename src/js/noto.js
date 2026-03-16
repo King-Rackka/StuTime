@@ -29,7 +29,11 @@ let activeNoteId = dummyNotes.length > 0 ? dummyNotes[0].id : null;
 function renderNotesList() {
     const listContainer = document.getElementById('notes-list');
     listContainer.innerHTML = '';
-    dummyNotes.forEach(note => {
+    
+    // ✅ Sort: favorite di atas, non-favorite di bawah
+    const sortedNotes = [...dummyNotes].sort((a, b) => b.isFavorite - a.isFavorite);
+    
+    sortedNotes.forEach(note => {
         const isActive = note.id === activeNoteId;
         const cardClasses = isActive
             ? 'border-l-4 border-[#FFD15C] bg-[#3A3A3F]'
@@ -51,11 +55,17 @@ function renderNotesList() {
 function selectNote(id) {
     activeNoteId = id;
     renderNotesList();
-    const note = dummyNotes.find(n => n.id === id);
-    if (note) {
-        document.querySelector('.note-title').value = note.title;
-        document.querySelector('.note-body').innerHTML = note.body;
-        updateFavoriteIcon(note.isFavorite);
+    
+    const selectedNote = dummyNotes.find(n => n.id === id);
+    if(selectedNote) {
+        document.querySelector('.note-title').value = selectedNote.title;
+        document.querySelector('.note-body').innerHTML = selectedNote.body;
+        updateFavoriteIcon(selectedNote.isFavorite);
+    }
+    
+    // 🔥 UX Magic: Kalau layarnya kecil (HP), tutup sidebar otomatis!
+    if (window.innerWidth < 768) {
+        closeNotesSidebar();
     }
 }
 
@@ -93,20 +103,18 @@ function deleteNote() {
 
 function createNewNote() {
     const newId = Date.now();
-    const newNote = { id: newId, title: 'Catatan Baru', body: '', isFavorite: false };
+    const newNote = { id: newId, title: "Catatan Baru", body: "", isFavorite: false };
     dummyNotes.unshift(newNote);
-    saveNotes(dummyNotes); // ← simpan ke localStorage
-    activeNoteId = newId;
-    renderNotesList();
-    const titleInput = document.querySelector('.note-title');
-    const bodyInput = document.querySelector('.note-body');
-    titleInput.value = newNote.title;
-    bodyInput.innerHTML = '';
-    updateFavoriteIcon(false);
-    titleInput.focus();
-    titleInput.select();
+    saveNotes(dummyNotes);  // <-- ganti ini
+    
+    selectNote(newId);
+    document.querySelector('.note-title').focus();
+    document.querySelector('.note-title').select();
+    
+    if (window.innerWidth < 768) {
+        closeNotesSidebar();
+    }
 }
-
 function toggleFavorite() {
     if (!activeNoteId) return;
     const idx = dummyNotes.findIndex(n => n.id === activeNoteId);
@@ -524,7 +532,7 @@ function generate() {
         const auth = processMultipleAuthors(v.author, 'Chicago');
 
         if (sourceType === 'book') {
-            result = `${auth}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year || 'n.d.'}.`;
+            result = `${auth} *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year || 'n.d.'}.`;
         } else if (sourceType === 'journal') {
             result = `${auth}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year || 'n.d.'}): ${v.pages}.`;
         } else {
@@ -628,5 +636,58 @@ window.addEventListener('DOMContentLoaded', () => {
         renderSavedEntries();
     }
 });
+const quotes = [
+      { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
+      { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
+      { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
+      { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
+      { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
+      { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
+    ];
+ function openMotivate() {
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('motivate-emoji').textContent = q.emoji;
+      document.getElementById('motivate-quote').textContent = q.quote;
+      document.getElementById('motivate-author').textContent = q.author;
+      const m = document.getElementById('motivate-modal');
+      m.classList.remove('opacity-0','pointer-events-none');
+      m.classList.add('opacity-100');
+      document.getElementById('motivate-box').classList.remove('scale-95');
+      document.getElementById('motivate-box').classList.add('scale-100');
+    }
+    function closeMotivate(e) {
+      if (!e || e.target === document.getElementById('motivate-modal')) {
+        const m = document.getElementById('motivate-modal');
+        m.classList.add('opacity-0','pointer-events-none');
+        m.classList.remove('opacity-100');
+        document.getElementById('motivate-box').classList.add('scale-95');
+        document.getElementById('motivate-box').classList.remove('scale-100');
+      }
+    }
 
+//mobile
+function openHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.remove('opacity-0','pointer-events-none');
+      d.classList.add('opacity-100');
+      b.classList.remove('-translate-x-full');
+      b.classList.add('translate-x-0');
+    }
+    function closeHamburger() {
+      const d = document.getElementById('hamburger-drawer');
+      const b = document.getElementById('hamburger-box');
+      d.classList.add('opacity-0','pointer-events-none');
+      d.classList.remove('opacity-100');
+      b.classList.add('-translate-x-full');
+      b.classList.remove('translate-x-0');
+    }
+    function openNotesSidebar() {
+    document.getElementById('notes-sidebar').classList.remove('-translate-x-full');
+    document.getElementById('notes-overlay').classList.remove('hidden');
+}
 
+function closeNotesSidebar() {
+    document.getElementById('notes-sidebar').classList.add('-translate-x-full');
+    document.getElementById('notes-overlay').classList.add('hidden');
+}
