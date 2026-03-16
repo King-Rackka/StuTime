@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STUTime — Dashboard</title>
+  <title>StuTime — Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-bebas { font-family: 'Bebas Neue', sans-serif; }
     .nav-blur { backdrop-filter: blur(20px); }
+
+    /* fadeUp hanya untuk wrapper luar — TIDAK di #hero-inner */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     .fade-up { animation: fadeUp 0.5s ease forwards; }
     .d1{animation-delay:.05s;opacity:0} .d2{animation-delay:.1s;opacity:0}
     .d3{animation-delay:.15s;opacity:0} .d4{animation-delay:.2s;opacity:0}
     .d5{animation-delay:.25s;opacity:0} .d6{animation-delay:.3s;opacity:0}
+
     .stat-card { transition: transform 0.2s, box-shadow 0.2s; }
     .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(255,208,78,0.12); }
     .task-dash-card { transition: border-color 0.2s; }
     .task-dash-card:hover { border-color: rgba(255,208,78,0.35); }
-    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); z-index:200; align-items:center; justify-content:center; }
-    .modal-overlay.open { display:flex; }
 
-    /* ── Hero intro animation ── */
+    /* ── HERO ── */
     #hero-section {
       display: flex;
       flex-direction: column;
@@ -36,30 +38,32 @@
       transition: min-height 0.9s cubic-bezier(0.4, 0, 0.2, 1);
     }
     #hero-section.shrink {
-      min-height: 200px;
+      min-height: 160px;
     }
+
+    #hero-fade-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* hero-inner HANYA handle scale — tidak ada animasi lain */
     #hero-inner {
-      /* Pakai transform saja — bisa dianimasikan smooth */
-      transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-      transform: translate(0, 0) scale(1);
       text-align: center;
       width: 100%;
       max-width: 700px;
+      transform-origin: center center;
+      transform: scale(1);
+      transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
     }
     #hero-section.shrink #hero-inner {
-      /* Geser kiri + sedikit ke bawah + mengecil */
-      transform: translate(-30vw, 20px) scale(0.78);
+      transform: scale(0.52);
     }
+
     #hero-title {
-      transition: none;
-      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-size: clamp(2.8rem, 5vw, 4rem);
     }
-    #greeting-sub {
-      transition: opacity 0.5s ease;
-    }
-    #scroll-indicator {
-      transition: opacity 0.5s ease;
-    }
+
     #main-content {
       transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -72,18 +76,27 @@
       opacity: 1;
       transform: translateY(0);
     }
+
     @keyframes bounce {
       0%, 100% { transform: translateY(0); opacity: 0.5; }
-      50% { transform: translateY(6px); opacity: 1; }
+      50%       { transform: translateY(6px); opacity: 1; }
     }
     .bounce { animation: bounce 1.5s ease-in-out infinite; }
+
+    /* hide scrollbar deadlines */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
+
 <body class="bg-[#111111] text-white overflow-x-hidden">
 
   <!-- Hamburger Drawer (mobile) -->
-  <div id="hamburger-drawer" onclick="if(event.target===this)closeHamburger()" class="fixed inset-0 bg-black/75 z-[400] opacity-0 pointer-events-none transition-opacity duration-200 md:hidden" style="backdrop-filter:blur(8px)">
-    <div id="hamburger-box" class="absolute top-0 left-0 h-full w-64 bg-[#1a1a1a] border-r border-white/[0.07] p-6 flex flex-col gap-2 -translate-x-full transition-transform duration-300">
+  <div id="hamburger-drawer" onclick="if(event.target===this)closeHamburger()"
+    class="fixed inset-0 bg-black/75 z-[400] opacity-0 pointer-events-none transition-opacity duration-200 md:hidden"
+    style="backdrop-filter:blur(8px)">
+    <div id="hamburger-box"
+      class="absolute top-0 left-0 h-full w-64 bg-[#1a1a1a] border-r border-white/[0.07] p-6 flex flex-col gap-2 -translate-x-full transition-transform duration-300">
       <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider mb-4">STUTime</div>
       <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E]">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
@@ -105,6 +118,18 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Calendar
       </a>
+      <div class="mt-auto pt-4 border-t border-white/[0.07]">
+  <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.05] mb-3">
+    <div class="font-bebas w-9 h-9 rounded-xl bg-[#FFD04E] text-[#111111] flex items-center justify-center text-base flex-shrink-0" id="mobile-avatar"></div>
+    <div class="flex-1 min-w-0">
+      <div class="text-sm font-bold text-white truncate" id="mobile-name-label"></div>
+    </div>
+  </div>
+  <button onclick="logOut()" class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 border border-red-500/15 transition-all">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    Log Out
+  </button>
+</div>
     </div>
   </div>
 
@@ -114,7 +139,26 @@
       <button onclick="openHamburger()" class="md:hidden w-9 h-9 border border-white/[0.07] rounded-xl flex items-center justify-center text-[#888] hover:text-[#FFD04E] transition-all flex-shrink-0">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
-      <div class="hidden md:flex font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] items-center justify-center text-lg flex-shrink-0">D</div>
+      <div class="hidden md:flex relative" id="avatar-wrapper">
+  <button onclick="toggleAvatarMenu()" class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0 hover:bg-[#ffe066] transition-all" id="avatar-btn"></button>
+    <div id="avatar-menu" class="hidden absolute top-13 left-0 bg-[#1a1a1a] border border-white/[0.07] rounded-2xl shadow-2xl overflow-hidden w-52 z-50" style="top:48px;">
+    <!-- Header profile -->
+    <div class="px-4 py-4 bg-gradient-to-br from-[#FFD04E]/10 to-transparent border-b border-white/[0.07]">
+      <div class="flex items-center gap-3">
+        <div>
+          <div class="text-sm font-bold text-white truncate" id="avatar-name-label"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Actions -->
+    <div class="p-2">
+      <button onclick="logOut()" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Log Out
+      </button>
+    </div>
+</div>
+</div>
       <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">Dashboard</div>
       <div class="hidden md:flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
         <a href="dashboard.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">Dashboard</a>
@@ -133,18 +177,21 @@
   <div class="max-w-[1440px] mx-auto">
 
     <!-- Hero -->
-    <section id="hero-section" class="relative intro px-4 overflow-hidden">
-      <!-- Gradient radial background -->
+    <section id="hero-section" class="relative px-4 overflow-hidden">
       <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 60% 70% at 50% 50%, rgba(255,208,78,0.12) 0%, rgba(255,208,78,0.04) 50%, transparent 100%);"></div>
       <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(ellipse 30% 40% at 50% 50%, rgba(255,208,78,0.07) 0%, transparent 100%);"></div>
-      <div id="hero-inner" class="relative text-center fade-up d1">
-        <h1 id="hero-title" class="font-bebas tracking-wider text-white mb-3">Selamat Pagi, Daffa!</h1>
-        <p class="text-[#888] text-sm md:text-base transition-all duration-700" id="greeting-sub">Kami sudah menyusun jadwal dan statistik harianmu</p>
-        <!-- Scroll indicator -->
-        <div id="scroll-indicator" class="mt-12 flex flex-col items-center gap-2 opacity-60 transition-opacity duration-500">
-          <span class="text-xs text-[#555] tracking-widest uppercase">Scroll</span>
-          <div class="bounce">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD04E" stroke-width="2.5" stroke-linecap="round"><polyline points="6,9 12,15 18,9"/></svg>
+
+      <!-- fade-up wrapper TERPISAH dari hero-inner -->
+      <div id="hero-fade-wrapper" class="fade-up d1 relative w-full flex justify-center">
+        <!-- hero-inner HANYA handle scale transform -->
+        <div id="hero-inner">
+          <h1 id="hero-title" class="font-bebas tracking-wider text-white mb-3">Selamat Pagi, </h1>
+          <p class="text-[#888] text-sm md:text-base" id="greeting-sub">Kami sudah menyusun jadwal dan statistik harianmu</p>
+          <div id="scroll-indicator" class="mt-12 flex flex-col items-center gap-2 opacity-60" style="transition: opacity 0.5s ease;">
+            <span class="text-xs text-[#555] tracking-widest uppercase">Scroll</span>
+            <div class="bounce">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD04E" stroke-width="2.5" stroke-linecap="round"><polyline points="6,9 12,15 18,9"/></svg>
+            </div>
           </div>
         </div>
       </div>
@@ -159,13 +206,11 @@
           <span class="font-bebas text-xl md:text-2xl tracking-wider text-white">Schedule History</span>
           <div class="flex-1 h-px bg-white/[0.07]"></div>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4" id="stats-grid">
-          <!-- diisi JS -->
-        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4" id="stats-grid"></div>
       </section>
 
       <!-- Deadlines -->
-      <section class="fade-up d3">
+      <section class="fade-up d3 overflow-x-hidden">
         <div class="flex items-center justify-between gap-4 mb-6">
           <div class="flex items-center gap-4">
             <span class="font-bebas text-xl md:text-2xl tracking-wider text-white">Deadlines</span>
@@ -173,9 +218,7 @@
           </div>
           <span class="text-xs text-[#555] font-medium">7 hari ke depan</span>
         </div>
-        <div class="flex flex-col gap-4" id="deadlines-container">
-          <!-- diisi JS -->
-        </div>
+        <div class="flex flex-col gap-4" id="deadlines-container"></div>
       </section>
 
       <!-- Others: FocStats + Schedule -->
@@ -185,7 +228,6 @@
           <div class="flex-1 h-px bg-white/[0.07]"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- FocStats -->
           <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-6">
             <div class="flex items-center justify-between mb-4">
               <div class="font-bebas text-[#FFD04E] text-xl tracking-wider">FocTime! Stats</div>
@@ -210,13 +252,9 @@
               Start Session →
             </a>
           </div>
-
-          <!-- Your Schedule -->
           <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-6 flex flex-col">
             <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-4">Your Schedule</div>
-            <div class="flex flex-col gap-2 flex-1 overflow-hidden" id="schedule-preview">
-              <!-- diisi JS -->
-            </div>
+            <div class="flex flex-col gap-2 flex-1 overflow-hidden" id="schedule-preview"></div>
             <a href="task.html" class="mt-4 flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-[#FFD04E] text-[#FFD04E] text-sm font-bold hover:bg-[#FFD04E]/10 transition-all">
               + Add new schedule
             </a>
@@ -231,9 +269,7 @@
           <div class="flex-1 h-px bg-white/[0.07]"></div>
           <a href="noto.html" class="text-xs text-[#FFD04E] hover:underline">Lihat semua →</a>
         </div>
-        <div class="flex flex-col gap-3" id="noto-preview">
-          <!-- diisi JS -->
-        </div>
+        <div class="flex flex-col gap-3" id="noto-preview"></div>
         <a href="noto.html" class="mt-4 flex items-center justify-center gap-2 w-full py-3.5 rounded-xl border border-white/[0.07] text-[#888] text-sm font-semibold hover:border-white/20 hover:text-white transition-all">
           + Add new notes
         </a>
@@ -243,7 +279,9 @@
   </div>
 
   <!-- Motivate Modal -->
-  <div id="motivate-modal" onclick="closeMotivate(event)" class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
+  <div id="motivate-modal" onclick="closeMotivate(event)"
+    class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200"
+    style="backdrop-filter:blur(8px)">
     <div id="motivate-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-10 max-w-[440px] w-[90%] text-center scale-95 transition-transform duration-200">
       <div class="text-5xl mb-4" id="motivate-emoji">💪</div>
       <div class="text-lg leading-relaxed text-[#ddd] font-medium mb-2" id="motivate-quote"></div>
@@ -254,7 +292,11 @@
 
   <script>
     // ─── HELPERS ───
-    const NAMA = 'Daffa';
+    function getUser() {
+      const u = localStorage.getItem('stutime_user');
+      return u ? JSON.parse(u) : { name: 'Student'};
+    }
+    const NAMA = getUser().name.split(' ')[0];
     const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
     const DAYS = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 
@@ -290,7 +332,6 @@
     function loadTasks() {
       const s = localStorage.getItem('stutime_tasks');
       if (s) return JSON.parse(s);
-      // Init dummy langsung ke localStorage biar konsisten dengan task.js
       const dummy = getDummyTasks();
       localStorage.setItem('stutime_tasks', JSON.stringify(dummy));
       return dummy;
@@ -302,7 +343,6 @@
     function loadNotes() {
       const s = localStorage.getItem('stutime_notes');
       if (s) return JSON.parse(s);
-      // Init dummy sama persis dengan noto.js, langsung simpan ke localStorage
       const dummy = [
         { id:1, title:'Pergi ke pasar membeli ikan', body:'Pergi ke pasar membeli ikan, cakep...', isFavorite:false },
         { id:2, title:'Belajar UI/UX Design Gestalt', body:'Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...', isFavorite:true },
@@ -327,13 +367,6 @@
         { id:7, title:'Review materi Algoritma', desc:'Review bab sorting dan searching', date:s3, time:'15.00', pinned:false, done:false },
       ];
     }
-    function getDummyNotes() {
-      return [
-        { id:1, title:'Catatan PPOK D1', body:'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pelajari materi hari ini dengan fokus dan disiplin.' },
-        { id:2, title:'PKM 2026', body:'Rangkuman proposal PKM bidang teknologi. Deadline pengumpulan minggu depan.' },
-        { id:3, title:'List belanja bulanan', body:'Kebutuhan bulanan: alat tulis, buku catatan, dan perlengkapan belajar lainnya.' },
-      ];
-    }
 
     // ─── GREETING ───
     document.getElementById('hero-title').textContent = getGreeting() + ', ' + NAMA + '!';
@@ -346,8 +379,6 @@
       const doneTasks = tasks.filter(t => t.done);
       const stats = loadStats();
       const sessions = stats.date === today ? (stats.sessions || 0) : 0;
-
-      // Hitung total menit fokus (sessions * 25 menit default)
       const totalMin = sessions * 25;
 
       const data = [
@@ -364,12 +395,10 @@
         </div>
       `).join('');
 
-      // Update others section
       document.getElementById('dash-sessions').textContent = sessions;
       document.getElementById('dash-streak').textContent = stats.streak || 0;
       document.getElementById('dash-today-tasks').textContent = todayTasks.length;
 
-      // Greeting subtitle
       const sub = todayTasks.length > 0
         ? `Kamu punya ${todayTasks.length} jadwal hari ini. Semangat!`
         : 'Belum ada jadwal hari ini. Tambah jadwal baru!';
@@ -381,8 +410,8 @@
       const tasks = loadTasks();
       const today = todayStr();
       const container = document.getElementById('deadlines-container');
+      const cardW = window.innerWidth < 768 ? '75vw' : '360px';
 
-      // Ambil task 7 hari ke depan (termasuk hari ini)
       const upcoming = [];
       for (let i = 0; i <= 6; i++) {
         const dateStr = shiftDate(today, i);
@@ -401,10 +430,10 @@
             <div class="text-sm font-bold text-white">${formatDateLabel(dateStr)}</div>
             <div class="text-xs text-[#555] mt-0.5">${(() => { const [y,m,d] = dateStr.split('-').map(Number); return d+' '+MONTHS[m-1]; })()}</div>
           </div>
-          <div class="flex-1 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none;">
-            <div class="flex gap-3" style="width:max-content">
+          <div class="flex-1 overflow-x-auto hide-scrollbar" style="-webkit-overflow-scrolling:touch;">
+            <div class="flex gap-3" style="width:max-content;">
               ${dayTasks.map(t => `
-                <div class="task-dash-card bg-[#1a1a1a] border ${t.done ? 'border-white/[0.04] opacity-60' : 'border-white/[0.07]'} rounded-xl p-4 flex-shrink-0" style="width:360px">
+                <div class="task-dash-card bg-[#1a1a1a] border ${t.done ? 'border-white/[0.04] opacity-60' : 'border-white/[0.07]'} rounded-xl p-4 flex-shrink-0" style="width:${cardW};min-width:200px;max-width:360px;">
                   <div class="flex items-start justify-between gap-2 mb-3">
                     <div class="text-sm font-bold text-white truncate flex-1 ${t.done ? 'line-through text-[#555]' : ''}">${t.title}</div>
                     ${t.pinned ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="#FFD04E" class="flex-shrink-0 mt-0.5"><line x1="12" y1="17" x2="12" y2="22" stroke="#FFD04E" stroke-width="2"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>' : ''}
@@ -432,7 +461,6 @@
       const t = tasks.find(t => t.id === id);
       if (!t) return;
       t.done = !t.done;
-      // Selalu simpan ke localStorage, termasuk dummy data
       localStorage.setItem('stutime_tasks', JSON.stringify(tasks));
       renderStats();
       renderDeadlines();
@@ -477,7 +505,7 @@
         return;
       }
       el.innerHTML = notes.slice(0, 3).map(n => `
-        <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-xl p-5 hover:border-white/[0.12] transition-all cursor-pointer" onclick="window.location.href='noto.html'">
+        <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-xl p-5 hover:border-white/[0.12] transition-all cursor-pointer" onclick="window.location.href='noto.html?id=${n.id}'"'">
           <div class="flex items-start justify-between gap-3 mb-2">
             <div class="text-sm font-bold text-white">${n.title || 'Tanpa Judul'}</div>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2.5" stroke-linecap="round" class="flex-shrink-0 mt-0.5"><polyline points="9,18 15,12 9,6"/></svg>
@@ -538,17 +566,19 @@
     // ─── INTRO ANIMATION ───
     function startIntroAnimation() {
       const hero = document.getElementById('hero-section');
+      const heroInner = document.getElementById('hero-inner');
       const mainContent = document.getElementById('main-content');
       const scrollIndicator = document.getElementById('scroll-indicator');
 
-      // Setelah 1.8 detik, mulai transisi
       setTimeout(() => {
         // Sembunyikan scroll indicator
         scrollIndicator.style.opacity = '0';
 
-        // Shrink hero
-        hero.classList.remove('intro');
+        // Shrink hero container
         hero.classList.add('shrink');
+
+        // Scale down hero-inner via inline style (lebih reliable dari CSS class)
+        heroInner.style.transform = 'scale(0.62)';
 
         // Tampilkan main content
         setTimeout(() => {
@@ -559,12 +589,44 @@
       }, 1800);
     }
 
+    // ─── AVATAR & LOGOUT ───
+function initAvatar() {
+  const initial = NAMA.charAt(0).toUpperCase();
+  const btn = document.getElementById('avatar-btn');
+  const mobileAvatar = document.getElementById('mobile-avatar');
+  const nameLabel = document.getElementById('avatar-name-label');
+  const mobileName = document.getElementById('mobile-name-label');
+  const menuInitial = document.getElementById('avatar-menu-initial');
+if (menuInitial) menuInitial.textContent = initial;
+  if (btn) btn.textContent = initial;
+  if (mobileAvatar) mobileAvatar.textContent = initial;
+  if (nameLabel) nameLabel.textContent = getUser().name;
+  if (mobileName) mobileName.textContent = getUser().name;
+}
+function toggleAvatarMenu() {
+  const menu = document.getElementById('avatar-menu');
+  menu.classList.toggle('hidden');
+}
+// Tutup menu kalau klik di luar
+document.addEventListener('click', e => {
+  const wrapper = document.getElementById('avatar-wrapper');
+  if (wrapper && !wrapper.contains(e.target)) {
+    document.getElementById('avatar-menu').classList.add('hidden');
+  }
+});
+function logOut() {
+  window.location.href = '../index.html';
+}
+
     // ─── INIT ───
     renderStats();
     renderDeadlines();
     renderSchedulePreview();
     renderNotoPreview();
     startIntroAnimation();
+    initAvatar();
+
+    window.addEventListener('resize', renderDeadlines);
   </script>
 </body>
 </html>

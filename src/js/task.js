@@ -1,3 +1,4 @@
+
 function getTodayStr() {
   return formatDate(new Date());
 }
