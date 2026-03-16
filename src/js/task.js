@@ -1,3 +1,4 @@
+
 function getTodayStr() {
   return formatDate(new Date());
 }
@@ -25,17 +26,17 @@ function formatDateLabel(dateStr) {
   return `${label}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-function initDummyTasks() {
-  return [
-    { id:1, title:"Belajar Tailwind CSS", desc:"Pelajari utility class Tailwind v4 untuk styling halaman STUTime secara konsisten.", date:getTodayStr(), time:"08.00", pinned:true, done:false },
-    { id:2, title:"Mengerjakan tugas Basis Data", desc:"Buat ERD dan implementasi SQL untuk tugas akhir semester mata kuliah Basis Data.", date:getTodayStr(), time:"13.00", pinned:true, done:false },
-    { id:3, title:"Review materi Algoritma", desc:"Review bab sorting dan searching untuk persiapan UTS minggu depan.", date:getTodayStr(), time:"15.00", pinned:false, done:false },
-    { id:4, title:"Meeting kelompok WDC", desc:"Diskusi pembagian tugas coding untuk lomba WDC 2026 IFest #14.", date:getTodayStr(), time:"19.00", pinned:false, done:false },
-    { id:5, title:"Kerjakan laporan PKL", desc:"Tulis bab 3 laporan PKL tentang implementasi sistem informasi.", date:getTomorrowStr(), time:"09.00", pinned:false, done:false },
-    { id:6, title:"Presentasi Jaringan Komputer", desc:"Persiapkan slide presentasi topik subnetting dan CIDR.", date:getTomorrowStr(), time:"10.30", pinned:false, done:false },
-    { id:7, title:"Kumpulkan tugas Statistika", desc:"Selesaikan soal regresi linear dan upload ke e-learning.", date:getDateStr(2), time:"23.59", pinned:false, done:false }
-  ];
-}
+// function initDummyTasks() {
+//   return [
+//     { id:1, title:"Belajar Tailwind CSS", desc:"Pelajari utility class Tailwind v4 untuk styling halaman STUTime secara konsisten.", date:getTodayStr(), time:"08.00", pinned:true, done:false },
+//     { id:2, title:"Mengerjakan tugas Basis Data", desc:"Buat ERD dan implementasi SQL untuk tugas akhir semester mata kuliah Basis Data.", date:getTodayStr(), time:"13.00", pinned:true, done:false },
+//     { id:3, title:"Review materi Algoritma", desc:"Review bab sorting dan searching untuk persiapan UTS minggu depan.", date:getTodayStr(), time:"15.00", pinned:false, done:false },
+//     { id:4, title:"Meeting kelompok WDC", desc:"Diskusi pembagian tugas coding untuk lomba WDC 2026 IFest #14.", date:getTodayStr(), time:"19.00", pinned:false, done:false },
+//     { id:5, title:"Kerjakan laporan PKL", desc:"Tulis bab 3 laporan PKL tentang implementasi sistem informasi.", date:getTomorrowStr(), time:"09.00", pinned:false, done:false },
+//     { id:6, title:"Presentasi Jaringan Komputer", desc:"Persiapkan slide presentasi topik subnetting dan CIDR.", date:getTomorrowStr(), time:"10.30", pinned:false, done:false },
+//     { id:7, title:"Kumpulkan tugas Statistika", desc:"Selesaikan soal regresi linear dan upload ke e-learning.", date:getDateStr(2), time:"23.59", pinned:false, done:false }
+//   ];
+// }
 
 // ─── STATE ───
 let tasks = [];
@@ -54,6 +55,18 @@ function loadTasks() {
 }
 function saveTasks() {
   localStorage.setItem('stutime_tasks', JSON.stringify(tasks));
+}
+
+// ─── HELPER: konversi format waktu ───
+// "13.00" → "13:00" (untuk input type="time")
+function timeToInput(t) {
+  if (!t) return '';
+  return t.replace('.', ':');
+}
+// "13:00" → "13.00" (untuk disimpan)
+function timeToStore(t) {
+  if (!t) return '';
+  return t.replace(':', '.');
 }
 
 // ─── RENDER ───
@@ -243,7 +256,6 @@ function renderDetail() {
 function selectTask(id) {
   selectedId = id;
   render();
-  // Mobile: pindah ke detail view
   if (typeof showDetail === 'function') showDetail();
 }
 
@@ -302,7 +314,8 @@ function openEditModal(id) {
   document.getElementById('form-title').value = t.title;
   document.getElementById('form-desc').value = t.desc;
   document.getElementById('form-date').value = t.date;
-  document.getElementById('form-time').value = t.time;
+  // ── FIX: konversi "13.00" → "13:00" supaya input type="time" bisa baca ──
+  document.getElementById('form-time').value = timeToInput(t.time);
   document.getElementById('task-modal').classList.add('open');
 }
 
@@ -322,7 +335,8 @@ function submitTask() {
     return;
   }
 
-  const formattedTime = time.replace(':', '.');
+  // Simpan dengan format titik "13.00"
+  const formattedTime = timeToStore(time);
 
   if (editingId) {
     const t = tasks.find(t => t.id === editingId);
@@ -373,14 +387,12 @@ function closeMotivate(e) {
 // ─── INIT ───
 document.addEventListener('DOMContentLoaded', () => {
   loadTasks();
-  // Auto-select task dari query param ?id= (dari calendar)
   const params = new URLSearchParams(window.location.search);
   const idParam = params.get('id');
   if (idParam) {
     selectedId = parseInt(idParam);
   }
   render();
-  // Auto-show detail di mobile kalau dari query param ?id=
   if (idParam) {
     setTimeout(() => {
       if (typeof showDetail === 'function') showDetail();

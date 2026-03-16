@@ -1,5 +1,3 @@
-
-// 1. Siapkan Data Dummy (Array of Objects)
 // ─── LOCALSTORAGE ───
 const STORAGE_KEY = 'stutime_notes';
 
@@ -23,16 +21,13 @@ function saveNotes(notes) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
 }
 
-// ─── STATE ───
 let dummyNotes = loadNotes();
 let activeNoteId = dummyNotes.length > 0 ? dummyNotes[0].id : null;
 
-// ─── RENDER NOTES LIST ───
 function renderNotesList() {
     const listContainer = document.getElementById('notes-list');
     listContainer.innerHTML = '';
     
-    // ✅ Sort: favorite di atas, non-favorite di bawah
     const sortedNotes = [...dummyNotes].sort((a, b) => b.isFavorite - a.isFavorite);
     
     sortedNotes.forEach(note => {
@@ -104,7 +99,7 @@ function deleteNote() {
 }
 
 function createNewNote() {
-    const newId = Date.now();
+    const newId = dummyNotes.length > 0 ? Math.max(...dummyNotes.map(n => n.id)) + 1 : 1;
     const newNote = { id: newId, title: "Catatan Baru", body: "", isFavorite: false };
     dummyNotes.unshift(newNote);
     saveNotes(dummyNotes);  // <-- ganti ini

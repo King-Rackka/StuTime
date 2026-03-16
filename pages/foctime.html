@@ -4,19 +4,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>STUTime — FocTime!</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>StuTime — FocTime!</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       overflow: hidden;
     }
-    @media (max-width: 767px) { body { overflow-y: auto; } }
-    .font-bebas { font-family: 'Bebas Neue', sans-serif; }
-    .nav-blur { backdrop-filter: blur(20px); }
 
-    /* ── KEY FIX: wrapper biar nggak melebar saat zoom out ── */
+    @media (max-width: 767px) {
+      body {
+        overflow-y: auto;
+      }
+    }
+
+    .font-bebas {
+      font-family: 'Bebas Neue', sans-serif;
+    }
+
+    .nav-blur {
+      backdrop-filter: blur(20px);
+    }
+
     #app-wrapper {
       max-width: 1440px;
       min-width: 320px;
@@ -26,103 +38,246 @@
       flex-direction: column;
       overflow: hidden;
     }
+
     @media (max-width: 767px) {
-      #app-wrapper { height: auto; overflow: visible; }
+      #app-wrapper {
+        height: auto;
+        overflow: visible;
+      }
     }
 
     .sidebar-col {
-      width: clamp(380px, 26%,260px);
+      width: clamp(380px, 26%, 260px);
       flex-shrink: 0;
     }
 
     @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-8px); }
-      to { opacity: 1; transform: translateX(0); }
+      from {
+        opacity: 0;
+        transform: translateX(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
-    .log-slide { animation: slideIn 0.3s ease; }
-    .log-scroll::-webkit-scrollbar { width: 4px; }
-    .log-scroll::-webkit-scrollbar-track { background: transparent; }
-    .log-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+
+    .log-slide {
+      animation: slideIn 0.3s ease;
+    }
+
+    .log-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .log-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .log-scroll::-webkit-scrollbar-thumb {
+      background: #2a2a2a;
+      border-radius: 2px;
+    }
   </style>
 </head>
 
 <body class="bg-[#111111] text-[#F0F0F0]">
 
-  <!-- APP WRAPPER: membatasi lebar max & center saat zoom out -->
   <div id="app-wrapper">
 
     <!-- Hamburger Drawer (mobile only) -->
-    <div id="hamburger-drawer" onclick="if(event.target===this)closeHamburger()" class="fixed inset-0 bg-black/75 z-[400] opacity-0 pointer-events-none transition-opacity duration-200 md:hidden" style="backdrop-filter:blur(8px)">
-      <div id="hamburger-box" class="absolute top-0 left-0 h-full w-64 bg-[#1a1a1a] border-r border-white/[0.07] p-6 flex flex-col gap-2 -translate-x-full transition-transform duration-300">
+    <div id="hamburger-drawer" onclick="if(event.target===this)closeHamburger()"
+      class="fixed inset-0 bg-black/75 z-[400] opacity-0 pointer-events-none transition-opacity duration-200 md:hidden"
+      style="backdrop-filter:blur(8px)">
+      <div id="hamburger-box"
+        class="absolute top-0 left-0 h-full w-64 bg-[#1a1a1a] border-r border-white/[0.07] p-6 flex flex-col gap-2 -translate-x-full transition-transform duration-300">
         <div class="font-bebas text-[#FFD04E] text-2xl tracking-wider mb-4">STUTime</div>
-        <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <a href="dashboard.html"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+          </svg>
           Dashboard
         </a>
-        <a href="noto.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+        <a href="noto.html"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14,2 14,8 20,8" />
+          </svg>
           Noto
         </a>
-        <a href="task.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9,11 12,14 22,4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <a href="task.html"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <polyline points="9,11 12,14 22,4" />
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+          </svg>
           Task
         </a>
-        <a href="foctime.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E] transition-all">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+        <a href="foctime.html"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E]"
+          >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12,6 12,12 16,14" />
+          </svg>
           FocTime!
         </a>
-        <a href="calendar.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <a href="calendar.html"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#888] hover:text-white hover:bg-white/[0.05] transition-all">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
           Calendar
         </a>
+        <div class="mt-auto pt-4 border-t border-white/[0.07]">
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/[0.05] mb-3">
+            <div
+              class="font-bebas w-9 h-9 rounded-xl bg-[#FFD04E] text-[#111111] flex items-center justify-center text-base flex-shrink-0"
+              id="mobile-avatar"></div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-bold text-white truncate" id="mobile-name-label"></div>
+            </div>
+          </div>
+          <button onclick="logOut()"
+            class="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 border border-red-500/15 transition-all">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16,17 21,12 16,7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            Log Out
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Navbar -->
-    <nav class="nav-blur flex-shrink-0 z-50 flex items-center px-4 md:px-10 py-3 md:py-[18px] border-b border-white/[0.07] bg-[#111111]/90">
-      <button onclick="openHamburger()" class="md:hidden w-9 h-9 border border-white/[0.07] rounded-xl flex items-center justify-center text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all flex-shrink-0">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
-      <div class="hidden md:flex font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] items-center justify-center text-lg flex-shrink-0">D</div>
-      <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">FocTime!</div>
-      <div class="hidden md:flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
-        <a href="dashboard.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
-        <a href="noto.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
-        <a href="task.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
-        <a href="foctime.html" class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">FocTime!</a>
-        <a href="calendar.html" class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
+    <nav class="nav-blur sticky top-0 z-50 border-b border-white/[0.07] bg-[#111111]/90">
+      <div class="max-w-[1440px] mx-auto flex items-center px-4 md:px-10 py-3 md:py-[18px]">
+        <button onclick="openHamburger()"
+          class="md:hidden w-9 h-9 border border-white/[0.07] rounded-xl flex items-center justify-center text-[#888] hover:text-[#FFD04E] transition-all flex-shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <div class="hidden md:flex relative" id="avatar-wrapper">
+          <button onclick="toggleAvatarMenu()"
+            class="font-bebas w-10 h-10 rounded-full bg-[#FFD04E] text-[#111111] flex items-center justify-center text-lg flex-shrink-0 hover:bg-[#ffe066] transition-all"
+            id="avatar-btn"></button>
+          <div id="avatar-menu"
+            class="hidden absolute top-13 left-0 bg-[#1a1a1a] border border-white/[0.07] rounded-2xl shadow-2xl overflow-hidden w-52 z-50"
+            style="top:48px;">
+            <!-- Header profile -->
+            <div class="px-4 py-4 bg-gradient-to-br from-[#FFD04E]/10 to-transparent border-b border-white/[0.07]">
+              <div class="flex items-center gap-3">
+                <div>
+                  <div class="text-sm font-bold text-white truncate" id="avatar-name-label"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Actions -->
+            <div class="p-2">
+              <button onclick="logOut()"
+                class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                  stroke-linecap="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16,17 21,12 16,7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">Dashboard</div>
+        <div class="hidden md:flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
+          <a href="dashboard.html"
+            class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
+          <a href="noto.html"
+            class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Noto</a>
+          <a href="task.html"
+            class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Task</a>
+          <a href="foctime.html"
+            class="px-5 py-2 rounded-full text-sm font-bold bg-[#FFD04E] text-[#111111]">FocTime!</a>
+          <a href="calendar.html"
+            class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Calendar</a>
+        </div>
+        <div class="md:hidden flex items-center">
+          <button onclick="openMotivate()"
+            class="border border-[#FFD04E] text-[#FFD04E] px-3 py-2 rounded-full text-xs font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
+        </div>
+        <button onclick="openMotivate()"
+          class="hidden md:block border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
       </div>
-      <div class="md:hidden flex items-center">
-        <button onclick="openMotivate()" class="border border-[#FFD04E] text-[#FFD04E] px-3 py-2 rounded-full text-xs font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motive</button>
-      </div>
-      <button onclick="openMotivate()" class="hidden md:block border border-[#FFD04E] text-[#FFD04E] px-5 py-[9px] rounded-full text-sm font-semibold hover:bg-[#FFD04E] hover:text-[#111111] transition-all">Motivate</button>
     </nav>
 
     <!-- Content: sidebar + main -->
     <div class="flex-1 flex overflow-hidden">
 
-      <!-- Sidebar -->
-      <aside class="hidden md:flex sidebar-col border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex-col gap-6 overflow-hidden">
+      <!-- Sidebar (desktop) -->
+      <aside
+        class="hidden md:flex sidebar-col border-r border-white/[0.07] bg-[#1a1a1a] p-7 flex-col gap-6 overflow-hidden">
+
         <!-- Custom settings -->
         <div class="bg-[#222222] border border-white/[0.07] rounded-2xl p-6">
-          <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-5">Custom</div>
+          <div class="font-bebas text-[#FFD04E] text-xl tracking-wider mb-4">Custom</div>
+
+          <!-- ── NOTIF TIPS DESKTOP ── -->
+          <div class="flex gap-2.5 p-3 rounded-xl bg-[#FFD04E]/10 border border-[#FFD04E]/25 mb-5">
+            <svg class="flex-shrink-0 mt-0.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFD04E"
+              stroke-width="2.5" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p class="text-xs text-[#FFD04E]/80 leading-relaxed">
+              Tips. <span class="font-bold text-[#FFD04E]">25 min focus</span> + <span
+                class="font-bold text-[#FFD04E]">5 min break</span> — the optimal study combo.
+            </p>
+          </div>
+
           <div class="flex items-center justify-between py-[10px] border-b border-white/[0.07]">
             <span class="text-sm font-medium text-[#ccc]">Focus</span>
             <div class="flex items-center gap-3">
-              <button onclick="adjustTime('focus',-5)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">−</button>
+              <button onclick="adjustTime('focus',-5)"
+                class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">−</button>
               <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-focus">25</span>
-              <button onclick="adjustTime('focus',5)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
+              <button onclick="adjustTime('focus',5)"
+                class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
             </div>
           </div>
           <div class="flex items-center justify-between py-[10px]">
             <span class="text-sm font-medium text-[#ccc]">Break</span>
             <div class="flex items-center gap-3">
-              <button onclick="adjustTime('short',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">−</button>
+              <button onclick="adjustTime('short',-1)"
+                class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">−</button>
               <span class="font-bebas text-[22px] min-w-[28px] text-center" id="val-short">5</span>
-              <button onclick="adjustTime('short',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
+              <button onclick="adjustTime('short',1)"
+                class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center hover:bg-[#FFD04E]/10 hover:border-[#FFD04E] transition-all active:scale-90">+</button>
             </div>
           </div>
-          <button onclick="applySettings()" class="w-full mt-[18px] bg-[#FFD04E] text-[#111111] rounded-xl py-3 text-sm font-bold hover:bg-[#ffe033] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">Apply Settings</button>
+          <button onclick="applySettings()"
+            class="w-full mt-[18px] bg-[#FFD04E] text-[#111111] rounded-xl py-3 text-sm font-bold hover:bg-[#ffe033] hover:-translate-y-px hover:shadow-[0_4px_20px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">Apply
+            Settings</button>
         </div>
 
         <!-- FocStats -->
@@ -139,14 +294,22 @@
             </div>
           </div>
         </div>
+
       </aside>
 
       <!-- Main timer area -->
-      <main class="flex-1 min-w-0 flex flex-col items-center justify-start px-4 md:px-6 pt-10 md:pt-10 pb-4 md:pb-6 relative overflow-auto md:overflow-hidden">
+      <main
+        class="flex-1 min-w-0 flex flex-col items-center justify-start px-4 md:px-6 pt-10 md:pt-10 pb-4 md:pb-6 relative overflow-auto md:overflow-hidden">
 
         <!-- Settings button mobile only -->
-        <button onclick="openSettings()" class="md:hidden mb-4 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.07] text-xs text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all self-end">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <button onclick="openSettings()"
+          class="md:hidden mb-4 flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.07] text-xs text-[#888] hover:text-[#FFD04E] hover:border-[#FFD04E]/40 transition-all self-end">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
           Settings
         </button>
 
@@ -165,63 +328,103 @@
         <!-- Timer -->
         <div class="flex flex-col items-center mb-10 md:mb-10">
           <div class="font-bebas leading-none tracking-wider" style="font-size: clamp(56px, 14vw, 140px);">
-            <span id="timer-mm">25</span><span class="text-white">.</span><span id="timer-ss">00</span><span id="timer-ms" class="font-bebas text-white" style="font-size: clamp(28px, 7vw, 70px);">.00</span>
+            <span id="timer-mm">25</span><span class="text-white">.</span><span id="timer-ss">00</span><span
+              id="timer-ms" class="font-bebas text-white" style="font-size: clamp(28px, 7vw, 70px);">.00</span>
           </div>
-          <div class="text-[15px] font-bold text-white tracking-[3px] uppercase mt-5" id="timer-status">Time to Focus!</div>
+          <div class="text-[15px] font-bold text-white tracking-[3px] uppercase mt-5" id="timer-status">Time to Focus!
+          </div>
         </div>
 
         <!-- Buttons -->
         <div class="flex flex-row items-center justify-center gap-3 w-full" style="max-width:480px">
-          <button onclick="resetTimer()" class="flex items-center justify-center gap-2 flex-1 py-3 md:py-[14px] rounded-xl text-[14px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>
+          <button onclick="resetTimer()"
+            class="flex items-center justify-center gap-2 flex-1 py-3 md:py-[14px] rounded-xl text-[14px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
             </svg>
             Reset
           </button>
-          <button onclick="toggleTimer()" id="start-btn" class="flex items-center justify-center gap-2 flex-[1.5] py-3 md:py-[14px] rounded-xl text-[15px] md:text-[16px] font-bold bg-[#FFD04E] text-[#111111] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="start-icon"><polygon points="10,8 18,12 10,16"/></svg>
+          <button onclick="toggleTimer()" id="start-btn"
+            class="flex items-center justify-center gap-2 flex-[1.5] py-3 md:py-[14px] rounded-xl text-[15px] md:text-[16px] font-bold bg-[#FFD04E] text-[#111111] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="start-icon">
+              <polygon points="10,8 18,12 10,16" />
+            </svg>
             <span id="start-text">Start</span>
           </button>
-          <button onclick="skipTimer()" class="flex items-center justify-center gap-2 flex-1 py-3 md:py-[14px] rounded-xl text-[14px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
+          <button onclick="skipTimer()"
+            class="flex items-center justify-center gap-2 flex-1 py-3 md:py-[14px] rounded-xl text-[14px] font-semibold text-[#FFD04E] border border-[#FFD04E]/50 hover:border-[#FFD04E] hover:bg-[#FFD04E]/10 transition-all">
             Skip
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="5,4 15,12 5,20"/><line x1="19" y1="5" x2="19" y2="19"/>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5,4 15,12 5,20" />
+              <line x1="19" y1="5" x2="19" y2="19" />
             </svg>
           </button>
         </div>
+
       </main>
     </div>
 
   </div><!-- end #app-wrapper -->
 
   <!-- Settings Modal (mobile only) -->
-  <div id="settings-modal" onclick="if(event.target===this)closeSettings()" class="fixed inset-0 bg-black/75 z-[300] flex items-end sm:items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
-    <div id="settings-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-sm p-6 translate-y-4 transition-transform duration-200">
+  <div id="settings-modal" onclick="if(event.target===this)closeSettings()"
+    class="fixed inset-0 bg-black/75 z-[300] flex items-end sm:items-center justify-center opacity-0 pointer-events-none transition-opacity duration-200"
+    style="backdrop-filter:blur(8px)">
+    <div id="settings-box"
+      class="bg-[#1a1a1a] border border-white/[0.07] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-sm p-6 translate-y-4 transition-transform duration-200">
       <div class="flex items-center justify-between mb-5">
         <div class="font-bebas text-[#FFD04E] text-xl tracking-wider">Settings</div>
-        <button onclick="closeSettings()" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#222] text-[#888] hover:text-white transition-colors">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <button onclick="closeSettings()"
+          class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#222] text-[#888] hover:text-white transition-colors">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
         </button>
       </div>
       <div class="bg-[#222222] border border-white/[0.07] rounded-xl p-4 mb-4">
         <div class="font-bebas text-[#FFD04E] text-base tracking-wider mb-3">Custom Timer</div>
+
+        <!-- ── NOTIF TIPS MOBILE ── -->
+        <div class="flex gap-2 p-3 rounded-xl bg-[#FFD04E]/10 border border-[#FFD04E]/25 mb-4">
+          <svg class="flex-shrink-0 mt-0.5" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFD04E"
+            stroke-width="2.5" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <p class="text-[11px] text-[#FFD04E]/80 leading-relaxed">
+            Tips. <span class="font-bold text-[#FFD04E]">25 min focus</span> + <span class="font-bold text-[#FFD04E]">5
+              min break</span> — the optimal study combo.
+          </p>
+        </div>
+
         <div class="flex items-center justify-between py-2 border-b border-white/[0.07]">
           <span class="text-sm font-medium text-[#ccc]">Focus</span>
           <div class="flex items-center gap-3">
-            <button onclick="adjustTime('focus',-5)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">−</button>
+            <button onclick="adjustTime('focus',-5)"
+              class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">−</button>
             <span class="font-bebas text-[20px] min-w-[24px] text-center" id="val-focus-m">25</span>
-            <button onclick="adjustTime('focus',5)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
+            <button onclick="adjustTime('focus',5)"
+              class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
           </div>
         </div>
         <div class="flex items-center justify-between py-2">
           <span class="text-sm font-medium text-[#ccc]">Break</span>
           <div class="flex items-center gap-3">
-            <button onclick="adjustTime('short',-1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">−</button>
+            <button onclick="adjustTime('short',-1)"
+              class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">−</button>
             <span class="font-bebas text-[20px] min-w-[24px] text-center" id="val-short-m">5</span>
-            <button onclick="adjustTime('short',1)" class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
+            <button onclick="adjustTime('short',1)"
+              class="w-7 h-7 bg-[#2a2a2a] border border-white/[0.07] rounded-lg text-[#FFD04E] font-bold flex items-center justify-center active:scale-90">+</button>
           </div>
         </div>
-        <button onclick="applySettings();closeSettings()" class="w-full mt-3 bg-[#FFD04E] text-[#111111] rounded-xl py-2.5 text-sm font-bold">Apply Settings</button>
+        <button onclick="applySettings();closeSettings()"
+          class="w-full mt-3 bg-[#FFD04E] text-[#111111] rounded-xl py-2.5 text-sm font-bold">Apply Settings</button>
       </div>
       <div class="bg-[#222222] border border-white/[0.07] rounded-xl p-4">
         <div class="font-bebas text-[#FFD04E] text-base tracking-wider mb-3">FocStats</div>
@@ -240,16 +443,25 @@
   </div>
 
   <!-- Motivate Modal -->
-  <div id="modal" onclick="closeMotivate(event)" class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200" style="backdrop-filter:blur(8px)">
-    <div id="modal-box" class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-10 max-w-[440px] w-[90%] text-center scale-95 transition-transform duration-200">
+  <div id="modal" onclick="closeMotivate(event)"
+    class="fixed inset-0 bg-black/75 flex items-center justify-center z-[200] opacity-0 pointer-events-none transition-opacity duration-200"
+    style="backdrop-filter:blur(8px)">
+    <div id="modal-box"
+      class="bg-[#1a1a1a] border border-white/[0.07] rounded-2xl p-10 max-w-[440px] w-[90%] text-center scale-95 transition-transform duration-200">
       <div class="text-5xl mb-4" id="modal-emoji">💪</div>
       <div class="text-lg leading-relaxed text-[#ddd] font-medium mb-2" id="modal-quote"></div>
       <div class="text-sm text-[#888] mb-7" id="modal-author"></div>
-      <button onclick="closeMotivate()" class="bg-[#FFD04E] text-[#111111] px-8 py-3 rounded-xl font-bold text-sm">Let's Go! 🚀</button>
+      <button onclick="closeMotivate()" class="bg-[#FFD04E] text-[#111111] px-8 py-3 rounded-xl font-bold text-sm">Let's
+        Go! 🚀</button>
     </div>
   </div>
 
   <script>
+    function getUser() {
+      const u = localStorage.getItem('stutime_user');
+      return u ? JSON.parse(u) : { name: 'Student'};
+    }
+    const NAMA = getUser().name.split(' ')[0];
     const settings = { focus: 25, short: 5, long: 10 };
     let currentMode = 'focus';
     let totalSeconds = 25 * 60;
@@ -262,7 +474,7 @@
 
     function getTodayStr() {
       const n = new Date();
-      return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0') + '-' + String(n.getDate()).padStart(2,'0');
+      return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0');
     }
     function loadStats() {
       const today = getTodayStr();
@@ -270,8 +482,8 @@
       const data = raw ? JSON.parse(raw) : {};
       const sessionsToday = data.date === today ? (data.sessions || 0) : 0;
       const yesterday = (() => {
-        const d = new Date(); d.setDate(d.getDate()-1);
-        return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        const d = new Date(); d.setDate(d.getDate() - 1);
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
       })();
       let streak = data.streak || 0;
       if (data.lastActive && data.lastActive !== today && data.lastActive !== yesterday) streak = 0;
@@ -306,24 +518,24 @@
         audio.volume = 0.8;
         audio.play();
         setTimeout(() => { audio.pause(); audio.currentTime = 0; }, 4000);
-      } catch(e) {}
+      } catch (e) { }
     }
 
     function switchToMode(mode) {
       currentMode = mode;
       const tabMap = { focus: 'tab-focus', short: 'tab-short', long: 'tab-long' };
       document.querySelectorAll('.mode-tab').forEach(t => {
-        t.classList.remove('bg-[#FFD04E]','text-[#111111]','font-bold','border-[#FFD04E]','hover:bg-[#ffe033]','hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
-        t.classList.add('text-white','font-semibold','border-white/[0.07]','hover:border-[#FFD04E]','hover:text-[#FFD04E]','hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
+        t.classList.remove('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+        t.classList.add('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
       });
       const activeTab = document.getElementById(tabMap[mode]);
       if (activeTab) {
-        activeTab.classList.remove('text-white','font-semibold','border-white/[0.07]','hover:border-[#FFD04E]','hover:text-[#FFD04E]','hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
-        activeTab.classList.add('bg-[#FFD04E]','text-[#111111]','font-bold','border-[#FFD04E]','hover:bg-[#ffe033]','hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+        activeTab.classList.remove('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
+        activeTab.classList.add('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
       }
       totalSeconds = settings[mode] * 60;
       remainingSeconds = totalSeconds; remainingMs = 0;
-      const statuses = { focus:'Time to Focus!', short:'Break 🌿', long:'Break ☕' };
+      const statuses = { focus: 'Time to Focus!', short: 'Break 🌿', long: 'Break ☕' };
       document.getElementById('timer-status').textContent = statuses[mode];
       document.getElementById('start-text').textContent = 'Start';
       document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
@@ -340,10 +552,8 @@
         let current = settings[key];
         let next;
         if (delta > 0) {
-          // Naik: ke kelipatan 5 berikutnya
           next = Math.floor(current / 5) * 5 + 5;
         } else {
-          // Turun: ke kelipatan 5 sebelumnya
           next = Math.ceil(current / 5) * 5 - 5;
         }
         settings[key] = Math.max(5, Math.min(90, next));
@@ -356,17 +566,18 @@
       if (el1) el1.textContent = v;
       if (el2) el2.textContent = v;
     }
+
     function openSettings() {
       updateStatsMobile();
       const m = document.getElementById('settings-modal');
       const b = document.getElementById('settings-box');
-      m.classList.remove('opacity-0','pointer-events-none'); m.classList.add('opacity-100');
+      m.classList.remove('opacity-0', 'pointer-events-none'); m.classList.add('opacity-100');
       b.classList.remove('translate-y-4'); b.classList.add('translate-y-0');
     }
     function closeSettings() {
       const m = document.getElementById('settings-modal');
       const b = document.getElementById('settings-box');
-      m.classList.add('opacity-0','pointer-events-none'); m.classList.remove('opacity-100');
+      m.classList.add('opacity-0', 'pointer-events-none'); m.classList.remove('opacity-100');
       b.classList.add('translate-y-4'); b.classList.remove('translate-y-0');
     }
     function updateStatsMobile() {
@@ -386,14 +597,14 @@
       if (running) return;
       currentMode = mode;
       document.querySelectorAll('.mode-tab').forEach(t => {
-        t.classList.remove('bg-[#FFD04E]','text-[#111111]','font-bold','border-[#FFD04E]','hover:bg-[#ffe033]','hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
-        t.classList.add('text-white','font-semibold','border-white/[0.07]','hover:border-[#FFD04E]','hover:text-[#FFD04E]','hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
+        t.classList.remove('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+        t.classList.add('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
       });
-      btn.classList.remove('text-white','font-semibold','border-white/[0.07]','hover:border-[#FFD04E]','hover:text-[#FFD04E]','hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
-      btn.classList.add('bg-[#FFD04E]','text-[#111111]','font-bold','border-[#FFD04E]','hover:bg-[#ffe033]','hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
+      btn.classList.remove('text-white', 'font-semibold', 'border-white/[0.07]', 'hover:border-[#FFD04E]', 'hover:text-[#FFD04E]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.15)]');
+      btn.classList.add('bg-[#FFD04E]', 'text-[#111111]', 'font-bold', 'border-[#FFD04E]', 'hover:bg-[#ffe033]', 'hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)]');
       totalSeconds = settings[mode] * 60;
       remainingSeconds = totalSeconds; remainingMs = 0;
-      const statuses = { focus:'Time to Focus!', short:'Break 🌿', long:'Break ☕' };
+      const statuses = { focus: 'Time to Focus!', short: 'Break 🌿', long: 'Break ☕' };
       document.getElementById('timer-status').textContent = statuses[mode];
       updateDisplay();
     }
@@ -423,14 +634,13 @@
       remainingSeconds = totalSeconds; remainingMs = 0;
       document.getElementById('start-text').textContent = 'Start';
       document.getElementById('start-icon').innerHTML = '<polygon points="10,8 18,12 10,16"/>';
-      const statuses = { focus:'Time to Focus!', short:'Break 🌿', long:'Break ☕' };
+      const statuses = { focus: 'Time to Focus!', short: 'Break 🌿', long: 'Break ☕' };
       document.getElementById('timer-status').textContent = statuses[currentMode];
       updateDisplay();
     }
     function skipTimer() {
       running = false; clearInterval(intervalId);
       const next = getNextMode();
-      // Skip tidak menghitung sesi, focusCount tidak dinaikkan
       switchToMode(next);
     }
     function completeTimer() {
@@ -452,29 +662,29 @@
     function openHamburger() {
       const d = document.getElementById('hamburger-drawer');
       const b = document.getElementById('hamburger-box');
-      d.classList.remove('opacity-0','pointer-events-none'); d.classList.add('opacity-100');
+      d.classList.remove('opacity-0', 'pointer-events-none'); d.classList.add('opacity-100');
       b.classList.remove('-translate-x-full'); b.classList.add('translate-x-0');
     }
     function closeHamburger() {
       const d = document.getElementById('hamburger-drawer');
       const b = document.getElementById('hamburger-box');
-      d.classList.add('opacity-0','pointer-events-none'); d.classList.remove('opacity-100');
+      d.classList.add('opacity-0', 'pointer-events-none'); d.classList.remove('opacity-100');
       b.classList.add('-translate-x-full'); b.classList.remove('translate-x-0');
     }
 
     function updateDisplay() {
-      document.getElementById('timer-mm').textContent = String(Math.floor(remainingSeconds/60)).padStart(2,'0');
-      document.getElementById('timer-ss').textContent = String(remainingSeconds%60).padStart(2,'0');
-      document.getElementById('timer-ms').textContent = '.' + String(remainingMs).padStart(2,'0');
+      document.getElementById('timer-mm').textContent = String(Math.floor(remainingSeconds / 60)).padStart(2, '0');
+      document.getElementById('timer-ss').textContent = String(remainingSeconds % 60).padStart(2, '0');
+      document.getElementById('timer-ms').textContent = '.' + String(remainingMs).padStart(2, '0');
     }
 
     const quotes = [
-      { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
-      { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
-      { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
-      { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
-      { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
-      { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
+      { emoji: '💪', quote: '"The secret of getting ahead is getting started."', author: '— Mark Twain' },
+      { emoji: '🔥', quote: '"Focus on being productive instead of busy."', author: '— Tim Ferriss' },
+      { emoji: '🎯', quote: '"Do the hard jobs first. The easy jobs will take care of themselves."', author: '— Dale Carnegie' },
+      { emoji: '⚡', quote: '"You don\'t have to be great to start, but you have to start to be great."', author: '— Zig Ziglar' },
+      { emoji: '🌟', quote: '"The way to get started is to quit talking and begin doing."', author: '— Walt Disney' },
+      { emoji: '🧠', quote: '"It always seems impossible until it is done."', author: '— Nelson Mandela' },
     ];
     function openMotivate() {
       const q = quotes[Math.floor(Math.random() * quotes.length)];
@@ -482,19 +692,49 @@
       document.getElementById('modal-quote').textContent = q.quote;
       document.getElementById('modal-author').textContent = q.author;
       const m = document.getElementById('modal');
-      m.classList.remove('opacity-0','pointer-events-none'); m.classList.add('opacity-100');
+      m.classList.remove('opacity-0', 'pointer-events-none'); m.classList.add('opacity-100');
       document.getElementById('modal-box').classList.remove('scale-95'); document.getElementById('modal-box').classList.add('scale-100');
     }
     function closeMotivate(e) {
       if (!e || e.target === document.getElementById('modal')) {
         const m = document.getElementById('modal');
-        m.classList.add('opacity-0','pointer-events-none'); m.classList.remove('opacity-100');
+        m.classList.add('opacity-0', 'pointer-events-none'); m.classList.remove('opacity-100');
         document.getElementById('modal-box').classList.add('scale-95'); document.getElementById('modal-box').classList.remove('scale-100');
       }
     }
 
+    function initAvatar() {
+      const initial = NAMA.charAt(0).toUpperCase();
+      const btn = document.getElementById('avatar-btn');
+      const mobileAvatar = document.getElementById('mobile-avatar');
+      const nameLabel = document.getElementById('avatar-name-label');
+      const mobileName = document.getElementById('mobile-name-label');
+      const menuInitial = document.getElementById('avatar-menu-initial');
+      if (menuInitial) menuInitial.textContent = initial;
+      if (btn) btn.textContent = initial;
+      if (mobileAvatar) mobileAvatar.textContent = initial;
+      if (nameLabel) nameLabel.textContent = getUser().name;
+      if (mobileName) mobileName.textContent = getUser().name;
+    }
+    function toggleAvatarMenu() {
+      const menu = document.getElementById('avatar-menu');
+      menu.classList.toggle('hidden');
+    }
+    // Tutup menu kalau klik di luar
+    document.addEventListener('click', e => {
+      const wrapper = document.getElementById('avatar-wrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        document.getElementById('avatar-menu').classList.add('hidden');
+      }
+    });
+    function logOut() {
+      window.location.href = '../index.html';
+    }
+
+    initAvatar();
     updateDisplay();
     updateStats();
   </script>
 </body>
+
 </html>
