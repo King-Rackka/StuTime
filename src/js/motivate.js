@@ -7,8 +7,10 @@ const quotes = [
     { emoji: '🧠', quote: '"It always seems impossible until it is done."', author: '— Nelson Mandela' },
     { emoji: '⏳', quote: '"Hidup adalah pembelajaran yang tidak pernah berhenti."', author: '— Ki Hajar Dewantara' },
     { emoji: '⚡', quote: '"Hidup itu seperti bersepeda. Jika ingin menjaga keseimbanganmu, kamu harus terus bergerak maju.",', author: '— Albert Eintstein' },
-
-
+    { emoji: '⚡', quote: '"Anda mungkin bisa menunda, tapi waktu tidak akan menunggu."', author: '— Benjamin Franklin' },
+    { emoji: '🌱', quote: '"Kegagalan hanya terjadi bila kita menyerah."', author: '— BJ Habibie' },
+    { emoji: '🚀', quote: '"Terkadang, kesulitan harus kamu rasakan terlebih dulu sebelum kebahagiaan yang sempurna datang kepadamu."', author: '— R.A Kartini' },
+    { emoji: '🚀', quote: '"Seseorang yang berani membuang satu jam waktunya tidak mengetahui nilai dari kehidupan."', author: '—  Charles Darwin.' },
 ];
 
 function openMotivate() {
