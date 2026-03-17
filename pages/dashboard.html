@@ -434,7 +434,7 @@
                     ${t.pinned ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="#FFD04E" class="flex-shrink-0 mt-0.5"><line x1="12" y1="17" x2="12" y2="22" stroke="#FFD04E" stroke-width="2"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>' : ''}
                   </div>
                   <div class="flex items-center gap-2">
-                    <button onclick="toggleDone(${t.id})" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${t.done ? 'bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E]' : 'bg-white/[0.05] border border-white/[0.07] text-[#888] hover:border-[#FFD04E]/30 hover:text-[#FFD04E]'}">
+                    <button onclick="toggleDone(${t.id})" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${t.done ? 'bg-[#B8942A] border border-[#B8942A] text-[#111111]' : 'bg-[#FFD04E] border border-[#FFD04E] text-[#111111] hover:bg-[#B8942A] hover:border-[#B8942A]'}">
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20,6 9,17 4,12"/></svg>
                       ${t.done ? 'Restore' : 'Done'}
                     </button>
