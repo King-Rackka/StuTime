@@ -208,7 +208,7 @@
             </div>
           </div>
         </div>
-        <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">Dashboard</div>
+        <div class="md:hidden flex-1 text-center font-bebas text-[#FFD04E] text-xl tracking-wider">Foctime</div>
         <div class="hidden md:flex gap-1 bg-[#222222] rounded-full p-[5px] mx-auto border border-white/[0.07]">
           <a href="dashboard.html"
             class="px-5 py-2 rounded-full text-sm font-medium text-[#888] hover:text-white transition-colors">Dashboard</a>
@@ -299,7 +299,7 @@
 
       <!-- Main timer area -->
       <main
-        class="flex-1 min-w-0 flex flex-col items-center justify-start px-4 md:px-6 pt-10 md:pt-10 pb-4 md:pb-6 relative overflow-auto md:overflow-hidden">
+        class="flex-1 min-w-0 flex flex-col items-center justify-start px-4 md:px-6 pt-10 md:pt-10 pb-8 md:pb-6 relative overflow-auto md:overflow-hidden">
 
         <!-- Settings button mobile only -->
         <button onclick="openSettings()"
@@ -314,7 +314,7 @@
         </button>
 
         <!-- Mode tabs -->
-        <div class="flex gap-2 mb-8 md:mb-10">
+        <div class="flex gap-2 mb-16 md:mb-10">
           <button onclick="setMode('focus',this)" id="tab-focus"
             class="mode-tab px-4 py-2 rounded-xl text-sm font-bold bg-[#FFD04E] text-[#111111] border border-[#FFD04E] hover:bg-[#ffe033] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(255,208,78,0.35)] active:translate-y-0 transition-all">
             Focus
@@ -326,7 +326,7 @@
         </div>
 
         <!-- Timer -->
-        <div class="flex flex-col items-center mb-10 md:mb-10">
+        <div class="flex flex-col items-center mb-16 md:mb-10">
           <div class="font-bebas leading-none tracking-wider" style="font-size: clamp(56px, 14vw, 140px);">
             <span id="timer-mm">25</span><span class="text-white">.</span><span id="timer-ss">00</span><span
               id="timer-ms" class="font-bebas text-white" style="font-size: clamp(28px, 7vw, 70px);">.00</span>
@@ -428,6 +428,7 @@
       </div>
       <div class="bg-[#222222] border border-white/[0.07] rounded-xl p-4">
         <div class="font-bebas text-[#FFD04E] text-base tracking-wider mb-3">FocStats</div>
+        
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-[#2a2a2a] border border-white/[0.07] rounded-xl p-3 text-center">
             <div class="font-bebas text-[28px] text-[#FFD04E] leading-none" id="stat-sessions-m">0</div>
@@ -517,7 +518,7 @@
         const audio = new Audio('../src/audio/alarm.mp3');
         audio.volume = 0.8;
         audio.play();
-        setTimeout(() => { audio.pause(); audio.currentTime = 0; }, 4000);
+        setTimeout(() => { audio.pause(); audio.currentTime = 0; }, 8000);
       } catch (e) { }
     }
 
@@ -678,31 +679,6 @@
       document.getElementById('timer-ms').textContent = '.' + String(remainingMs).padStart(2, '0');
     }
 
-    const quotes = [
-      { emoji: '💪', quote: '"The secret of getting ahead is getting started."', author: '— Mark Twain' },
-      { emoji: '🔥', quote: '"Focus on being productive instead of busy."', author: '— Tim Ferriss' },
-      { emoji: '🎯', quote: '"Do the hard jobs first. The easy jobs will take care of themselves."', author: '— Dale Carnegie' },
-      { emoji: '⚡', quote: '"You don\'t have to be great to start, but you have to start to be great."', author: '— Zig Ziglar' },
-      { emoji: '🌟', quote: '"The way to get started is to quit talking and begin doing."', author: '— Walt Disney' },
-      { emoji: '🧠', quote: '"It always seems impossible until it is done."', author: '— Nelson Mandela' },
-    ];
-    function openMotivate() {
-      const q = quotes[Math.floor(Math.random() * quotes.length)];
-      document.getElementById('modal-emoji').textContent = q.emoji;
-      document.getElementById('modal-quote').textContent = q.quote;
-      document.getElementById('modal-author').textContent = q.author;
-      const m = document.getElementById('modal');
-      m.classList.remove('opacity-0', 'pointer-events-none'); m.classList.add('opacity-100');
-      document.getElementById('modal-box').classList.remove('scale-95'); document.getElementById('modal-box').classList.add('scale-100');
-    }
-    function closeMotivate(e) {
-      if (!e || e.target === document.getElementById('modal')) {
-        const m = document.getElementById('modal');
-        m.classList.add('opacity-0', 'pointer-events-none'); m.classList.remove('opacity-100');
-        document.getElementById('modal-box').classList.add('scale-95'); document.getElementById('modal-box').classList.remove('scale-100');
-      }
-    }
-
     function initAvatar() {
       const initial = NAMA.charAt(0).toUpperCase();
       const btn = document.getElementById('avatar-btn');
@@ -736,5 +712,7 @@
     updateStats();
   </script>
 </body>
+
+<script src="../src/js/motivate.js"></script>
 
 </html>

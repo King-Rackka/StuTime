@@ -1,4 +1,3 @@
-
 function getTodayStr() {
   return formatDate(new Date());
 }
@@ -20,23 +19,11 @@ function formatDateLabel(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
   const today = new Date(); today.setHours(0,0,0,0);
   const diff = Math.round((d - today) / 86400000);
-  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-  const label = diff === 0 ? 'Hari ini' : diff === 1 ? 'Besok' : diff === -1 ? 'Kemarin' : days[d.getDay()];
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const label = diff === 0 ? 'Today' : diff === 1 ? 'Tomorrow' : diff === -1 ? 'Yesterday' : days[d.getDay()];
   return `${label}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
-
-// function initDummyTasks() {
-//   return [
-//     { id:1, title:"Belajar Tailwind CSS", desc:"Pelajari utility class Tailwind v4 untuk styling halaman STUTime secara konsisten.", date:getTodayStr(), time:"08.00", pinned:true, done:false },
-//     { id:2, title:"Mengerjakan tugas Basis Data", desc:"Buat ERD dan implementasi SQL untuk tugas akhir semester mata kuliah Basis Data.", date:getTodayStr(), time:"13.00", pinned:true, done:false },
-//     { id:3, title:"Review materi Algoritma", desc:"Review bab sorting dan searching untuk persiapan UTS minggu depan.", date:getTodayStr(), time:"15.00", pinned:false, done:false },
-//     { id:4, title:"Meeting kelompok WDC", desc:"Diskusi pembagian tugas coding untuk lomba WDC 2026 IFest #14.", date:getTodayStr(), time:"19.00", pinned:false, done:false },
-//     { id:5, title:"Kerjakan laporan PKL", desc:"Tulis bab 3 laporan PKL tentang implementasi sistem informasi.", date:getTomorrowStr(), time:"09.00", pinned:false, done:false },
-//     { id:6, title:"Presentasi Jaringan Komputer", desc:"Persiapkan slide presentasi topik subnetting dan CIDR.", date:getTomorrowStr(), time:"10.30", pinned:false, done:false },
-//     { id:7, title:"Kumpulkan tugas Statistika", desc:"Selesaikan soal regresi linear dan upload ke e-learning.", date:getDateStr(2), time:"23.59", pinned:false, done:false }
-//   ];
-// }
 
 // ─── STATE ───
 let tasks = [];
@@ -57,13 +44,13 @@ function saveTasks() {
   localStorage.setItem('stutime_tasks', JSON.stringify(tasks));
 }
 
-// ─── HELPER: konversi format waktu ───
-// "13.00" → "13:00" (untuk input type="time")
+// ─── HELPER: time format conversion ───
+// "13.00" → "13:00" (for input type="time")
 function timeToInput(t) {
   if (!t) return '';
   return t.replace('.', ':');
 }
-// "13:00" → "13.00" (untuk disimpan)
+// "13:00" → "13.00" (for storage)
 function timeToStore(t) {
   if (!t) return '';
   return t.replace(':', '.');
@@ -114,13 +101,13 @@ function renderTaskList() {
   ];
 
   const countEl = document.getElementById('task-count');
-  if (countEl) countEl.textContent = tasks.length + ' jadwal';
+  if (countEl) countEl.textContent = tasks.length + (tasks.length === 1 ? ' schedule' : ' schedules');
 
   if (tasks.length === 0) {
     container.innerHTML = `
       <div class="flex flex-col items-center justify-center h-48 text-center">
         <div class="text-3xl mb-3">📋</div>
-        <div class="text-[#555] text-sm">Belum ada jadwal.<br>Tambah jadwal pertamamu!</div>
+        <div class="text-[#555] text-sm">No schedules yet.<br>Add your first one!</div>
       </div>`;
     return;
   }
@@ -161,7 +148,7 @@ function renderDetail() {
     panel.innerHTML = `
       <div class="flex flex-col items-center justify-center h-full text-center py-20">
         <div class="text-5xl mb-4">👈</div>
-        <div class="text-[#444] text-sm font-medium">Pilih jadwal untuk melihat detail</div>
+        <div class="text-[#444] text-sm font-medium">Select a schedule to view details</div>
       </div>`;
     return;
   }
@@ -177,9 +164,9 @@ function renderDetail() {
         </div>
         <div class="flex items-center gap-2 flex-shrink-0">
           <button onclick="toggleDone(${t.id})"
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${t.done ? 'bg-[#FFD04E]/10 border border-[#FFD04E]/30 text-[#FFD04E]' : 'bg-white/[0.05] border border-white/[0.07] text-[#888] hover:border-green-500/30 hover:text-green-400'}">
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${t.done ? 'bg-[#B8942A] border border-[#B8942A] text-[#111111]' : 'bg-[#FFD04E] border border-[#FFD04E] text-[#111111] hover:bg-[#B8942A] hover:border-[#B8942A]'}">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20,6 9,17 4,12"/></svg>
-            ${t.done ? 'Pulihkan' : 'Done'}
+            ${t.done ? 'Restore' : 'Done'}
           </button>
           <button onclick="togglePin(${t.id})" title="${t.pinned ? 'Unpin' : 'Pin task'}"
             class="w-9 h-9 rounded-xl border flex items-center justify-center transition-all
@@ -199,19 +186,19 @@ function renderDetail() {
         <div class="w-px h-4 bg-white/10"></div>
         <div class="flex items-center gap-2 text-sm text-[#aaa]">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFD04E" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-          <span>${t.time} WIB</span>
+          <span>${t.time}</span>
         </div>
       </div>
 
       <div class="mb-6 flex-1">
-        <div class="text-xs font-bold text-[#555] uppercase tracking-widest mb-2">Deskripsi</div>
-        <p class="text-sm text-[#bbb] leading-relaxed">${t.desc || '<span class="text-[#444] italic">Tidak ada deskripsi</span>'}</p>
+        <div class="text-xs font-bold text-[#555] uppercase tracking-widest mb-2">Description</div>
+        <p class="text-sm text-[#bbb] leading-relaxed">${t.desc || '<span class="text-[#444] italic">No description</span>'}</p>
       </div>
 
       <div class="grid grid-cols-2 gap-3 mb-4">
         <button onclick="openYoutube('${encodeURIComponent(t.title)}')"
           class="flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-white/[0.07] rounded-xl hover:border-red-500/50 hover:bg-red-500/5 transition-all group">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#ff0000"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02" fill="white"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" class="flex-shrink-0" fill="#ff0000"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75,15.02 15.5,12 9.75,8.98 9.75,15.02" fill="white"/></svg>
           <div class="text-left">
             <div class="text-xs text-[#555] group-hover:text-[#888]">Tutorial</div>
             <div class="text-sm font-semibold text-white truncate max-w-[120px]">${t.title}</div>
@@ -220,7 +207,7 @@ function renderDetail() {
         </button>
         <button onclick="openGoogle('${encodeURIComponent(t.title)}')"
           class="flex items-center gap-3 px-4 py-3 bg-[#1a1a1a] border border-white/[0.07] rounded-xl hover:border-blue-500/50 hover:bg-blue-500/5 transition-all group">
-          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" class="flex-shrink-0"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           <div class="text-left">
             <div class="text-xs text-[#555] group-hover:text-[#888]">Tutorial</div>
             <div class="text-sm font-semibold text-white truncate max-w-[120px]">${t.title}</div>
@@ -237,7 +224,7 @@ function renderDetail() {
         </button>
         <button onclick="startFocus(${t.id})"
           class="flex items-center justify-center gap-2 py-3 rounded-xl bg-[#FFD04E] text-[#111111] text-sm font-bold hover:bg-[#ffe066] transition-all">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="10,8 18,12 10,16"/></svg>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><polygon points="10,8 18,12 10,16"/></svg>
           Start Focus
         </button>
       </div>
@@ -245,7 +232,7 @@ function renderDetail() {
         <button onclick="deleteTask(${t.id})"
           class="flex items-center justify-center gap-2 py-3 rounded-xl border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500/10 hover:border-red-500 transition-all">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14a2,2,0,0,1-2,2H8a2,2,0,0,1-2-2L5,6"/><path d="M10,11v6"/><path d="M14,11v6"/><path d="M9,6V4a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V6"/></svg>
-          Hapus
+          Delete
         </button>
       </div>
     </div>
@@ -276,7 +263,7 @@ function toggleDone(id) {
 }
 
 function deleteTask(id) {
-  if (!confirm('Yakin mau hapus jadwal ini?')) return;
+  if (!confirm('Are you sure you want to delete this schedule?')) return;
   tasks = tasks.filter(t => t.id !== id);
   selectedId = null;
   saveTasks();
@@ -298,7 +285,7 @@ function openGoogle(query) {
 // ─── ADD / EDIT MODAL ───
 function openAddModal() {
   editingId = null;
-  document.getElementById('modal-title').textContent = 'Tambah Jadwal';
+  document.getElementById('modal-title').textContent = 'Add Schedule';
   document.getElementById('form-title').value = '';
   document.getElementById('form-desc').value = '';
   document.getElementById('form-date').value = getTodayStr();
@@ -310,11 +297,10 @@ function openEditModal(id) {
   const t = tasks.find(t => t.id === id);
   if (!t) return;
   editingId = id;
-  document.getElementById('modal-title').textContent = 'Edit Jadwal';
+  document.getElementById('modal-title').textContent = 'Edit Schedule';
   document.getElementById('form-title').value = t.title;
   document.getElementById('form-desc').value = t.desc;
   document.getElementById('form-date').value = t.date;
-  // ── FIX: konversi "13.00" → "13:00" supaya input type="time" bisa baca ──
   document.getElementById('form-time').value = timeToInput(t.time);
   document.getElementById('task-modal').classList.add('open');
 }
@@ -331,11 +317,11 @@ function submitTask() {
   const time = document.getElementById('form-time').value;
 
   if (!title || !date || !time) {
-    alert('Judul, tanggal, dan waktu wajib diisi!');
+    alert('Title, date, and time are required!');
     return;
   }
 
-  // Simpan dengan format titik "13.00"
+  // Store with dot format "13.00"
   const formattedTime = timeToStore(time);
 
   if (editingId) {
@@ -350,38 +336,6 @@ function submitTask() {
   saveTasks();
   closeModal();
   render();
-}
-
-// ─── MOTIVATE ───
-const quotes = [
-  { emoji:'💪', quote:'"The secret of getting ahead is getting started."', author:'— Mark Twain' },
-  { emoji:'🔥', quote:'"Focus on being productive instead of busy."', author:'— Tim Ferriss' },
-  { emoji:'🎯', quote:'"Do the hard jobs first. The easy jobs will take care of themselves."', author:'— Dale Carnegie' },
-  { emoji:'⚡', quote:'"You don\'t have to be great to start, but you have to start to be great."', author:'— Zig Ziglar' },
-  { emoji:'🌟', quote:'"The way to get started is to quit talking and begin doing."', author:'— Walt Disney' },
-  { emoji:'🧠', quote:'"It always seems impossible until it is done."', author:'— Nelson Mandela' },
-];
-
-function openMotivate() {
-  const q = quotes[Math.floor(Math.random() * quotes.length)];
-  document.getElementById('motivate-emoji').textContent = q.emoji;
-  document.getElementById('motivate-quote').textContent = q.quote;
-  document.getElementById('motivate-author').textContent = q.author;
-  const m = document.getElementById('motivate-modal');
-  m.classList.remove('opacity-0','pointer-events-none');
-  m.classList.add('opacity-100');
-  document.getElementById('motivate-box').classList.remove('scale-95');
-  document.getElementById('motivate-box').classList.add('scale-100');
-}
-
-function closeMotivate(e) {
-  if (!e || e.target === document.getElementById('motivate-modal')) {
-    const m = document.getElementById('motivate-modal');
-    m.classList.add('opacity-0','pointer-events-none');
-    m.classList.remove('opacity-100');
-    document.getElementById('motivate-box').classList.add('scale-95');
-    document.getElementById('motivate-box').classList.remove('scale-100');
-  }
 }
 
 // ─── INIT ───

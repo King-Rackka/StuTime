@@ -8,10 +8,7 @@ function loadNotes() {
     }
     // Dummy data pertama kali
     const dummy = [
-        { id: 1, title: 'Pergi ke pasar membeli ikan', body: 'Pergi ke pasar membeli ikan, cakep...', isFavorite: false },
-        { id: 2, title: 'Belajar UI/UX Design Gestalt', body: 'Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...', isFavorite: true },
-        { id: 3, title: 'Belajar UI/UX Design Gestalt', body: 'Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...', isFavorite: true },
-        { id: 4, title: 'Belajar UI/UX Design Gestalt', body: 'Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...', isFavorite: true },
+        { id: 1, title: 'Belajar UI/UX Design Gestalt', body: 'Hari ini aku belajar tentang prinsip Gestalt dalam desain UI/UX...', isFavorite: true },
     ];
     saveNotes(dummy);
     return dummy;
