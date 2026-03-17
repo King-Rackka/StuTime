@@ -224,31 +224,31 @@
           <div class="w-full bg-[#323236] rounded-xl p-4 md:p-6 flex flex-col gap-3 overflow-hidden" style="height: calc(100dvh - 220px); min-height: 400px;">
                 
                 <div class="flex justify-between pb-3 md:pb-5 border-b border-gray-600 flex-wrap shrink-0 items-center">
-    <button data-tooltip="Undo" onclick="formatText('undo')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-rotate-left"></i></button>
-    <button data-tooltip="Redo" onclick="formatText('redo')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-rotate-right"></i></button>
-    <button data-tooltip="Bold" data-command="bold" onclick="formatText('bold')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-bold"></i></button>
-    <button data-tooltip="Italic" data-command="italic" onclick="formatText('italic')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-italic"></i></button>
-    <button data-tooltip="Underline" data-command="underline" onclick="formatText('underline')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-underline"></i></button>
-    <button data-tooltip="Strikethrough" data-command="strikeThrough" onclick="formatText('strikeThrough')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-strikethrough"></i></button>
-    
-    <div class="relative inline-block">
-        <button data-tooltip="Align" id="align-dropdown-btn" onclick="toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15">
-            <i id="current-align-icon" class="fa-solid fa-align-left"></i>
-            <i class="fa-solid fa-caret-down text-[10px] ml-1"></i> 
-        </button>
-        <div id="align-menu" class="hidden absolute top-full mt-2 left-0 z-10 bg-[#2A2A2D] border border-[#FFD15C] rounded-md shadow-lg flex flex-col items-center py-2 gap-2 w-[45px]">
-            <button data-command="justifyLeft" onclick="formatText('justifyLeft'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-align-left"></i></button>
-            <button data-command="justifyCenter" onclick="formatText('justifyCenter'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-align-center"></i></button>
-            <button data-command="justifyRight" onclick="formatText('justifyRight'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-align-right"></i></button>
-            <button data-command="justifyFull" onclick="formatText('justifyFull'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-align-justify"></i></button>
-        </div>
-    </div>
-    
-    <button data-tooltip="Ordered List" data-command="insertOrderedList" onclick="formatText('insertOrderedList')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-list-ol"></i></button>
-    <button data-tooltip="Unordered List" data-command="insertUnorderedList" onclick="formatText('insertUnorderedList')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-list-ul"></i></button>
-    <button data-tooltip="Outdent" onclick="formatText('outdent')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-outdent"></i></button>
-    <button data-tooltip="Favorite" onclick="toggleFavorite()" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-regular fa-star" id="fav-icon"></i></button>
-</div>
+              <button data-tooltip="Undo" onclick="formatText('undo')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-rotate-left"></i></button>
+              <button data-tooltip="Redo" onclick="formatText('redo')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-rotate-right"></i></button>
+              <button data-tooltip="Bold" data-command="bold" onclick="formatText('bold')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-bold"></i></button>
+              <button data-tooltip="Italic" data-command="italic" onclick="formatText('italic')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-italic"></i></button>
+              <button data-tooltip="Underline" data-command="underline" onclick="formatText('underline')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-underline"></i></button>
+              <button data-tooltip="Strikethrough" data-command="strikeThrough" onclick="formatText('strikeThrough')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-strikethrough"></i></button>
+              
+              <div class="relative inline-block">
+                  <button data-tooltip="Align" id="align-dropdown-btn" onclick="toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15">
+                      <i id="current-align-icon" class="fa-solid fa-align-left"></i>
+                      <i class="fa-solid fa-caret-down text-[10px] ml-1"></i> 
+                  </button>
+                  <div id="align-menu" class="hidden absolute top-full mt-2 left-0 z-10 bg-[#2A2A2D] border border-[#FFD15C] rounded-md shadow-lg flex flex-col items-center py-2 gap-2 w-[45px]">
+                      <button data-command="justifyLeft" onclick="formatText('justifyLeft'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-align-left"></i></button>
+                      <button data-command="justifyCenter" onclick="formatText('justifyCenter'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-align-center"></i></button>
+                      <button data-command="justifyRight" onclick="formatText('justifyRight'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-align-right"></i></button>
+                      <button data-command="justifyFull" onclick="formatText('justifyFull'); toggleDropdown('align-menu')" class="bg-transparent border-none text-[#FFD15C] text-lg cursor-pointer w-[30px] h-[30px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-align-justify"></i></button>
+                  </div>
+              </div>
+              
+              <button data-tooltip="Ordered List" data-command="insertOrderedList" onclick="formatText('insertOrderedList')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-list-ol"></i></button>
+              <button data-tooltip="Unordered List" data-command="insertUnorderedList" onclick="formatText('insertUnorderedList')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-list-ul"></i></button>
+              <button data-tooltip="Outdent" onclick="formatText('outdent')" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-solid fa-outdent"></i></button>
+              <button data-tooltip="Favorite" onclick="toggleFavorite()" class="bg-transparent border-none text-[#FFD15C] text-base md:text-lg cursor-pointer w-8 h-8 md:w-[35px] md:h-[35px] rounded-full flex justify-center items-center transition hover:bg-[#FFD15C]/15"><i class="fa-regular fa-star" id="fav-icon"></i></button>
+          </div>
 
                 <input type="text" class="note-title bg-transparent border-none text-white text-xl md:text-2xl font-bold outline-none w-full shrink-0 mt-2" value="Pergi ke pasar membeli ikan">
                 <div class="note-body flex-grow text-[#F0F0F0] leading-relaxed outline-none text-[0.95rem] overflow-y-auto" contenteditable="true"></div>
@@ -274,9 +274,9 @@
             <div class="w-full lg:w-[450px] xl:w-[500px] bg-[#323236] rounded-xl p-6 md:p-8 flex flex-col gap-5 shrink-0 overflow-y-auto overflow-x-hidden">
                 <div class="font-bebas text-lg tracking-wider text-[#FFD15C] mb-2">SOURCE TYPE</div>
                 <div class="flex gap-2 mb-2 flex-wrap">
-                    <button class="source-type-btn active px-4 py-2 rounded-lg border border-[#FFD15C] bg-[#FFD15C] text-[#1E1E20] font-semibold text-sm transition" onclick="setSourceType('book',this)">📚 Book</button>
-                    <button class="source-type-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-semibold text-sm transition hover:text-white" onclick="setSourceType('journal',this)">📄 Journal</button>
-                    <button class="source-type-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-semibold text-sm transition hover:text-white" onclick="setSourceType('website',this)">🌐 Website</button>
+                    <button class="source-type-btn active px-4 py-2 rounded-lg border border-[#FFD15C] bg-[#FFD15C] text-[#1E1E20] font-semibold text-sm transition" onclick="setSourceType('book',this)"><i class="fa-solid fa-book-bookmark mr-2"></i> Book</button>
+                    <button class="source-type-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-semibold text-sm transition hover:text-white" onclick="setSourceType('journal',this)"><i class="fa-solid fa-file-signature mr-2"></i> Journal</button>
+                    <button class="source-type-btn px-4 py-2 rounded-lg border border-gray-600 bg-transparent text-gray-400 font-semibold text-sm transition hover:text-white" onclick="setSourceType('website',this)"><i class="fa-solid fa-globe mr-2"></i> Website</button>
                 </div>
 
                 <div class="font-bebas text-lg tracking-wider text-[#FFD15C] mb-2 mt-2 md:mt-4">FORMAT</div>
@@ -301,9 +301,9 @@
                     <div class="font-bebas text-base tracking-wider text-[#FFD15C]">RESULT</div>
                     <div class="bg-[#1a1a1a] border border-white/[0.07] rounded-xl p-4 min-h-[100px] text-sm text-white leading-relaxed whitespace-pre-wrap" id="dafpusResult">Fill in the form and click Generate to see your bibliography entry here.</div>
                     <div class="flex gap-2">
-                        <button class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-[#FFD15C] text-[#1E1E20] hover:bg-[#e6bc53] transition" onclick="copyResult()">📋 Copy</button>
-                        <button class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-transparent border border-[#FFD15C] text-[#FFD15C] hover:bg-[#FFD15C]/10 transition" onclick="saveResult()">💾 Save</button>
-                        <button class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-transparent border border-red-500/50 text-red-400 hover:bg-red-500/10 transition" onclick="clearResult()">🗑 Clear</button>
+                        <button class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-[#FFD15C] text-[#1E1E20] hover:bg-[#e6bc53] transition" onclick="copyResult()"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
+                        <button class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-transparent border border-[#FFD15C] text-[#FFD15C] hover:bg-[#FFD15C]/10 transition" onclick="saveResult()"><i class="fa-regular fa-bookmark mr-1"></i> Save</button>
+                        <button class="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-transparent border border-red-500/50 text-red-400 hover:bg-red-500/10 transition" onclick="clearResult()"><i class="fa-solid fa-eraser mr-1"></i> Clear</button>
                     </div>
                 </div>
  
