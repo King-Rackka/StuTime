@@ -420,46 +420,54 @@ function formatAuthorIEEE(authorStr) {
     // Gabungkan inisial di depan, lalu spasi, lalu nama belakang
     return `${initials} ${last}`;
 }
+// --- Format Harvard: Fachri, R. N. ---
+// (Mirip APA, tapi nanti cara gabungin banyak authornya beda)
+function formatAuthorHarvard(authorStr) {
+    const { last, first, middle } = parseAuthorName(authorStr);
+    if (!first) return last;
+    
+    let initials = first.charAt(0).toUpperCase() + '.';
+    if (middle) {
+        const middleInitials = middle.split(' ').map(n => n.charAt(0).toUpperCase() + '.').join(' ');
+        initials += ' ' + middleInitials;
+    }
+    return `${last}, ${initials}`;
+}
 // ==========================================
 // FUNGSI PENGGABUNG BANYAK AUTHOR (MAX 5)
 // ==========================================
 function processMultipleAuthors(rawAuthors, formatType) {
-    // 1. Pisahkan nama berdasarkan tanda titik koma (;) atau koma (,)
     const delimiter = rawAuthors.includes(';') ? ';' : ',';
     let authorsArray = rawAuthors.split(delimiter).map(a => a.trim()).filter(a => a);
-
-    // 2. Batasi maksimal 5 author
-    if (authorsArray.length > 5) {
-        authorsArray = authorsArray.slice(0, 5);
-    }
+    
+    if (authorsArray.length > 5) authorsArray = authorsArray.slice(0, 5);
     if (authorsArray.length === 0) return '';
-
-    // 3. Format masing-masing nama pakai mesin pemotong yang sudah kita buat
+    
     let formattedAuthors = authorsArray.map(author => {
         if (formatType === 'APA') return formatAuthorAPA(author);
         if (formatType === 'IEEE') return formatAuthorIEEE(author);
+        if (formatType === 'Harvard') return formatAuthorHarvard(author); // 🔥 TAMBAHAN HARVARD
         return formatAuthorChicago(author);
     });
 
-    // 4. Gabungkan kembali sesuai aturan jumlah orang dan gaya sitasi
     if (formattedAuthors.length === 1) return formattedAuthors[0];
 
     if (formattedAuthors.length === 2) {
-        if (formatType === 'APA') {
-            return `${formattedAuthors[0]}, & ${formattedAuthors[1]}`;
-        } else {
-            // IEEE dan Chicago pakai 'and' untuk 2 orang (tanpa koma sebelum and)
-            return `${formattedAuthors[0]} and ${formattedAuthors[1]}`;
-        }
+        if (formatType === 'APA') return `${formattedAuthors[0]}, & ${formattedAuthors[1]}`;
+        // Harvard dan yang lain pakai 'and' tanpa koma di antara 2 orang
+        return `${formattedAuthors[0]} and ${formattedAuthors[1]}`;
     }
 
-    // Untuk 3 sampai 5 orang
-    const lastAuthor = formattedAuthors.pop(); // Ambil orang terakhir
-    const joinedFirst = formattedAuthors.join(', '); // Gabungkan sisanya pakai koma
-
+    const lastAuthor = formattedAuthors.pop(); 
+    const joinedFirst = formattedAuthors.join(', '); 
+    
     if (formatType === 'APA') {
         return `${joinedFirst}, & ${lastAuthor}`;
+    } else if (formatType === 'Harvard') {
+        // 🔥 Harvard: A, B and C (Tanpa koma sebelum and)
+        return `${joinedFirst} and ${lastAuthor}`;
     } else {
+        // Chicago/IEEE: A, B, and C (Pakai koma Oxford)
         return `${joinedFirst}, and ${lastAuthor}`;
     }
 }
@@ -501,40 +509,39 @@ function generate() {
     // ... (kode bagian atas generate() tetap sama) ...
 
     if (format === 'APA') {
-        // PANGGIL MESIN MULTI-AUTHOR UNTUK APA
         const auth = processMultipleAuthors(v.author, 'APA');
-
-        if (sourceType === 'book') {
-            result = `${auth} (${v.year || 'n.d.'}). *${v.title}*${v.edition ? ` (${v.edition} ed.)` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}.`;
-        } else if (sourceType === 'journal') {
-            result = `${auth} (${v.year || 'n.d.'}). ${v.title}. *${v.journal}*, *${v.volume}*(${v.issue}), ${v.pages}.`;
-        } else {
-            result = `${auth} (${v.year || 'n.d.'}). ${v.title}. ${v.site}. Retrieved from ${v.url}`;
-        }
-
+        if (sourceType === 'book') result = `${auth} (${v.year||'n.d.'}). *${v.title}*${v.edition ? ` (${v.edition} ed.)` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}.`;
+        else if (sourceType === 'journal') result = `${auth} (${v.year||'n.d.'}). ${v.title}. *${v.journal}*, *${v.volume}*(${v.issue}), ${v.pages}.`;
+        else result = `${auth} (${v.year||'n.d.'}). ${v.title}. ${v.site}. Retrieved from ${v.url}`;
+        
     } else if (format === 'IEEE') {
-        // PANGGIL MESIN MULTI-AUTHOR UNTUK IEEE
         const auth = processMultipleAuthors(v.author, 'IEEE');
-
+        if (sourceType === 'book') result = `[1] ${auth}, *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+        else if (sourceType === 'journal') result = `[1] ${auth}, "${v.title}," *${v.journal}*, vol. ${v.volume}, no. ${v.issue}, pp. ${v.pages}, ${v.year||'n.d.'}.`;
+        else result = `[1] ${auth}, "${v.title}," ${v.site}, ${v.year||'n.d.'}. [Online]. Available: ${v.url}`;
+        
+    // 🔥 INI DIA BLOK HARVARD YANG BARU
+    } else if (format === 'Harvard') {
+        const auth = processMultipleAuthors(v.author, 'Harvard');
+        
         if (sourceType === 'book') {
-            result = `[1] ${auth}, *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year || 'n.d.'}.`;
+            // Format: Smith, J., 2020. *Artificial Intelligence Basics*. 2nd ed. New York: Springer.
+            result = `${auth}, ${v.year||'n.d.'}. *${v.title}*.${v.edition ? ` ${v.edition} ed.` : ''} ${v.city ? v.city + ': ' : ''}${v.publisher || ''}.`;
+            
         } else if (sourceType === 'journal') {
-            result = `[1] ${auth}, "${v.title}," *${v.journal}*, vol. ${v.volume}, no. ${v.issue}, pp. ${v.pages}, ${v.year || 'n.d.'}.`;
+            // Format: Smith, J., 2020. 'Judul Artikel', *Nama Jurnal*, 5(2), pp. 10-20.
+            result = `${auth}, ${v.year||'n.d.'}. ${v.title}, *${v.journal}*, ${v.volume}(${v.issue}), pp. ${v.pages}.`;
+            
         } else {
-            result = `[1] ${auth}, "${v.title}," ${v.site}, ${v.year || 'n.d.'}. [Online]. Available: ${v.url}`;
+            // Format Website: Admin, 2023. *Judul Web*. Available at: https... (Accessed: 17 March 2026).
+           result = `${auth}, ${v.year||'n.d.'}. *${v.title}*. ${v.site}. Available at: ${v.url} (Accessed: ${v.accessed}).`;
         }
-
+        
     } else { // Chicago
-        // PANGGIL MESIN MULTI-AUTHOR UNTUK CHICAGO
         const auth = processMultipleAuthors(v.author, 'Chicago');
-
-        if (sourceType === 'book') {
-            result = `${auth} *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year || 'n.d.'}.`;
-        } else if (sourceType === 'journal') {
-            result = `${auth}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year || 'n.d.'}): ${v.pages}.`;
-        } else {
-            result = `${auth}. "${v.title}." ${v.site}. Accessed ${v.accessed}. ${v.url}`;
-        }
+        if (sourceType === 'book') result = `${auth}. *${v.title}*${v.edition ? `, ${v.edition} ed.` : ''}. ${v.city ? v.city + ': ' : ''}${v.publisher || ''}, ${v.year||'n.d.'}.`;
+        else if (sourceType === 'journal') result = `${auth}. "${v.title}." *${v.journal}* ${v.volume}, no. ${v.issue} (${v.year||'n.d.'}): ${v.pages}.`;
+        else result = `${auth}. "${v.title}." ${v.site}. Accessed ${v.accessed}. ${v.url}`;
     }
 
     // ... (kode replace bintang ke italic tetap di bawah) ...
