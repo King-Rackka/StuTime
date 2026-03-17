@@ -5,6 +5,10 @@ const quotes = [
     { emoji: '⚡', quote: '"You don\'t have to be great to start, but you have to start to be great."', author: '— Zig Ziglar' },
     { emoji: '🌟', quote: '"The way to get started is to quit talking and begin doing."', author: '— Walt Disney' },
     { emoji: '🧠', quote: '"It always seems impossible until it is done."', author: '— Nelson Mandela' },
+    { emoji: '⏳', quote: '"Hidup adalah pembelajaran yang tidak pernah berhenti."', author: '— Ki Hajar Dewantara' },
+    { emoji: '⚡', quote: '"Hidup itu seperti bersepeda. Jika ingin menjaga keseimbanganmu, kamu harus terus bergerak maju.",', author: '— Albert Eintstein' },
+
+
 ];
 
 function openMotivate() {
