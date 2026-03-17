@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>StuTime — Calendar</title>
+  <title>StuTime</title>
+  <link rel="icon" href="../src/images/logo.svg" type="image/svg+xml">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
     @media (max-width: 767px) { body { overflow-y: auto; } }
@@ -290,39 +292,41 @@
 
   <script>
     const holidays = {
-      '2026-01-01':'Tahun Baru Masehi','2026-01-27':'Isra Miraj','2026-01-29':'Tahun Baru Imlek',
-      '2026-03-20':'Hari Raya Nyepi','2026-03-22':'Idul Fitri 1447 H','2026-03-23':'Idul Fitri 1447 H (Hari Kedua)',
-      '2026-04-03':'Wafat Yesus Kristus','2026-04-06':'Paskah','2026-05-01':'Hari Buruh Internasional',
-      '2026-05-14':'Kenaikan Yesus Kristus','2026-05-24':'Hari Raya Waisak',
-      '2026-05-29':'Idul Adha 1447 H','2026-06-06':'Tahun Baru Islam 1448 H',
-      '2026-08-17':'Hari Kemerdekaan RI','2026-09-14':'Maulid Nabi Muhammad SAW',
-      '2026-12-25':'Hari Raya Natal','2026-12-26':'Cuti Bersama Natal',
-      '2027-01-01':'Tahun Baru Masehi','2027-01-16':'Isra Miraj','2027-01-17':'Tahun Baru Imlek',
-      '2027-03-11':'Idul Fitri 1448 H','2027-03-12':'Idul Fitri 1448 H (Hari Kedua)',
-      '2027-03-26':'Hari Raya Nyepi','2027-04-02':'Wafat Yesus Kristus','2027-05-01':'Hari Buruh Internasional',
-      '2027-05-18':'Idul Adha 1448 H','2027-05-26':'Tahun Baru Islam 1449 H',
-      '2027-06-03':'Kenaikan Yesus Kristus','2027-06-13':'Hari Raya Waisak',
-      '2027-08-17':'Hari Kemerdekaan RI','2027-09-03':'Maulid Nabi Muhammad SAW','2027-12-25':'Hari Raya Natal',
-      '2028-01-01':'Tahun Baru Masehi','2028-01-06':'Tahun Baru Imlek','2028-01-25':'Isra Miraj',
-      '2028-02-28':'Idul Fitri 1449 H','2028-02-29':'Idul Fitri 1449 H (Hari Kedua)',
-      '2028-03-14':'Hari Raya Nyepi','2028-04-14':'Wafat Yesus Kristus','2028-05-01':'Hari Buruh Internasional',
-      '2028-05-06':'Idul Adha 1449 H','2028-05-14':'Tahun Baru Islam 1450 H',
-      '2028-05-22':'Kenaikan Yesus Kristus','2028-06-01':'Hari Raya Waisak',
-      '2028-08-17':'Hari Kemerdekaan RI','2028-08-22':'Maulid Nabi Muhammad SAW','2028-12-25':'Hari Raya Natal',
-      '2029-01-01':'Tahun Baru Masehi','2029-01-14':'Isra Miraj','2029-01-26':'Tahun Baru Imlek',
-      '2029-02-14':'Idul Fitri 1450 H','2029-02-15':'Idul Fitri 1450 H (Hari Kedua)',
-      '2029-03-05':'Hari Raya Nyepi','2029-03-30':'Wafat Yesus Kristus',
-      '2029-04-26':'Idul Adha 1450 H','2029-05-01':'Hari Buruh Internasional',
-      '2029-05-03':'Tahun Baru Islam 1451 H','2029-05-10':'Kenaikan Yesus Kristus',
-      '2029-05-21':'Hari Raya Waisak','2029-08-12':'Maulid Nabi Muhammad SAW',
-      '2029-08-17':'Hari Kemerdekaan RI','2029-12-25':'Hari Raya Natal',
-      '2030-01-01':'Tahun Baru Masehi','2030-01-03':'Isra Miraj',
-      '2030-01-17':'Idul Fitri 1451 H','2030-01-18':'Idul Fitri 1451 H (Hari Kedua)',
-      '2030-02-03':'Tahun Baru Imlek','2030-02-22':'Hari Raya Nyepi',
-      '2030-04-16':'Idul Adha 1451 H','2030-04-19':'Wafat Yesus Kristus',
-      '2030-04-23':'Tahun Baru Islam 1452 H','2030-05-01':'Hari Buruh Internasional',
-      '2030-05-09':'Kenaikan Yesus Kristus','2030-05-10':'Hari Raya Waisak',
-      '2030-08-01':'Maulid Nabi Muhammad SAW','2030-08-17':'Hari Kemerdekaan RI','2030-12-25':'Hari Raya Natal',
+      '2026-01-01':'Tahun Baru Masehi',
+      '2026-01-16':'Isra Miraj',
+      '2026-03-17':'Tahun Baru Imlek',
+      '2026-03-19':'Hari Raya Nyepi',
+      '2026-03-21':'Idul Fitri 1447 H',
+      '2026-03-22':'Idul Fitri 1447 H (Hari Kedua)',
+      '2026-04-03':'Wafat Yesus Kristus',
+      '2026-04-05':'Paskah',
+      '2026-05-01':'Hari Buruh Internasional',
+      '2026-05-14':'Kenaikan Yesus Kristus',
+      '2026-05-27':'Hari Raya Idul Adha 1447 H',
+      '2026-05-31':'Hari Raya Waisak',
+      '2026-06-16':'Tahun Baru Islam 1448 H',
+      '2026-08-17':'Hari Kemerdekaan Indonesia',
+      '2026-08-25':'Maulid Nabi Muhammad SAW',
+      '2026-12-25':'Hari Raya Natal',
+      '2026-12-26':'Cuti Bersama Natal',
+      
+      '2027-01-01':'Tahun Baru Masehi',
+      '2027-01-05':'Isra Miraj',
+      '2027-01-06':'Tahun Baru Imlek',
+      '2027-03-8':'Hari Raya Nyepi',
+      '2027-03-10':'Idul Fitri 1448 H',
+      '2027-03-11':'Idul Fitri 1448 H (Hari Kedua)',
+      '2027-03-26':'Jumat Agung',
+      '2027-05-01':'Hari Buruh Internasional',
+      '2027-05-06':'Kenaikan Yesus Kristus',
+      '2027-05-17':'Idul Adha 1448 H',
+      '2027-05-20':'Hari Raya Waisak',
+      '2027-06-06':'Tahun Baru Islam 1449 H',
+      '2027-08-15':'Maulid Nabi Muhammad SAW',
+      '2027-08-17':'Hari Kemerdekaan Indonesia',
+      '2027-12-25':'Hari Raya Natal',
+      
+      
     };
 
     const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
