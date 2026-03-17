@@ -1,8 +1,10 @@
-Nama Website : StuTime
+**Nama Website** : StuTime
 
-Nama Tim : Timnya Bebas
+**Nama Tim** : Timnya Bebas
  
-Dengan Backend : TIDAK
+**Dengan Backend** : TIDAK
+
+**Daftar Fitur Utama** :
  
 | Fitur | Deskripsi |
 | --- | --- |
